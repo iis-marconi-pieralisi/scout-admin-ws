@@ -11,7 +11,7 @@
     "3000": { "label": "La mia App (PHP)" },
     "8080": { "label": "phpMyAdmin" }
   },
-  "postCreateCommand": "git config --global --add safe.directory /var/www/html && rm -f .git/hooks/pre-push",
+  "postCreateCommand": "git config --global --add safe.directory /var/www/html && rm -f .git/hooks/pre-push .git/hooks/post-checkout .git/hooks/post-commit .git/hooks/post-merge && git config --remove-section lfs 2>/dev/null || true",
   "postStartCommand": "sh .devcontainer/init-db.sh",
   "customizations": {
     "vscode": {
