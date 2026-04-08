@@ -1,0 +1,4 @@
+.devcontainer/mariadb_data
+.devcontainer/mariadb_run
+src/api/php/vendor
+src/api/php/composer.lock
