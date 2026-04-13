@@ -29,7 +29,7 @@ scout-admin-ws
 
 ---
 
-## ▶️ Accesso ai serviziiii
+## ▶️ Accesso ai servizi
 
 - Applicazione PHP: `http://localhost:3000`
 - phpMyAdmin: `http://localhost:8080`
