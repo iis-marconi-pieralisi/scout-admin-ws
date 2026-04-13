@@ -58,7 +58,7 @@ scout-admin-ws
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
 - 404BrainNotFound: [💅TavianTorbian](https://github.com/TavianTorbian)​, [🏋🏻Thumad](https://github.com/Thumad)​
-- 500FatalError: [Giulia431-creator](https://github.com/Giulia431-creator), [candolone](https://github.com/candolone)
+- 500FatalError: [👮🏼‍♀️Giulia431-creator](https://github.com/Giulia431-creator), [👨🏼‍🍳candolone](https://github.com/candolone)
 - CompilaEPrega: [🧅st10951-cloud](https://github.com/st10951-cloud), ​​[🐰st10700-eng](https://github.com/st10700-eng), [🦊st10845-spec](https://github.com/st10845-spec)
 - IPellari:[🙊LucaTons](https://github.com/LucaTons), [🕴st10936-dev](https://github.com/st10936-dev), [​👩🏿‍🦽‍➡️​ithrybr07](https://github.com/ithrybr07)
 - MM71:[🐳st10769](https://github.com/st10769),[🐕ionnis07](https://github.com/ionnis07),[🐎st10964](https://github.com/st10964)
