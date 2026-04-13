@@ -56,7 +56,7 @@ scout-admin-ws
 
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
-- Admins: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
+- Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
 - 404BrainNotFound: [💅TavianTorbian](https://github.com/TavianTorbian)​, [🏋🏻Thumad](https://github.com/Thumad)​
 - 500FatalError: [Giulia431-creator](https://github.com/Giulia431-creator), [candolone](https://github.com/candolone)
 - CompilaEPrega: [🧅st10951-cloud](https://github.com/st10951-cloud), ​​[🐰st10700-eng](https://github.com/st10700-eng), [🦊st10845-spec](https://github.com/st10845-spec)
