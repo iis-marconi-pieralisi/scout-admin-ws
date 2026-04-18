@@ -22,6 +22,20 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
+function get_branche($db)
+{
+    try {
+        $sql = <<<EOD
+            SELECT 	*
+            from Branca
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
 /**
  * Gestore generico per tabelle.
  * Estrae il nome della tabella dall'URI e restituisce tutti i record.

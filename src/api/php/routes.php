@@ -8,19 +8,17 @@ $routes = [
         // Rotta custom che usa un suo handler specifico
         '/api/prova' => 'mostra_messaggio_di_prova',
         // Rotte che usano il gestore generico per tabelle
-        '/api/users' => 'generic_table_handler',
-        '/api/products' => 'generic_table_handler',
-        '/api/orders' => 'get_orders_join'
+        '/api/branche' => 'get_branche'
+
     ],
 
     // Rotte che rispondono al metodo POST
     'POST' => [
-        '/api/products' => 'create_product',
         '/api/auth' => 'authenticate_user'
     ],
     
     'PUT' => [
-        '/api/products/:id' => 'update_product'
+        //'/api/products/:id' => 'update_product'
     ],
     
     // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
