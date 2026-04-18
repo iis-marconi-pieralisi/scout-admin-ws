@@ -48,6 +48,28 @@ function generic_table_handler($db) {
 /**
  * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
  */
+
+function get_branche($db)
+{
+    // Estrae l'URI della richiesta, es. /api/users
+    $uri = strtok($_SERVER['REQUEST_URI'], '?');
+
+    try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            SELECT 	*
+            FROM Branca
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
+        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
 function get_orders_join($db) {
     // Estrae l'URI della richiesta, es. /api/users
     $uri = strtok($_SERVER['REQUEST_URI'], '?');
