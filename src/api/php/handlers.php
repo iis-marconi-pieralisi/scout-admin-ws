@@ -22,6 +22,24 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
+function get_branche($db)
+{
+    try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            SELECT 	*
+            FROM Branca;
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
+        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
 /**
  * Gestore generico per tabelle.
  * Estrae il nome della tabella dall'URI e restituisce tutti i record.
