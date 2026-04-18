@@ -7,7 +7,7 @@ $routes = [
     'GET' => [
         // Rotta custom che usa un suo handler specifico
         '/api/prova' => 'mostra_messaggio_di_prova',
-        '/api/branche' => 'get_branche'
+        '/api/branche' => 'get_branche',
     ],
 
     // Rotte che rispondono al metodo POST

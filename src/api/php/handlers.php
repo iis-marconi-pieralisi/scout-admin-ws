@@ -63,6 +63,22 @@ function generic_table_handler($db) {
     }
 }
 
+function get_branche($db) {
+     try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            SELECT 	*
+            FROM Branca
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+
 /**
  * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
  */
