@@ -14,7 +14,8 @@ $routes = [
     // Rotte che rispondono al metodo POST
     'POST' => [
         '/api/products' => 'create_product',
-        '/api/auth' => 'authenticate_user'
+        '/api/auth' => 'authenticate_user',
+        '/api/aggiungipersona' => 'create_person',
     ],
     
     'PUT' => [

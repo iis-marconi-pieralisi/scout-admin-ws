@@ -193,6 +193,56 @@ function update_product($db, $id) {
     }
 }
 
+function create_person($db) 
+{
+    //prende il body della richiesta php e trasforma il json in un array associativo
+    $persona = json_decode(file_get_contents('php://input'), true);
+
+    //validazione json
+     if (!$persona || !isset($persona['nome']) || !isset($persona['cognome']) || !isset($persona['data_nascita'])|| !isset($persona['luogo_nascita'])|| !isset($persona['citta_residenza'])|| !isset($persona['via_residenza'])|| !isset($persona['cap_residenza'])|| !isset($persona['telefono']) || !isset($persona['id_tutore1']) ) 
+    {
+        json_response(['error' => 'Dati mancanti' ], 400);
+        return;
+    }
+
+    try {
+        // id_persona -> AUTO_INCREMENT (NULL)
+        // id_tutore2 -> nullable (Null = Sì)
+        $sql = "INSERT INTO persona 
+                    (nome, cognome, data_nascita, luogo_nascita, citta_residenza, via_residenza, cap_residenza, telefono, id_tutore1, id_tutore2) 
+                VALUES 
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $params = [
+            $persona['nome'],                          // varchar(50)
+            $persona['cognome'],                       // varchar(50)
+            $persona['data_nascita'],                  // date (formato YYYY-MM-DD)
+            $persona['luogo_nascita'],                 // varchar(50)
+            $persona['citta_residenza'],               // varchar(50)
+            $persona['via_residenza'],                 // varchar(50)
+            $persona['cap_residenza'],                 // varchar(6)
+            $persona['telefono'],                      // varchar(15)
+            (int)$persona['id_tutore1'],               // int(11) obbligatorio
+            isset($persona['id_tutore2'])
+                ? (int)$persona['id_tutore2']
+                : null,                             // int(11) nullable
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => 'Persona creata con successo.',
+            'affected_rows' => $affected_rows
+        ]);
+
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        json_response(['error' => 'Errore durante la creazione della persona.'], 500);
+    }
+    
+}
+
 function authenticate_user($db) {
     $data = json_decode(file_get_contents('php://input'), true);
     json_response(['utente' => 'ciao']);
