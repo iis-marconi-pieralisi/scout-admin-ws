@@ -9,7 +9,6 @@ $routes = [
         '/api/prova' => 'mostra_messaggio_di_prova',
         // Rotte che usano il gestore generico per tabelle
         '/api/branche' => 'get_branche'
-
     ],
 
     // Rotte che rispondono al metodo POST
@@ -19,6 +18,7 @@ $routes = [
     
     'PUT' => [
         //'/api/products/:id' => 'update_product'
+       // '/api/products/:id' => 'update_product'
     ],
     
     // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
