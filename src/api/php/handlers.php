@@ -82,10 +82,29 @@ function put_account($db)
     }
 }
 
-function delete_account()
+function delete_account($db, $username)
 {
+     try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            DELATE FROM account
+            WHERE username = '$username';
+        EOD;
 
+
+        $db->query($sql);
+
+
+        json_response(['message' => 'account eliminato']);
+     }
+     catch(exception $e)
+     {
+
+
+        json_response(['error' => 'ERRORE' ]);
+     }
 }
+
 
 function get_branche($db)
 {
