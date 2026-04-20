@@ -69,19 +69,24 @@ function get_orders_join($db) {
     // Estrae l'URI della richiesta, es. /api/users
     $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
+/*CREATE TABLE Servizio (
+    descrizione TEXT NOT NULL,
+    anno_associativo INT NOT NULL,
+    id_persona INT NOT NULL,
+    id_tipologia INT NOT NULL,
+    id_unita INT NOT NULL,
+    FOREIGN KEY (id_persona) REFERENCES Persona(id_persona) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (id_tipologia) REFERENCES Tipologia(id_tipologia) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (id_unita) REFERENCES Unita(id_unita) ON DELETE RESTRICT ON UPDATE CASCADE,
+    PRIMARY KEY (anno_associativo, id_persona)
+);*/
+function get_servizio($db)
+{
     try {
         // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
-            SELECT 	order_id, 
-                users.name AS user_name,
-                products.name AS product_name,
-                orders.quantity AS quantity,
-                orders.created_at AS created_at, 
-                orders.quantity AS quantity,
-                orders.created_at AS created_at
-            FROM orders
-        	    NATURAL JOIN products
-                JOIN users ON orders.user_id=users.user_id;
+            SELECT *
+            FROM Servizio
         EOD;
 
         $results = $db->query($sql);
@@ -91,6 +96,66 @@ function get_orders_join($db) {
         // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
     }
+}
+
+function create_servizio($db) 
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+    var_dump($data);
+    
+    // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
+    if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
+        {
+            json_response(['error' => 'Dati mancanti (anno_associativo, id_persona)'], 400);
+            return;
+        }
+    try 
+    {
+        $sql = "INSERT INTO Servizio VALUES (?, ?, ?, ?, ?)";
+
+        // È fondamentale rispettare l'ordine dei punti di domanda!
+        $params = [
+            $data['descrizione'],          
+            (int)$data['anno_associativo'],
+            (int)$data['id_persona'],
+            (int)$data['id_tipologia'],
+            (int)$data['id_unità'],
+        ];
+
+        // 5. Esecuzione tramite Helper
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => "Servizio aggiornato",
+            'affected_rows' => $affected_rows
+        ]);
+
+    } catch (Exception $e) {
+        // Log dell'errore server (opzionale)
+        error_log($e->getMessage());
+        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
+        mostra_messaggio_di_prova($db);
+    }
+}
+
+function update_servizio($db)
+{
+
+}
+
+function delete_servizo($db)
+{
+    
+}
+
+
+/**
+ * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
+ */
+function get_orders_join($db) {
+    // Estrae l'URI della richiesta, es. /api/users
+    $uri = strtok($_SERVER['REQUEST_URI'], '?');
 }
 
 function create_product($db) {
