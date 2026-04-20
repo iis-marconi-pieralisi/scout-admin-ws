@@ -19,8 +19,11 @@ $routes = [
     ],
     
     'PUT' => [
-        '/api/products/:id' => 'update_product'
+        '/api/products/:id' => 'update_product',
+        '/api/persona/:id' => 'update_person',
     ],
     
-    // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
+    'DELETE' => [
+        '/api/persona/:id' => 'delete_person'
+    ]
 ];
