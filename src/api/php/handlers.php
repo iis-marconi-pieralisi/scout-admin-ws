@@ -168,3 +168,20 @@ function authenticate_user($db) {
 function mostra_messaggio_di_prova($db) {
     json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
 }
+
+function get_branche($db){
+    try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            SELECT 	*
+            FROM Branca;
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
+        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
