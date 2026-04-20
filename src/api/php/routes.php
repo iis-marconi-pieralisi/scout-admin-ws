@@ -12,12 +12,11 @@ $routes = [
 
     // Rotte che rispondono al metodo POST
     'POST' => [
-        '/api/products' => 'create_product',
         '/api/auth' => 'authenticate_user'
     ],
     
     'PUT' => [
-        '/api/products/:id' => 'update_product'
+        //'/api/products/:id' => 'update_product'
     ],
     
     // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
