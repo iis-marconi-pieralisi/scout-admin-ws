@@ -8,21 +8,24 @@ $routes = [
         // Rotta custom che usa un suo handler specifico
         '/api/prova' => 'mostra_messaggio_di_prova',
         '/api/branche' => 'get_branche',
-        '/api/getaccount' => 'get_account',
-        '/api/postaccount' => 'post_account',
-        '/api/putaccount' => 'put_account',
-        '/api/deleteaccount' => 'delete_account'
-        ],
+        '/api/account' => 'get_account'        
+    ],
 
     // Rotte che rispondono al metodo POST
     'POST' => [
         '/api/products' => 'create_product',
-        '/api/auth' => 'authenticate_user'
+        '/api/auth' => 'authenticate_user',
+        '/api/account' => 'post_account'
     ],
     
     'PUT' => [
-        '/api/products/:id' => 'update_product'
+        '/api/products/:id' => 'update_product',
+        '/api/account/:id' => 'put_account'
     ],
     
     // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
+    'DELETE' => [
+        '/api/account' => 'delete_account'
+    ],
+
 ];
