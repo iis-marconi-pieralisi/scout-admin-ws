@@ -208,7 +208,7 @@ function create_person($db)
     try {
         // id_persona -> AUTO_INCREMENT (NULL)
         // id_tutore2 -> nullable (Null = Sì)
-        $sql = "INSERT INTO persona 
+        $sql = "INSERT INTO Persona 
                     (nome, cognome, data_nascita, luogo_nascita, citta_residenza, via_residenza, cap_residenza, telefono, id_tutore1, id_tutore2) 
                 VALUES 
                     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

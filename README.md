@@ -52,6 +52,25 @@ scout-admin-ws
 - Arresta: `docker compose -f .devcontainer/docker-compose.yml down`
 - Accesso container: `docker compose -f .devcontainer/docker-compose.yml exec php-app bash`
 
+PER COMMITTARE IN CASO DI PRIMA COMMIT
+git add *
+git commit -m “ “
+git push
+
+
+PER COMMITTARE IN CASO DI ALTRA COMMIT
+git stash
+git pull
+git stash pop
+git add *
+git commit -m “ “
+git push
+
+
+PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
+git pull
+
+
 ---
 
 ## 👨‍👨‍👦‍👦 Composizione gruppi

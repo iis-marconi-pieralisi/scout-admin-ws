@@ -15,7 +15,7 @@ $routes = [
     'POST' => [
         '/api/products' => 'create_product',
         '/api/auth' => 'authenticate_user',
-        '/api/aggiungipersona' => 'create_person',
+        '/api/persona' => 'create_person',
     ],
     
     'PUT' => [
