@@ -60,36 +60,36 @@ function generic_table_handler($db) {
 }
 
 /**
- * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
- */
-/*function get_orders_join($db) {
-    // Estrae l'URI della richiesta, es. /api/users
-    $uri = strtok($_SERVER['REQUEST_URI'], '?');
+ *  * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
+  */
+  /*function get_orders_join($db) {
+      // Estrae l'URI della richiesta, es. /api/users
+          $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
-    try {
-        // EOD necessario per stringa literal multiriga
-        $sql = <<<EOD
-            SELECT 	order_id, 
-                users.name AS user_name,
-                products.name AS product_name,
-                orders.quantity AS quantity,
-                orders.created_at AS created_at, 
-                orders.quantity AS quantity,
-                orders.created_at AS created_at
-            FROM orders
-        	    NATURAL JOIN products
-                JOIN users ON orders.user_id=users.user_id;
-        EOD;
+              try {
+                      // EOD necessario per stringa literal multiriga
+                              $sql = <<<EOD
+                                          SELECT 	order_id, 
+                                                          users.name AS user_name,
+                                                                          products.name AS product_name,
+                                                                                          orders.quantity AS quantity,
+                                                                                                          orders.created_at AS created_at, 
+                                                                                                                          orders.quantity AS quantity,
+                                                                                                                                          orders.created_at AS created_at
+                                                                                                                                                      FROM orders
+                                                                                                                                                              	    NATURAL JOIN products
+                                                                                                                                                                                    JOIN users ON orders.user_id=users.user_id;
+                                                                                                                                                                                            EOD;
 
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}*/
-
+                                                                                                                                                                                                    $results = $db->query($sql);
+                                                                                                                                                                                                            json_response($results);
+                                                                                                                                                                                                                } catch (Exception $e) {
+                                                                                                                                                                                                                        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
+                                                                                                                                                                                                                                // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+                                                                                                                                                                                                                                        json_response(['error' => 'Errore interno del server.'], 500);
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            }*/
+                                                                                                                                                                                                                                            
 function create_product($db) {
     // 1. Lettura del payload JSON
     $data = json_decode(file_get_contents('php://input'), true);
