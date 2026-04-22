@@ -151,7 +151,42 @@ function update_servizio($db)
 //DELETE
 function delete_servizo($db)
 {
-    
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // Validazione
+    if (
+        !$data ||
+        !isset($data['anno_associativo']) ||
+        !isset($data['id_persona'])
+    ) {
+        json_response(['error' => 'Chiave primaria mancante'], 400);
+        return;
+    }
+
+    try {
+        $sql = "
+            DELETE FROM Servizio
+            WHERE anno_associativo = ?
+              AND id_persona = ?
+        ";
+
+        $params = [
+            (int)$data['anno_associativo'],
+            (int)$data['id_persona']
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => 'Servizio eliminato',
+            'affected_rows' => $affected_rows
+        ]);
+
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
+    }
 }
 
 
