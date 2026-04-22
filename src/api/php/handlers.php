@@ -22,30 +22,54 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
-function get_account($db)
+function read_account($db)
 {
     try {
-        // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
-            SELECT 	*
+            SELECT *
             FROM Account;
         EOD;
 
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
 
-function post_account()
+function create_account($db)
 {
-    
+    try {
+        $body = json_decode(file_get_contents('php://input'), true);
+
+        if (!$body || !isset($body['username']) || !isset($body['password']) || !isset($body['email'])) {
+            json_response(['error' => 'Dati mancanti (username, password, email).'], 400);
+            return;
+        }
+
+        $username = $body['username'];
+        $password = password_hash($body['password'], PASSWORD_BCRYPT);
+        $email    = $body['email'];
+
+        $sql = <<<EOD
+            INSERT INTO Account (username, password, email)
+            VALUES (:username, :password, :email);
+        EOD;
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':username' => $username,
+            ':password' => $password,
+            ':email'    => $email
+        ]);
+
+        json_response(['message' => 'Account creato con successo.'], 201);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
 }
 
-function put_account($db)
+function update_account($db)
 {
     try {
         $body = json_decode(file_get_contents('php://input'), true);
@@ -82,29 +106,31 @@ function put_account($db)
     }
 }
 
-function delete_account($db, $username)
+function delete_account($db)
 {
-     try {
-        // EOD necessario per stringa literal multiriga
+    try {
+        $body = json_decode(file_get_contents('php://input'), true);
+
+        if (!$body || !isset($body['id'])) {
+            json_response(['error' => 'Dati mancanti (id).'], 400);
+            return;
+        }
+
+        $id = (int) $body['id'];
+
         $sql = <<<EOD
-            DELATE FROM account
-            WHERE username = '$username';
+            DELETE FROM Account
+            WHERE id = :id;
         EOD;
 
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':id' => $id]);
 
-        $db->query($sql);
-
-
-        json_response(['message' => 'account eliminato']);
-     }
-     catch(exception $e)
-     {
-
-
-        json_response(['error' => 'ERRORE' ]);
-     }
+        json_response(['message' => 'Account eliminato con successo.']);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
 }
-
 
 function get_branche($db)
 {
