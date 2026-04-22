@@ -20,7 +20,7 @@ $routes = [
     'POST' => [
         '/api/products' => 'create_product',
         '/api/auth' => 'authenticate_user',
-        'api/partecipa' =>  'create_partecipa',
+        '/api/partecipa' =>  'create_partecipa',
         '/api/auth' => 'authenticate_user'
     ],
     

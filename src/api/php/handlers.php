@@ -198,10 +198,8 @@ function get_all_partecipa($db) {
 }
 
 function create_partecipa($db) {
-    // 1. Lettura del payload JSON
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // 2. Validazione
     if (!$data || !isset($data['id_attivita']) || !isset($data['id_unita'])) {
         json_response(['error' => 'Dati mancanti (id_attivita, id_unita)'], 400);
         return;
@@ -228,10 +226,8 @@ function create_partecipa($db) {
 }
 
 function update_partecipa($db, $id_attivita, $id_unita) {
-    // 1. Lettura del payload JSON
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // 2. Validazione
     if (!$data || !isset($data['new_id_attivita']) || !isset($data['new_id_unita'])) {
         json_response(['error' => 'Dati mancanti (new_id_attivita, new_id_unita)'], 400);
         return;
@@ -240,10 +236,10 @@ function update_partecipa($db, $id_attivita, $id_unita) {
     try {
         $sql = "UPDATE Partecipa SET id_attivita = ?, id_unita = ? WHERE id_attivita = ? AND id_unita = ?";
         $params = [
-            (int)$data['new_id_attivita'],  // 1° ? -> nuovo id_attivita
-            (int)$data['new_id_unita'],     // 2° ? -> nuovo id_unita
-            (int)$id_attivita,              // 3° ? -> id_attivita attuale (WHERE)
-            (int)$id_unita                  // 4° ? -> id_unita attuale (WHERE)
+            (int)$data['new_id_attivita'],  
+            (int)$data['new_id_unita'],   
+            (int)$id_attivita,              
+            (int)$id_unita                  
         ];
 
         $affected_rows = $db->query($sql, $params);
