@@ -52,6 +52,101 @@ scout-admin-ws
 - Arresta: `docker compose -f .devcontainer/docker-compose.yml down`
 - Accesso container: `docker compose -f .devcontainer/docker-compose.yml exec php-app bash`
 
+# 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
+
+Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
+del branch principale e si hanno delle modifiche locali da caricare.
+
+---
+
+## 📋 Passaggi
+
+### 1. 🔍 Controlla lo stato attuale
+```bash
+git status
+```
+> Mostra lo stato del tuo repository locale rispetto al branch remoto:
+> file modificati, aggiunte in staging, commit non ancora pushate, ecc.
+
+---
+
+### 2. 📦 Metti da parte le tue modifiche
+```bash
+git stash
+```
+> Salva **temporaneamente** le tue modifiche locali in una zona di "parcheggio" 
+> (lo stash), così puoi aggiornare il branch senza conflitti immediati.
+
+---
+
+### 3. ⬇️ Scarica l'ultima versione del branch
+```bash
+git pull
+```
+> Scarica e integra le modifiche più recenti dal repository remoto (GitHub)
+> nel tuo Codespace locale.
+
+---
+
+### 4. 🔃 Ripristina le tue modifiche
+```bash
+git stash pop
+```
+> Recupera le modifiche messe da parte con `git stash` e le applica 
+> sopra alla versione aggiornata del branch.
+
+---
+
+### 5. ⚠️ Risolvi eventuali conflitti (es. Merge Conflict)
+> Se Git non riesce ad unire automaticamente le modifiche, segnalerà un
+> **conflitto**. Dovrai aprire i file in conflitto e scegliere manualmente 
+> quale versione del codice tenere (o combinarle).
+> I conflitti si presentano così nei file:
+> ```
+> <<<<<<< HEAD
+> // tuo codice
+> =======
+> // codice del branch remoto
+> >>>>>>> nome-branch
+> ```
+> Una volta risolti tutti i conflitti, salva i file e prosegui.
+
+---
+
+### 6. 💾 Crea la commit con le tue modifiche
+```bash
+git commit -m "nome modifica"
+```
+> Registra ufficialmente le tue modifiche nella cronologia del repository,
+> con un messaggio descrittivo che spiega cosa hai fatto.
+
+---
+
+### 7. 🚀 Carica le modifiche su GitHub
+```bash
+git push
+```
+> Carica la tua commit sul repository remoto, rendendola disponibile
+> a tutti i componenti del gruppo!
+
+---
+
+## 🗑️ Cancellare l'ultimo commit mantenendo le modifiche
+
+```bash
+git reset --soft HEAD~1
+```
+> Rimuove l'ultimo commit dalla cronologia, ma **mantiene tutte le modifiche**
+> nei tuoi file locali, pronti per essere committati di nuovo.
+> ⚠️ **Attenzione:** se si vuole rimuovere più commit, ripete il comando il numero di volte necessario
+> 
+> - `--soft` → mantiene le modifiche in staging (già pronte per la commit) ✅
+> - `HEAD~1` → indica "torna indietro di 1 commit" 🔙
+>
+> ⚠️ **Attenzione:** se hai già fatto `git push`, dovrai usare `git push --force`
+> per sovrascrivere il branch remoto. Fallo **solo** se sei sicuro e,
+> in un progetto di gruppo, **avvisa sempre i tuoi compagni** prima! 🚨
+
 ---
 
 ## 👨‍👨‍👦‍👦 Composizione gruppi
