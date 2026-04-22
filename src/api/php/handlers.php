@@ -45,7 +45,7 @@ function generic_table_handler($db) {
     }
 }
 
-function get_branca($db) 
+function read_branca($db) 
 {
     try {
         // EOD necessario per stringa literal multiriga
@@ -80,7 +80,9 @@ function get_orders_join($db) {
     FOREIGN KEY (id_unita) REFERENCES Unita(id_unita) ON DELETE RESTRICT ON UPDATE CASCADE,
     PRIMARY KEY (anno_associativo, id_persona)
 );*/
-function get_servizio($db)
+
+//GET
+function read_servizio($db)
 {
     try {
         // EOD necessario per stringa literal multiriga
@@ -98,6 +100,7 @@ function get_servizio($db)
     }
 }
 
+//POST 
 function create_servizio($db) 
 {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -139,11 +142,13 @@ function create_servizio($db)
     }
 }
 
+//PUT
 function update_servizio($db)
 {
 
 }
 
+//DELETE
 function delete_servizo($db)
 {
     
@@ -249,4 +254,5 @@ function authenticate_user($db) {
  */
 function mostra_messaggio_di_prova($db) {
     json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
+}
 }

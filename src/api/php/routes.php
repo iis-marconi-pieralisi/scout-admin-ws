@@ -7,13 +7,9 @@ $routes = [
     'GET' => [
         // Rotta custom che usa un suo handler specifico
         '/api/prova' => 'mostra_messaggio_di_prova',
-<<<<<<< Updated upstream
-        '/api/branca' => 'get_branca',
-=======
         '/api/branca'=> 'get_branca',
         '/api/servizi'=>'get_servizio',
         
->>>>>>> Stashed changes
     ],
 
     // Rotte che rispondono al metodo POST
