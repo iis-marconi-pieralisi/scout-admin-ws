@@ -72,6 +72,12 @@ git pull
 
 
 ---
+  ROTTA      METODO HTTP        NOME HANDLER(php)
+/api/branche --> Post    --> create-branche  
+             --> Get     --> read-branche
+             --> Delete  --> delete-branche
+             --> Pot     --> update-branche 
+Nome Handler<verbo_crud>_<nome_tabella>.php
 
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
