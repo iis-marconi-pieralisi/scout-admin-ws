@@ -45,7 +45,7 @@ function generic_table_handler($db) {
     }
 }
 
-function read_branca($db) 
+function read_branche($db) 
 {
     try {
         // EOD necessario per stringa literal multiriga
@@ -62,27 +62,27 @@ function read_branca($db)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-/**
- * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
- */
-function get_orders_join($db) {
-    // Estrae l'URI della richiesta, es. /api/users
-    $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
-/*CREATE TABLE Servizio (
-    descrizione TEXT NOT NULL,
-    anno_associativo INT NOT NULL,
-    id_persona INT NOT NULL,
-    id_tipologia INT NOT NULL,
-    id_unita INT NOT NULL,
-    FOREIGN KEY (id_persona) REFERENCES Persona(id_persona) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (id_tipologia) REFERENCES Tipologia(id_tipologia) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (id_unita) REFERENCES Unita(id_unita) ON DELETE RESTRICT ON UPDATE CASCADE,
-    PRIMARY KEY (anno_associativo, id_persona)
-);*/
+function read_persone($db)
+{
+         try {
+        // EOD necessario per stringa literal multiriga
+        $sql = <<<EOD
+            SELECT *
+            FROM Persona
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+    } catch (Exception $e) {
+        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
+        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
 
 //GET
-function read_servizio($db)
+function read_servizi($db)
 {
     try {
         // EOD necessario per stringa literal multiriga
@@ -189,95 +189,158 @@ function delete_servizo($db)
     }
 }
 
+function create_persona($db) 
+{
+    //prende il body della richiesta php e trasforma il json in un array associativo
+    $persona = json_decode(file_get_contents('php://input'), true);
 
-/**
- * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
- */
-function get_orders_join($db) {
-    // Estrae l'URI della richiesta, es. /api/users
-    $uri = strtok($_SERVER['REQUEST_URI'], '?');
-}
-
-function create_product($db) {
-    // 1. Lettura del payload JSON
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    var_dump($data);
-    
-    // 2. Validazione: servono obbligatoriamente name e price
-    if (!$data || !isset($data['name']) || !isset($data['price'])) {
-        json_response(['error' => 'Dati mancanti (name, price)'], 400);
+    //validazione json
+    if (!$persona || !isset($persona['nome']) || !isset($persona['cognome']) || !isset($persona['data_nascita'])|| !isset($persona['luogo_nascita'])|| !isset($persona['citta_residenza'])|| !isset($persona['via_residenza'])|| !isset($persona['cap_residenza'])|| !isset($persona['telefono']) || !isset($persona['id_tutore1']) ) 
+    {
+        json_response(['error' => 'Dati mancanti' ], 400);
         return;
     }
 
-    try {
-        $sql = "INSERT INTO products VALUES (NULL, ?, ?, ?, NULL)";
+    try 
+    {
+        if (isset($persona['id_tutore2'])) 
+        {
+            $id_tutore2 = (int)$persona['id_tutore2'];
+        } 
+        else 
+        {
+            $id_tutore2 = null;
+        }
 
-        // È fondamentale rispettare l'ordine dei punti di domanda!
+        // id_persona -> AUTO_INCREMENT (NULL)
+        // id_tutore2 -> nullable (Null = Sì)
+        $sql = "INSERT INTO Persona 
+                    (nome, cognome, data_nascita, luogo_nascita, citta_residenza, via_residenza, cap_residenza, telefono, id_tutore1, id_tutore2) 
+                VALUES 
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],   // 3° ? -> description (stringa)
-            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $persona['nome'],                         
+            $persona['cognome'],                       
+            $persona['data_nascita'],                 
+            $persona['luogo_nascita'],                 
+            $persona['citta_residenza'],               
+            $persona['via_residenza'],                 
+            $persona['cap_residenza'],                 
+            $persona['telefono'],                      
+            (int)$persona['id_tutore1'],               
+            $id_tutore2,                          
         ];
 
-        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => "Prodotto aggiornato (Nome e Prezzo).",
+            'message' => 'Persona creata con successo.',
             'affected_rows' => $affected_rows
         ]);
 
     } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
         error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
+        json_response(['error' => 'Errore durante la creazione della persona.'], 500);
     }
+    
 }
 
-/**
- * Aggiorna nome e prezzo di un prodotto.
- * Risponde alla rotta PUT /api/products/:id
- */
-function update_product($db, $id) {
-    // 1. Lettura del payload JSON
-    $data = json_decode(file_get_contents('php://input'), true);
 
-    // 2. Validazione: servono obbligatoriamente name e price
-    if (!$data || !isset($data['name']) || !isset($data['price'])) {
-        json_response(['error' => 'Dati mancanti (name, price)'], 400);
+function update_persona($db, $id) 
+{
+    $persona = json_decode(file_get_contents('php://input'), true);
+
+    // Validazione JSON
+    if (!$persona || !isset($persona['nome']) || !isset($persona['cognome']) || !isset($persona['data_nascita']) || !isset($persona['luogo_nascita']) || !isset($persona['citta_residenza']) || !isset($persona['via_residenza']) || !isset($persona['cap_residenza']) || !isset($persona['telefono']) || !isset($persona['id_tutore1'])) 
+    {
+        json_response(['error' => 'Dati mancanti'], 400);
         return;
     }
 
-    try {
-        // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
-        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
+    try 
+    {
+        if (isset($persona['id_tutore2'])) 
+        {
+            $id_tutore2 = (int)$persona['id_tutore2'];
+        } 
+        else 
+        {
+            $id_tutore2 = null;
+        }
 
-        // 4. Preparazione Parametri
-        // È fondamentale rispettare l'ordine dei punti di domanda!
+        // Query SQL
+        $sql = "UPDATE Persona SET 
+            nome = ?, 
+            cognome = ?, 
+            data_nascita = ?, 
+            luogo_nascita = ?, 
+            citta_residenza = ?, 
+            via_residenza = ?, 
+            cap_residenza = ?, 
+            telefono = ?, 
+            id_tutore1 = ?, 
+            id_tutore2 = ? 
+            WHERE id_persona = ?";
+
+        // Parametri
         $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
-            $data['description'],   // 3° ? -> description (stringa)
-            (int)$id                // 4° ? -> product_id (cast a int per bindare come 'i')
+            $persona['nome'],
+            $persona['cognome'],
+            $persona['data_nascita'],
+            $persona['luogo_nascita'],
+            $persona['citta_residenza'],
+            $persona['via_residenza'],
+            $persona['cap_residenza'],
+            $persona['telefono'],
+            (int)$persona['id_tutore1'],
+            $id_tutore2,
+            (int)$id
         ];
 
-        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => "Prodotto aggiornato (Nome e Prezzo).",
+            'message' => "Persona aggiornata",
             'affected_rows' => $affected_rows
         ]);
 
-    } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
     }
+    catch (Exception $e) 
+    {
+        json_response(['error' => $e->getMessage()], 500); //visualizzare il msg di errore
+    }
+}
+
+function delete_persona($db, $id)
+{
+    //niente json deve solo eliminare tramite l'id
+    try 
+    {
+        // Query SQL
+        $sql = "DELETE FROM Persona WHERE id_persona = ?";
+
+        // Parametri
+        $params = [
+            (int)$id
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => "Persona eliminata",
+            'affected_rows' => $affected_rows
+        ]);
+
+    } 
+    catch (Exception $e) 
+    {
+        json_response(['error' => $e->getMessage()], 500); //problema di eliminazione per via della fk chiedere al prof!!
+    }
+
 }
 
 function authenticate_user($db) {
