@@ -45,12 +45,12 @@ function generic_table_handler($db) {
     }
 }
 
-function get_branche($db)
+function read_branche($db) 
 {
-     try {
+    try {
         // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
-            SELECT *
+            SELECT 	*
             FROM Branca
         EOD;
 
@@ -63,7 +63,7 @@ function get_branche($db)
     }
 }
 
-function get_persone($db)
+function read_persone($db)
 {
          try {
         // EOD necessario per stringa literal multiriga
@@ -80,26 +80,15 @@ function get_persone($db)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-/**
- * Ottiene la lista degli ordini con relativi nomi utente e nome prodotto.
- */
-function get_orders_join($db) {
-    // Estrae l'URI della richiesta, es. /api/users
-    $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
+//GET
+function read_servizi($db)
+{
     try {
         // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
-            SELECT 	order_id, 
-                users.name AS user_name,
-                products.name AS product_name,
-                orders.quantity AS quantity,
-                orders.created_at AS created_at, 
-                orders.quantity AS quantity,
-                orders.created_at AS created_at
-            FROM orders
-        	    NATURAL JOIN products
-                JOIN users ON orders.user_id=users.user_id;
+            SELECT *
+            FROM Servizio
         EOD;
 
         $results = $db->query($sql);
@@ -111,26 +100,29 @@ function get_orders_join($db) {
     }
 }
 
-function create_product($db) {
-    // 1. Lettura del payload JSON
+//POST 
+function create_servizio($db) 
+{
     $data = json_decode(file_get_contents('php://input'), true);
-
     var_dump($data);
     
-    // 2. Validazione: servono obbligatoriamente name e price
-    if (!$data || !isset($data['name']) || !isset($data['price'])) {
-        json_response(['error' => 'Dati mancanti (name, price)'], 400);
-        return;
-    }
-
-    try {
-        $sql = "INSERT INTO products VALUES (NULL, ?, ?, ?, NULL)";
+    // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
+    if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
+        {
+            json_response(['error' => 'Dati mancanti (anno_associativo, id_persona)'], 400);
+            return;
+        }
+    try 
+    {
+        $sql = "INSERT INTO Servizio VALUES (?, ?, ?, ?, ?)";
 
         // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],   // 3° ? -> description (stringa)
-            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $data['descrizione'],          
+            (int)$data['anno_associativo'],
+            (int)$data['id_persona'],
+            (int)$data['id_tipologia'],
+            (int)$data['id_unità'],
         ];
 
         // 5. Esecuzione tramite Helper
@@ -138,7 +130,7 @@ function create_product($db) {
 
         json_response([
             'success' => true,
-            'message' => "Prodotto aggiornato (Nome e Prezzo).",
+            'message' => "Servizio aggiornato",
             'affected_rows' => $affected_rows
         ]);
 
@@ -146,54 +138,58 @@ function create_product($db) {
         // Log dell'errore server (opzionale)
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
+        mostra_messaggio_di_prova($db);
     }
 }
 
-/**
- * Aggiorna nome e prezzo di un prodotto.
- * Risponde alla rotta PUT /api/products/:id
- */
-function update_product($db, $id) {
-    // 1. Lettura del payload JSON
+//PUT
+function update_servizio($db)
+{
+
+}
+
+//DELETE
+function delete_servizo($db)
+{
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // 2. Validazione: servono obbligatoriamente name e price
-    if (!$data || !isset($data['name']) || !isset($data['price'])) {
-        json_response(['error' => 'Dati mancanti (name, price)'], 400);
+    // Validazione
+    if (
+        !$data ||
+        !isset($data['anno_associativo']) ||
+        !isset($data['id_persona'])
+    ) {
+        json_response(['error' => 'Chiave primaria mancante'], 400);
         return;
     }
 
     try {
-        // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
-        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
+        $sql = "
+            DELETE FROM Servizio
+            WHERE anno_associativo = ?
+              AND id_persona = ?
+        ";
 
-        // 4. Preparazione Parametri
-        // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
-            $data['description'],   // 3° ? -> description (stringa)
-            (int)$id                // 4° ? -> product_id (cast a int per bindare come 'i')
+            (int)$data['anno_associativo'],
+            (int)$data['id_persona']
         ];
 
-        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => "Prodotto aggiornato (Nome e Prezzo).",
+            'message' => 'Servizio eliminato',
             'affected_rows' => $affected_rows
         ]);
 
     } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
+        error_log($e->getMessage());
+        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
     }
 }
 
-function create_person($db) 
+function create_persona($db) 
 {
     //prende il body della richiesta php e trasforma il json in un array associativo
     $persona = json_decode(file_get_contents('php://input'), true);
@@ -252,7 +248,7 @@ function create_person($db)
 }
 
 
-function update_person($db, $id) 
+function update_persona($db, $id) 
 {
     $persona = json_decode(file_get_contents('php://input'), true);
 
@@ -318,7 +314,7 @@ function update_person($db, $id)
     }
 }
 
-function delete_person($db, $id)
+function delete_persona($db, $id)
 {
     //niente json deve solo eliminare tramite l'id
     try 
@@ -356,4 +352,5 @@ function authenticate_user($db) {
  */
 function mostra_messaggio_di_prova($db) {
     json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
+}
 }
