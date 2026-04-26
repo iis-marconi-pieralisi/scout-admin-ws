@@ -52,8 +52,35 @@ scout-admin-ws
 - Arresta: `docker compose -f .devcontainer/docker-compose.yml down`
 - Accesso container: `docker compose -f .devcontainer/docker-compose.yml exec php-app bash`
 
----
+PER COMMITTARE IN CASO DI PRIMA COMMIT
+git add *
+git commit -m “ “
+git push
 
+
+PER COMMITTARE IN CASO DI ALTRA COMMIT
+git stash
+git pull
+git stash pop
+git add *
+git commit -m “ “
+git push
+
+
+PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
+git pull
+
+
+---
+```
+  ROTTA      METODO HTTP    NOME HANDLER(php)
+/api/branche --> Post    --> create-branche  
+             --> Get     --> read-branche
+             --> Delete  --> delete-branche
+             --> Pot     --> update-branche 
+Nome Handler<verbo_crud>_<nome_tabella>.php
+```
+---
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
