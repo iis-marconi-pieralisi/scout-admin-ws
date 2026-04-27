@@ -191,7 +191,6 @@ function create_attivita($db){
         $sql = "INSERT INTO Attivita VALUES (id_attivita, nome, descrizione, luogo _partenza, luogo_arrivo, data, id_persona)";
         $results = $db->query($sql);
         json_response($results);
-        mostra_messaggio_di_prova($db);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
@@ -202,7 +201,6 @@ function delete_attivita($db){
         $sql = "DELETE FROM Attivita WHERE id_attivita = ?";
         $results = $db->query($sql);
         json_response($results);
-        mostra_messaggio_di_prova($db);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
@@ -213,7 +211,6 @@ function read_attivita($db){
         $sql = "SELECT * FROM Attivita ORDER BY data DESC";
         $results = $db->query($sql);
         json_response($results);
-        mostra_messaggio_di_prova($db);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
@@ -224,7 +221,6 @@ function update_attivita($db){
         $sql = "UPDATE Attivita SET id_attivita = ? , nome = ? , descrizione = ? , luogo _partenza = ? , luogo_arrivo = ? , data = ? , id_persona = ? WHERE id_attivita = ?";
         $results = $db->query($sql);
         json_response($results);
-        mostra_messaggio_di_prova($db);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
