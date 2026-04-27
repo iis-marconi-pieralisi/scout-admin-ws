@@ -5,9 +5,14 @@
 $routes = [
     // Rotte che rispondono al metodo GET
     'GET' => [
-        // Rotta custom che usa un suo handler specifico
         '/api/prova' => 'mostra_messaggio_di_prova',
-        '/api/account' => 'read_account'        
+        // Rotte che usano il gestore generico per tabelle
+        '/api/users' => 'generic_table_handler',
+        '/api/products' => 'generic_table_handler',
+        '/api/orders' => 'get_orders_join',
+        '/api/partecipa' => 'get_all_partecipa',     // lista tutto
+        '/api/branche' => 'get_branche',
+        '/api/account' => 'read_account',        
         '/api/servizi'=>'read_servizi',
         '/api/branche' => 'read_branche',
         '/api/persona' => 'read_persone',
@@ -16,19 +21,21 @@ $routes = [
     // Rotte che rispondono al metodo POST
     'POST' => [
         '/api/products' => 'create_product',
+        '/api/partecipa' =>  'create_partecipa',
         '/api/auth' => 'authenticate_user',
         '/api/account' => 'create_account'
     ],
     
     'PUT' => [
         '/api/products/:id' => 'update_product',
+        '/api/partecipa/:id_attivita/:id_unita' => 'update_partecipa',
         '/api/account/:id' => 'update_account'
     ],
     
-    // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
     'DELETE' => [
+        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
         '/api/account' => 'delete_account',
         '/api/persona/:id' => 'delete_persona'
-    ],
+    ]
 
 ];
