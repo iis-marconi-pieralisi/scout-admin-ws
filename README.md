@@ -187,6 +187,20 @@ git reset --soft HEAD~1
 > il numero di volte necessario.
 ---
 
+PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
+git pull
+
+
+---
+```
+  ROTTA      METODO HTTP    NOME HANDLER(php)
+/api/branche --> Post    --> create-branche  
+             --> Get     --> read-branche
+             --> Delete  --> delete-branche
+             --> Pot     --> update-branche 
+Nome Handler<verbo_crud>_<nome_tabella>.php
+```
+---
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)

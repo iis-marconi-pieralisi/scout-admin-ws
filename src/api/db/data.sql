@@ -47,3 +47,11 @@ INSERT INTO Iter(nome, id_branca) VALUES
 
 -- 7. RS:
 ('responsabile', 7);
+
+INSERT INTO Servizio (descrizione, anno_associativo, id_persona, id_tipologia, id_unita) VALUES
+('Gestione attività educative', 2023, 1, 2, 1),
+('Supporto logistico eventi', 2023, 2, 1, 2),
+('Coordinamento volontari', 2024, 3, 3, 1),
+('Organizzazione campi estivi', 2024, 4, 2, 3),
+('Attività di segreteria', 2025, 5, 1, 2);
+
