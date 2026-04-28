@@ -52,8 +52,155 @@ scout-admin-ws
 - Arresta: `docker compose -f .devcontainer/docker-compose.yml down`
 - Accesso container: `docker compose -f .devcontainer/docker-compose.yml exec php-app bash`
 
+# 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
+
+Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
+del branch principale e si hanno delle modifiche locali da caricare.
+
 ---
 
+# 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
+
+Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
+del branch principale e si hanno delle modifiche locali da caricare.
+
+---
+
+## 📋 Passaggi
+
+### 1. 🔍 Controlla lo stato attuale
+```bash
+git status
+```
+> Mostra lo stato del tuo repository locale rispetto al branch remoto:
+> file modificati, aggiunte in staging, commit non ancora pushate, ecc.
+> ⚠️ **Attenzione:** `git status` **non** mostra le nuove commit fatte da altri,
+> per vederle è necessario eseguire prima `git fetch`!
+
+---
+
+### 2. 🌐 Controlla le nuove commit remote
+```bash
+git fetch
+```
+> Scarica le informazioni sulle ultime modifiche dal repository remoto,
+> **senza applicarle** al tuo codice locale.
+> Utile per vedere se qualche compagno ha pushato nuove commit sul branch
+> prima di procedere con il proprio lavoro.
+
+---
+
+### 3. 📦 Metti da parte le tue modifiche
+```bash
+git stash
+```
+> Salva **temporaneamente** le tue modifiche locali in una zona di "parcheggio"
+> (lo stash), così puoi aggiornare il branch senza conflitti immediati.
+
+---
+
+### 4. ⬇️ Scarica l'ultima versione del branch
+```bash
+git pull
+```
+> Scarica e integra le modifiche più recenti dal repository remoto (GitHub)
+> nel tuo Codespace locale. A differenza di `git fetch`, applica subito
+> le modifiche al tuo codice.
+
+---
+
+### 5. 🔃 Ripristina le tue modifiche
+```bash
+git stash pop
+```
+> Recupera le modifiche messe da parte con `git stash` e le applica
+> sopra alla versione aggiornata del branch.
+
+---
+
+### 6. ⚠️ Risolvi eventuali conflitti (es. Merge Conflict)
+> Se Git non riesce ad unire automaticamente le modifiche, segnalerà un
+> **conflitto**. Su **VS Code / GitHub Codespaces** apparirà una notifica
+> sui file in conflitto: aprili e clicca su **"Resolve in Merge Editor"** 🖊️
+> Il Merge Editor mostrerà 3 pannelli:
+> - **Incoming** → modifiche del branch remoto (del compagno) 
+> - **Current** → tue modifiche locali
+> - **Result** → risultato finale che puoi editare liberamente
+>
+> Accetta le modifiche che vuoi mantenere, poi salva e prosegui.
+>
+> <details>
+> <summary>💡 Alternativa da terminale</summary>
+>
+> I conflitti si presentano così nei file:
+> ```
+> <<<<<<< HEAD
+> // tuo codice
+> =======
+> // codice del branch remoto
+> >>>>>>> nome-branch
+> ```
+> Modifica manualmente il file scegliendo quale codice tenere,
+> poi salva e prosegui.
+> </details>
+
+---
+
+### 7. ➕ Aggiungi i file modificati allo staging
+```bash
+git add *
+```
+> Aggiunge **tutti** i file modificati all'area di staging, ovvero li prepara
+> per la commit successiva.
+> ⚠️ **Attenzione:** `git add` è necessario solo se hai **nuovi file** non ancora
+> tracciati da Git, o dopo aver risolto un conflitto. Se hai modificato solo
+> file già tracciati e usato `git stash pop`, Git li gestisce automaticamente.
+
+---
+
+### 8. 💾 Crea la commit con le tue modifiche
+```bash
+git commit -m "nome modifica"
+```
+> Registra ufficialmente le tue modifiche nella cronologia del repository,
+> con un messaggio descrittivo che spiega cosa hai fatto.
+
+---
+
+### 9. 🚀 Carica le modifiche su GitHub
+```bash
+git push
+```
+> Carica la tua commit sul repository remoto, rendendola disponibile
+> a tutti i componenti del gruppo!
+
+---
+
+## 🗑️ Cancellare l'ultimo commit mantenendo le modifiche
+
+```bash
+git reset --soft HEAD~1
+```
+> Rimuove l'ultimo commit dalla cronologia, ma mantiene tutte le modifiche
+> nei tuoi file locali, pronti per essere committati di nuovo.
+> ⚠️ **Attenzione:** se si vuole rimuovere più commit, ripete il comando
+> il numero di volte necessario.
+---
+
+PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
+git pull
+
+
+---
+```
+  ROTTA      METODO HTTP    NOME HANDLER(php)
+/api/branche --> Post    --> create-branche  
+             --> Get     --> read-branche
+             --> Delete  --> delete-branche
+             --> Pot     --> update-branche 
+Nome Handler<verbo_crud>_<nome_tabella>.php
+```
+---
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)

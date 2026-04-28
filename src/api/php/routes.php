@@ -13,26 +13,43 @@ require_once 'handlers.php';
 // Tabella delle rotte
 // ---------------------------------------------------------------------------
 $routes = [
+    'GET' => [
+        '/api/prova' => 'mostra_messaggio_di_prova',
+        '/api/iter' => 'read_iter',
+        '/api/users' => 'generic_table_handler',
+        '/api/products' => 'generic_table_handler',
+        '/api/orders' => 'get_orders_join',
+        '/api/partecipa' => 'get_all_partecipa',
+        '/api/branche' => 'read_branche',
+        '/api/account' => 'read_account',        
+        '/api/servizi'=>'read_servizi',
+        '/api/branche' => 'read_branche',
+        '/api/persona' => 'read_persone'      
+    'POST' => [
+        '/api/products' => 'create_product',
+        '/api/partecipa' =>  'create_partecipa',
+        '/api/auth' => 'authenticate_user',
+        '/api/account' => 'create_account',
+        '/api/iter' => 'create_iter',
+        '/api/branche' => 'create_branche'
+    ],
+    
+    'PUT' => [
+        '/api/products/:id' => 'update_product',
+        '/api/partecipa/:id_attivita/:id_unita' => 'update_partecipa',
+        '/api/account/:id' => 'update_account',
+        '/api/iter/:id' => 'update_iter',
+        '/api/branche' => 'update_branche'
+    ],
 
-    // ── Branche ────────────────────────────────────────────────────────────
-    ['GET',    '/api/branche',          'read_branche'],
-    ['POST',   '/api/branche',          'create_branche'],
-    ['PUT',    '/api/branche',          'update_branche'],
-    ['DELETE', '/api/branche',          'delete_branche'],
+    'DELETE' => [
+        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
+        '/api/account' => 'delete_account',
+        '/api/persona/:id' => 'delete_persona',
+        'api/iter' => 'delete_iter',
+        '/api/branche' => 'delete_branche'
+    ]
 
-    // ── Ordini ─────────────────────────────────────────────────────────────
-    ['GET',    '/api/orders',           'get_orders_join'],
-
-    // ── Prodotti ───────────────────────────────────────────────────────────
-    ['GET',    '/api/products',         'generic_table_handler'],
-    ['POST',   '/api/products',         'create_product'],
-    ['PUT',    '/api/products/:id',     'update_product'],
-
-    // ── Utenti ─────────────────────────────────────────────────────────────
-    ['GET',    '/api/users',            'generic_table_handler'],
-
-    // ── Test ───────────────────────────────────────────────────────────────
-    ['GET',    '/api/test',             'mostra_messaggio_di_prova'],
 ];
 
 // ---------------------------------------------------------------------------
