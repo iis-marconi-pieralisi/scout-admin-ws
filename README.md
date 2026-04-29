@@ -59,13 +59,6 @@ del branch principale e si hanno delle modifiche locali da caricare.
 
 ---
 
-# 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
-
-Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
-del branch principale e si hanno delle modifiche locali da caricare.
-
----
-
 ## 📋 Passaggi
 
 ### 1. 🔍 Controlla lo stato attuale
@@ -201,6 +194,65 @@ git pull
 Nome Handler<verbo_crud>_<nome_tabella>.php
 ```
 ---
+
+## 🔀 Pull Request
+
+> Una Pull Request è come consegnare un lavoro al professore per la revisione:
+> carichi le tue modifiche su un branch separato e chiedi al responsabile
+> del progetto di approvarle prima che vengano unite al `main`.
+> Il nome del branch deve descrivere **cosa stai implementando**,
+> non il file che stai modificando. Es: `feature/crud-partecipa`,
+> `feature/rotta-branche`, `feature/login-utente`.
+
+### ⌨️ Comandi
+
+#### 1. 🌿 Crea e spostati sul nuovo branch
+```bash
+git checkout -b feature/cosa-stai-implementando
+```
+> Es: `git checkout -b feature/crud-partecipa`
+
+---
+
+#### 2. 💾 Aggiungi e committa le modifiche
+```bash
+git add *
+git commit -m "descrizione modifica"
+```
+
+---
+
+#### 3. 🚀 Carica il branch su GitHub
+```bash
+git push origin feature/cosa-stai-implementando
+```
+> Es: `git push origin feature/crud-partecipa`
+
+---
+
+#### 4. 🖥️ Apri la Pull Request su GitHub
+> Vai su GitHub, clicca il banner **"Compare & pull request"**,
+> aggiungi una descrizione e conferma con **"Create pull request"**.
+> A questo punto il professore (o il responsabile) potrà revisionare
+> e approvare le modifiche cliccando **"Merge pull request"**.
+
+---
+
+#### 5. ✅ Dopo l'approvazione, torna sul main e aggiornati
+```bash
+git checkout main
+git pull
+```
+---
+
+#### 6. 🗑️ Elimina il branch locale
+```bash
+git branch -d feature/cosa-stai-implementando
+```
+> ⚠️ `-d` elimina solo se il branch è già stato mergiato, quindi è sicuro!
+
+---
+
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
