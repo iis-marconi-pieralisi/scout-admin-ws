@@ -282,9 +282,43 @@ function create_iter($db)
 }
 
 //PUT
-function update_servizio($db)
-{
+function update_product($db) {
+    // 1. Lettura del payload JSON
+    $data = json_decode(file_get_contents('php://input'), true);
 
+    // 2. Validazione: servono obbligatoriamente name e price
+    if (!$data || !isset($data['name']) || !isset($data['price'])) {
+        json_response(['error' => 'Dati mancanti (name, price)'], 400);
+        return;
+    }
+
+    try {
+        // 3. Query SQL
+        // Usiamo i ? perché il tuo helper usa mysqli::prepare
+        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
+
+        // 4. Preparazione Parametri
+        // È fondamentale rispettare l'ordine dei punti di domanda!
+        $params = [
+            $data['name'],          // 1° ? -> name (stringa)
+            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $data['description'],   // 3° ? -> description (stringa)                      
+        ];
+
+        // 5. Esecuzione tramite Helper
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => "Prodotto aggiornato (Nome e Prezzo).",
+            'affected_rows' => $affected_rows
+        ]);
+
+    } catch (Exception $e) {
+        // Log dell'errore server (opzionale)
+        // error_log($e->getMessage());
+        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
+    }
 }
 
 function delete_servizo($db)
