@@ -1,0 +1,17 @@
+PER COMMITTARE IN CASO DI PRIMA COMMIT
+git add *
+git commit -m “ “
+git push
+
+
+PER COMMITTARE IN CASO DI ALTRA COMMIT
+git stash
+git pull
+git stash pop
+git add *
+git commit -m “ “
+git push
+
+
+PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
+git pull
