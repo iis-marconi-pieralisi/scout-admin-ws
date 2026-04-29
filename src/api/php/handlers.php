@@ -149,65 +149,6 @@ function generic_table_handler($db) {
 // BRANCHE
 // ===========================================================================
 
-/**
- * Handler: read_branche
- * Rotta:   GET /api/branche
- */
-function read_branche($db)
-{
-    try {
-        $sql = <<<EOD
-            SELECT  *
-            FROM    Branca
-        EOD;
-
-        $results = $db->query($sql);
-        json_response($results);
-
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-/**
- * Handler: create_branche
- * Rotta:   POST /api/branche
- * Body JSON atteso:
- *   { "nome": "Esploratori", "descrizione": "Ragazzi 12-16 anni" }
- */
-function create_branche($db)
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['nome'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: nome.'], 400);
-        return;
-    }
-
-    try {
-        $sql = <<<EOD
-            INSERT INTO Branca (nome, descrizione)
-            VALUES (?, ?)
-        EOD;
-
-        $params = [
-            $data['nome'],
-            $data['descrizione'] ?? null,
-        ];
-
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success'       => true,
-            'message'       => 'Branca creata con successo.',
-            'affected_rows' => $affected_rows,
-        ]);
-
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
 function get_iter($db)
 {
     try {
@@ -220,24 +161,6 @@ function get_iter($db)
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-function read_branche($db) 
-{
-    try {
-        $sql = <<<EOD
-            SELECT 	*
-            FROM Branca
-        EOD;
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) 
-     
-    {
         // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
         // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
@@ -355,19 +278,6 @@ function create_iter($db)
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
-    }
-}
-
-function update_iter($db, $id)
-{
-    // 1. Lettura del payload JSON
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    // 2. Validazione: servono obbligatoriamente name e branca
-    if (!$data || !isset($data['name']) || !isset($data['branca'])) {
-        json_response(['error' => 'Dati mancanti (name, branca)'], 400);
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
-        mostra_messaggio_di_prova($db);
     }
 }
 
