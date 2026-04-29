@@ -23,7 +23,6 @@ $routes = [
         '/api/branche' => 'read_branche',
         '/api/account' => 'read_account',        
         '/api/servizi'=>'read_servizi',
-        '/api/branche' => 'read_branche',
         '/api/persona' => 'read_persone'  
     ],
     'POST' => [
