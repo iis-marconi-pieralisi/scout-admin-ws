@@ -24,7 +24,8 @@ $routes = [
         '/api/account' => 'read_account',        
         '/api/servizi'=>'read_servizi',
         '/api/branche' => 'read_branche',
-        '/api/persona' => 'read_persone'      
+        '/api/persona' => 'read_persone'  
+    ],
     'POST' => [
         '/api/products' => 'create_product',
         '/api/partecipa' =>  'create_partecipa',
