@@ -489,7 +489,7 @@ function authenticate_user($db)
                 FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
                 JOIN Servizio S ON P.id_persona = S.id_persona
                 JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
-                WHERE A.email = ? AND A.password = ? AND S.anno_associato = YEAR(CURDATE())";
+                WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
 
         $params = [ $data['email'], $data['password']];
 
