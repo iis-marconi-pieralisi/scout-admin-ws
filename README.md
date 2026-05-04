@@ -185,16 +185,52 @@ git pull
 
 
 ---
-```
-  ROTTA      METODO HTTP    NOME HANDLER(php)
-/api/branche --> Post    --> create-branche  
-             --> Get     --> read-branche
-             --> Delete  --> delete-branche
-             --> Pot     --> update-branche 
-Nome Handler<verbo_crud>_<nome_tabella>.php
-```
----
+## 🔀 Nomenclatura rotte e handlers
 
+### Standard rotte API
+
+Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD.
+
+| Rotta | Metodo HTTP | Operazione | File handler |
+|---|---|---|---|
+| `/api/branche` | `GET` | Lettura | `read_branche.php` |
+| `/api/branche` | `POST` | Creazione | `create_branche.php` |
+| `/api/branche` | `PUT` | Aggiornamento | `update_branche.php` |
+| `/api/branche` | `DELETE` | Eliminazione | `delete_branche.php` |
+
+### Regola di nomenclatura
+
+```
+<operazione_crud>_<nome_tabella>.php
+```
+
+I verbi CRUD utilizzati sono: `create`, `read`, `update`, `delete`.
+
+**Esempi:**
+- `create_branche.php`
+- `read_partecipa.php`
+- `update_utenti.php`
+- `delete_eventi.php`
+
+---
+## 📁 Organizzazione degli handlers
+
+Ogni handler è un file PHP dedicato collocato in `src/api/php/handlers/`.
+
+```
+src/
+└── api/
+    └── php/
+        └── handlers/
+            ├── branca.php
+            ├── account.php
+            ├── attivita.php
+            ├── iter.php
+            ├── pagamento.php
+            ├── servizio.php
+            ├── partecipa.php
+            └── persona.php
+```
 ## 🔀 Pull Request
 
 > Una Pull Request è come consegnare un lavoro al professore per la revisione:
