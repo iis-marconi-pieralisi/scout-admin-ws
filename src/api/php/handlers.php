@@ -15,11 +15,11 @@
  * Imposta l'header per la risposta JSON.
  */
 function json_response($data, $statusCode = 200) {
-    http_response_code($statusCode);
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
-    echo json_encode($data);
+http_response_code($statusCode);
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+echo json_encode($data);
 }
 
 function read_account($db)
@@ -193,7 +193,7 @@ function read_branche($db)
 
 function read_persone($db)
 {
-         try {
+     try {
         // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
             SELECT *
@@ -233,7 +233,7 @@ function create_servizio($db)
 {
     $data = json_decode(file_get_contents('php://input'), true);
     var_dump($data);
-    
+
     // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
     if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
         {
@@ -297,7 +297,7 @@ function delete_servizo($db)
         $sql = "
             DELETE FROM Servizio
             WHERE anno_associativo = ?
-              AND id_persona = ?
+                AND id_persona = ?
         ";
 
         $params = [
@@ -374,7 +374,7 @@ function create_persona($db)
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante la creazione della persona.'], 500);
     }
-    
+
 }
 
 
@@ -470,7 +470,51 @@ function delete_persona($db, $id)
     {
         json_response(['error' => $e->getMessage()], 500); //problema di eliminazione per via della fk chiedere al prof!!
     }
+}
 
+function authenticate_user1($db) 
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!$data || !isset($data['email']) || !isset($data['password'])) 
+    {
+        json_response(['error' => 'Dati mancanti'], 400);
+        return;
+    }
+
+    try
+    {
+        $sql = "SELECT T.nome 
+                FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
+                JOIN Servizio S ON P.id_persona = S.id_persona
+                JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
+                WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
+
+        $params = [$data['email'], $data['password']];
+
+        $result = $db->query($sql, $params);
+
+        if (!$result || count($result) == 0)
+        {
+            json_response([
+                'success' => false,
+                'message' => 'Credenziali non valide'
+            ], 401);
+        }
+        else
+        {
+            json_response([
+                'success' => true,
+                'message' => 'Ecco la tipologia',
+                'tipologia' => $result[0]['nome']
+            ]);
+        }
+        
+    }
+    catch (Exception $e) 
+    {
+        json_response(['error' => $e->getMessage()], 500);
+    }
 }
 
 function authenticate_user($db) 
@@ -491,7 +535,7 @@ function authenticate_user($db)
                 JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
                 WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
 
-        $params = [ $data['email'], $data['password']];
+        $params = [$data['email'], $data['password']];
 
         $result = $db->query($sql, $params);
 
