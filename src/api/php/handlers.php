@@ -167,15 +167,12 @@ function get_iter($db)
     }
 }
 
-<<<<<<< 404BrainNotFound
+
 function mostra_messaggio_di_prova($db) {
     json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
 }
 
-function create_attivita($db){
-    try {
-        $sql = "INSERT INTO Attivita VALUES (nome, descrizione, luogo _partenza, luogo_arrivo, data, id_persona)";
-=======
+
 function read_persone($db)
 {
          try {
@@ -202,8 +199,6 @@ function read_servizi($db)
             SELECT *
             FROM Servizio
         EOD;
-
->>>>>>> main
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
@@ -211,15 +206,7 @@ function read_servizi($db)
     }
 }
 
-<<<<<<< 404BrainNotFound
-function delete_attivita($db){
-    try {
-        $sql = "DELETE FROM Attivita WHERE id_attivita = ?";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
+
 //POST 
 function create_servizio($db) 
 {
@@ -273,50 +260,9 @@ function create_iter($db)
     if (!$data || !isset($data['name']) || !isset($data['branca'])) {
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
->>>>>>> main
     }
 }
 
-function read_attivita($db){
-    try {
-<<<<<<< 404BrainNotFound
-        $sql = "SELECT * FROM Attivita ORDER BY data DESC";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-function update_attivita($db){
-    try {
-        $sql = "UPDATE Attivita SET id_attivita = ? , nome = ? , descrizione = ? , luogo _partenza = ? , luogo_arrivo = ? , data = ? , id_persona = ? WHERE id_attivita = ?";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
-        $sql = "INSERT INTO Iter VALUES (NULL, ?, ?, ?)";
-
-        $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],  // 2° ? -> description (stringa),
-            (int)$data['branca']         //3° ? -> branca(int)
-        ];
-
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Iter aggiornato (Nome e Branca).",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
-    }
-}
 
 //PUT
 function update_servizio($db)
@@ -373,23 +319,10 @@ function update_iter($db, $id)
     if (!$data || !isset($data['name']) || !isset($data['branca'])) {
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
->>>>>>> main
     }
-}
 
-function create_pagamento($db){
     try {
-<<<<<<< 404BrainNotFound
-        $sql = "INSERT INTO Pagamento VALUES (importo, metodo, data)";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-=======
         // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
         $sql = "UPDATE Iter SET name = ?, branca = ?, description = ? WHERE id_iter = ?";
 
         $params = [
@@ -406,22 +339,13 @@ function create_pagamento($db){
             'message' => "Iter aggiornato (Nome e Branca).",
             'affected_rows' => $affected_rows
         ]);
->>>>>>> main
-
-function delete_pagamento($db){
-    try {
-        $sql = "DELETE FROM Pagamento WHERE id_pagamento = ?";
-        $results = $db->query($sql);
-        json_response($results);
     } catch (Exception $e) {
-<<<<<<< 404BrainNotFound
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
+        error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento dell\'iter.'], 500);
     }
 }
+
+
 
 function create_persona($db) 
 {
@@ -477,28 +401,10 @@ function create_persona($db)
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante la creazione della persona.'], 500);
->>>>>>> main
     }
     
 }
 
-<<<<<<< 404BrainNotFound
-function read_pagamento($db){
-    try {
-        $sql = "SELECT * FROM Pagamento ORDER BY data DESC";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-function update_pagamento($db){
-    try {
-        $sql = "UPDATE Pagamento SET id_pagamento = ? , importo = ? , metodo = ?, data = ? WHERE id_pagamento = ?";
-        $results = $db->query($sql);
-        json_response($results);
-=======
 
 function update_persona($db, $id) 
 {
@@ -642,14 +548,6 @@ function delete_iter($db)
         json_response(['error' => 'Errore durante l\'eliminazione dell\'iter. '], 500);
     }
 }
-/**
- * Funzione di esempio per una rotta custom.
- */
-function mostra_messaggio_di_prova($db) {
-    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
-}
-
-
 //sezione per metodi partecipa
 function get_all_partecipa($db) {
     try {
@@ -880,8 +778,6 @@ function delete_branche($db)
             'message'       => 'Branca eliminata.',
             'affected_rows' => $affected_rows,
         ]);
-
->>>>>>> main
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
