@@ -310,18 +310,6 @@ function create_iter($db)
     }
 }
 
-function update_iter($db, $id)
-{
-    // 1. Lettura del payload JSON
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    // 2. Validazione: servono obbligatoriamente name e branca
-    if (!$data || !isset($data['name']) || !isset($data['branca'])) {
-        json_response(['error' => 'Dati mancanti (name, branca)'], 400);
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
-        mostra_messaggio_di_prova($db);
-    }
-}
 
 //PUT
 function update_servizio($db)
