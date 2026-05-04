@@ -99,3 +99,46 @@ function create_servizio($db)
         mostra_messaggio_di_prova($db);
     }
 }
+function update_servizio($db)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // controlla i campi richiesti
+    if (
+        !$data ||
+        !isset($data['descrizione']) ||
+        !isset($data['anno_associativo']) ||
+        !isset($data['id_persona']) ||
+        !isset($data['id_tipologia']) ||
+        !isset($data['id_unità'])
+    ) {
+        json_response(['error' => 'Dati mancanti'], 400);
+        return;
+    }
+
+    try {
+        // aggiorna la descrizione del servizio identificato dalla chiave composta
+        $sql = "
+            UPDATE servizi SET descrizione = ? WHERE anno_associativo = ? AND id_persona = ? AND id_tipologia = ? AND id_unità = ?
+        ";
+
+        $params = [
+            $data['descrizione'],
+            (int)$data['anno_associativo'],
+            (int)$data['id_persona'],
+            (int)$data['id_tipologia'],
+            (int)$data['id_unità']
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => "Servizio aggiornato correttamente.",
+            'affected_rows' => $affected_rows
+        ]);
+
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore durante l\'aggiornamento del servizio.'], 500);
+    }
+}
