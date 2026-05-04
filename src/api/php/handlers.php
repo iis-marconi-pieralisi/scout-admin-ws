@@ -18,6 +18,8 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
+
+
 function read_account($db)
 {
     try {

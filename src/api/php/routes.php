@@ -25,7 +25,8 @@ $routes = [
         '/api/servizi'=>'read_servizi',
         '/api/persona' => 'read_persone',
         '/api/attivita' => 'read_attivita',
-        '/api/pagamento' => 'read_pagamento'
+        '/api/pagamento' => 'read_pagamento',
+        '/api/iscrizione' => 'read_iscrizione'
 
     ],
     'POST' => [
@@ -33,6 +34,7 @@ $routes = [
         '/api/partecipa' =>  'create_partecipa',
         '/api/auth' => 'authenticate_user',
         '/api/account' => 'create_account',
+        '/api/iscrizione' => 'create_iscrizione',
         '/api/iter' => 'create_iter',
         '/api/branche' => 'create_branche',
         '/api/attivita' => 'create_attivita',
@@ -46,7 +48,8 @@ $routes = [
         '/api/iter/:id' => 'update_iter',
         '/api/branche' => 'update_branche',
         '/api/attivita/:id_attivita' => 'update_attivita',
-        '/api/pagamento' => 'update_pagamento'
+        '/api/pagamento' => 'update_pagamento',
+        '/api/iscrizione/:id' => 'update_iscrizione'
     ],
 
     'DELETE' => [
@@ -56,7 +59,8 @@ $routes = [
         'api/iter' => 'delete_iter',
         '/api/branche' => 'delete_branche',
         'api/attivita' => 'delete_attivita',
-        '/api/pagamento' => 'delete_pagamento'
+        '/api/pagamento' => 'delete_pagamento',
+        '/api/iscrizione/:id' => 'delete_iscrizione'
     ]
 
 ];
