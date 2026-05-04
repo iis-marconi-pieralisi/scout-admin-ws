@@ -190,65 +190,6 @@ function read_persone($db)
     }
 }
 
-//GET
-function read_servizi($db)
-{
-    try {
-        // EOD necessario per stringa literal multiriga
-        $sql = <<<EOD
-            SELECT *
-            FROM Servizio
-        EOD;
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-
-//POST 
-function create_servizio($db) 
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-    var_dump($data);
-    
-    // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
-    if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
-        {
-            json_response(['error' => 'Dati mancanti (anno_associativo, id_persona)'], 400);
-            return;
-        }
-    try 
-    {
-        $sql = "INSERT INTO Servizio VALUES (?, ?, ?, ?, ?)";
-
-        // È fondamentale rispettare l'ordine dei punti di domanda!
-        $params = [
-            $data['descrizione'],          
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona'],
-            (int)$data['id_tipologia'],
-            (int)$data['id_unità'],
-        ];
-
-        // 5. Esecuzione tramite Helper
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Servizio aggiornato",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
-        mostra_messaggio_di_prova($db);
-    }
-}
-
 function create_iter($db)
 {
     // 1. Lettura del payload JSON
@@ -265,50 +206,46 @@ function create_iter($db)
 
 
 //PUT
-function update_servizio($db)
-{
-
-}
-
-function delete_servizo($db)
-{
+function update_product($db) {
+    // 1. Lettura del payload JSON
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Validazione
-    if (
-        !$data ||
-        !isset($data['anno_associativo']) ||
-        !isset($data['id_persona'])
-    ) {
-        json_response(['error' => 'Chiave primaria mancante'], 400);
+    // 2. Validazione: servono obbligatoriamente name e price
+    if (!$data || !isset($data['name']) || !isset($data['price'])) {
+        json_response(['error' => 'Dati mancanti (name, price)'], 400);
         return;
     }
 
     try {
-        $sql = "
-            DELETE FROM Servizio
-            WHERE anno_associativo = ?
-              AND id_persona = ?
-        ";
+        // 3. Query SQL
+        // Usiamo i ? perché il tuo helper usa mysqli::prepare
+        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
 
+        // 4. Preparazione Parametri
+        // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona']
+            $data['name'],          // 1° ? -> name (stringa)
+            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $data['description'],   // 3° ? -> description (stringa)                      
         ];
 
+        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Servizio eliminato',
+            'message' => "Prodotto aggiornato (Nome e Prezzo).",
             'affected_rows' => $affected_rows
         ]);
 
     } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
+        // Log dell'errore server (opzionale)
+        // error_log($e->getMessage());
+        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
     }
 }
+
+
 
 function update_iter($db, $id)
 {
