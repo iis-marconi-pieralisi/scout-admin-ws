@@ -167,6 +167,12 @@ function get_iter($db)
     }
 }
 
+
+function mostra_messaggio_di_prova($db) {
+    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
+}
+
+
 function read_persone($db)
 {
          try {
@@ -184,7 +190,6 @@ function read_persone($db)
     }
 }
 
-
 function create_iter($db)
 {
     // 1. Lettura del payload JSON
@@ -197,29 +202,8 @@ function create_iter($db)
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
     }
-
-    try {
-        $sql = "INSERT INTO Iter VALUES (NULL, ?, ?, ?)";
-
-        $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],  // 2° ? -> description (stringa),
-            (int)$data['branca']         //3° ? -> branca(int)
-        ];
-
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Iter aggiornato (Nome e Branca).",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
-    }
 }
+
 
 //PUT
 function update_product($db) {
@@ -276,7 +260,6 @@ function update_iter($db, $id)
 
     try {
         // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
         $sql = "UPDATE Iter SET name = ?, branca = ?, description = ? WHERE id_iter = ?";
 
         $params = [
@@ -293,13 +276,13 @@ function update_iter($db, $id)
             'message' => "Iter aggiornato (Nome e Branca).",
             'affected_rows' => $affected_rows
         ]);
-
     } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
+        error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento dell\'iter.'], 500);
     }
 }
+
+
 
 function create_persona($db) 
 {
@@ -502,14 +485,6 @@ function delete_iter($db)
         json_response(['error' => 'Errore durante l\'eliminazione dell\'iter. '], 500);
     }
 }
-/**
- * Funzione di esempio per una rotta custom.
- */
-function mostra_messaggio_di_prova($db) {
-    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
-}
-
-
 //sezione per metodi partecipa
 function get_all_partecipa($db) {
     try {
@@ -740,7 +715,6 @@ function delete_branche($db)
             'message'       => 'Branca eliminata.',
             'affected_rows' => $affected_rows,
         ]);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
