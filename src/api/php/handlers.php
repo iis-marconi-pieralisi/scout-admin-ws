@@ -169,15 +169,12 @@ function get_iter($db)
     }
 }
 
-<<<<<<< 404BrainNotFound
+
 function mostra_messaggio_di_prova($db) {
     json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
 }
 
-function create_attivita($db){
-    try {
-        $sql = "INSERT INTO Attivita VALUES (nome, descrizione, luogo _partenza, luogo_arrivo, data, id_persona)";
-=======
+
 function read_persone($db)
 {
          try {
@@ -195,75 +192,6 @@ function read_persone($db)
     }
 }
 
-//GET
-function read_servizi($db)
-{
-    try {
-        // EOD necessario per stringa literal multiriga
-        $sql = <<<EOD
-            SELECT *
-            FROM Servizio
-        EOD;
-
->>>>>>> main
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-<<<<<<< 404BrainNotFound
-function delete_attivita($db){
-    try {
-        $sql = "DELETE FROM Attivita WHERE id_attivita = ?";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
-//POST 
-function create_servizio($db) 
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-    var_dump($data);
-    
-    // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
-    if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
-        {
-            json_response(['error' => 'Dati mancanti (anno_associativo, id_persona)'], 400);
-            return;
-        }
-    try 
-    {
-        $sql = "INSERT INTO Servizio VALUES (?, ?, ?, ?, ?)";
-
-        // È fondamentale rispettare l'ordine dei punti di domanda!
-        $params = [
-            $data['descrizione'],          
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona'],
-            (int)$data['id_tipologia'],
-            (int)$data['id_unità'],
-        ];
-
-        // 5. Esecuzione tramite Helper
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Servizio aggiornato",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
-        mostra_messaggio_di_prova($db);
-    }
-}
-
 function create_iter($db)
 {
     // 1. Lettura del payload JSON
@@ -275,96 +203,51 @@ function create_iter($db)
     if (!$data || !isset($data['name']) || !isset($data['branca'])) {
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
->>>>>>> main
     }
 }
 
-function read_attivita($db){
-    try {
-<<<<<<< 404BrainNotFound
-        $sql = "SELECT * FROM Attivita ORDER BY data DESC";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-function update_attivita($db){
-    try {
-        $sql = "UPDATE Attivita SET id_attivita = ? , nome = ? , descrizione = ? , luogo _partenza = ? , luogo_arrivo = ? , data = ? , id_persona = ? WHERE id_attivita = ?";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
-        $sql = "INSERT INTO Iter VALUES (NULL, ?, ?, ?)";
-
-        $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],  // 2° ? -> description (stringa),
-            (int)$data['branca']         //3° ? -> branca(int)
-        ];
-
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Iter aggiornato (Nome e Branca).",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
-    }
-}
 
 //PUT
-function update_servizio($db)
-{
-
-}
-
-function delete_servizo($db)
-{
+function update_product($db) {
+    // 1. Lettura del payload JSON
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Validazione
-    if (
-        !$data ||
-        !isset($data['anno_associativo']) ||
-        !isset($data['id_persona'])
-    ) {
-        json_response(['error' => 'Chiave primaria mancante'], 400);
+    // 2. Validazione: servono obbligatoriamente name e price
+    if (!$data || !isset($data['name']) || !isset($data['price'])) {
+        json_response(['error' => 'Dati mancanti (name, price)'], 400);
         return;
     }
 
     try {
-        $sql = "
-            DELETE FROM Servizio
-            WHERE anno_associativo = ?
-              AND id_persona = ?
-        ";
+        // 3. Query SQL
+        // Usiamo i ? perché il tuo helper usa mysqli::prepare
+        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
 
+        // 4. Preparazione Parametri
+        // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona']
+            $data['name'],          // 1° ? -> name (stringa)
+            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $data['description'],   // 3° ? -> description (stringa)                      
         ];
 
+        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Servizio eliminato',
+            'message' => "Prodotto aggiornato (Nome e Prezzo).",
             'affected_rows' => $affected_rows
         ]);
 
     } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
+        // Log dell'errore server (opzionale)
+        // error_log($e->getMessage());
+        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
     }
 }
+
+
 
 function update_iter($db, $id)
 {
@@ -375,23 +258,10 @@ function update_iter($db, $id)
     if (!$data || !isset($data['name']) || !isset($data['branca'])) {
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
->>>>>>> main
     }
-}
 
-function create_pagamento($db){
     try {
-<<<<<<< 404BrainNotFound
-        $sql = "INSERT INTO Pagamento VALUES (importo, metodo, data)";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-=======
         // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
         $sql = "UPDATE Iter SET name = ?, branca = ?, description = ? WHERE id_iter = ?";
 
         $params = [
@@ -408,22 +278,13 @@ function create_pagamento($db){
             'message' => "Iter aggiornato (Nome e Branca).",
             'affected_rows' => $affected_rows
         ]);
->>>>>>> main
-
-function delete_pagamento($db){
-    try {
-        $sql = "DELETE FROM Pagamento WHERE id_pagamento = ?";
-        $results = $db->query($sql);
-        json_response($results);
     } catch (Exception $e) {
-<<<<<<< 404BrainNotFound
-        json_response(['error' => 'Errore interno del server.'], 500);
-=======
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
+        error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento dell\'iter.'], 500);
     }
 }
+
+
 
 function create_persona($db) 
 {
@@ -479,28 +340,10 @@ function create_persona($db)
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante la creazione della persona.'], 500);
->>>>>>> main
     }
     
 }
 
-<<<<<<< 404BrainNotFound
-function read_pagamento($db){
-    try {
-        $sql = "SELECT * FROM Pagamento ORDER BY data DESC";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-function update_pagamento($db){
-    try {
-        $sql = "UPDATE Pagamento SET id_pagamento = ? , importo = ? , metodo = ?, data = ? WHERE id_pagamento = ?";
-        $results = $db->query($sql);
-        json_response($results);
-=======
 
 function update_persona($db, $id) 
 {
@@ -644,14 +487,6 @@ function delete_iter($db)
         json_response(['error' => 'Errore durante l\'eliminazione dell\'iter. '], 500);
     }
 }
-/**
- * Funzione di esempio per una rotta custom.
- */
-function mostra_messaggio_di_prova($db) {
-    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
-}
-
-
 //sezione per metodi partecipa
 function get_all_partecipa($db) {
     try {
@@ -882,8 +717,6 @@ function delete_branche($db)
             'message'       => 'Branca eliminata.',
             'affected_rows' => $affected_rows,
         ]);
-
->>>>>>> main
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
