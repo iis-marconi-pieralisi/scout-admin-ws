@@ -1,5 +1,5 @@
 <?php
-function get_iscrizione($db)
+function read_iscrizione($db)
 {
     try {
         $sql = <<<EOD
@@ -14,7 +14,7 @@ function get_iscrizione($db)
     }
 }
 
-function post_iscrizione($db)
+function create_iscrizione($db)
 {
     try {
         $body = json_decode(file_get_contents('php://input'), true);
@@ -47,7 +47,7 @@ function post_iscrizione($db)
     }
 }
 
-function put_iscrizione($db)
+function update_iscrizione($db)
 {
     try {
         $body = json_decode(file_get_contents('php://input'), true);
