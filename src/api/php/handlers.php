@@ -474,50 +474,6 @@ function delete_persona($db, $id)
     }
 }
 
-function authenticate_user1($db) 
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['email']) || !isset($data['password'])) 
-    {
-        json_response(['error' => 'Dati mancanti'], 400);
-        return;
-    }
-
-    try
-    {
-        $sql = "SELECT T.nome 
-                FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
-                JOIN Servizio S ON P.id_persona = S.id_persona
-                JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
-                WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
-
-        $params = [$data['email'], $data['password']];
-
-        $result = $db->query($sql, $params);
-
-        if (!$result || count($result) == 0)
-        {
-            json_response([
-                'success' => false,
-                'message' => 'Credenziali non valide'
-            ], 401);
-        }
-        else
-        {
-            json_response([
-                'success' => true,
-                'message' => 'Ecco la tipologia',
-                'tipologia' => $result[0]['nome']
-            ]);
-        }
-        
-    }
-    catch (Exception $e) 
-    {
-        json_response(['error' => $e->getMessage()], 500);
-    }
-}
 
 function authenticate_user($db) 
 {
