@@ -5,10 +5,6 @@
  *
  * Queste funzioni sono chiamate dal router e si occupano di interagire
  * con il database e di restituire la risposta in formato JSON.
- * 
- * TODO: suddividere la logica degli handler in altri sorgenti e caricarli con 
- * composer o altra tecnica.
- * Così si evitano conflitti sullo stesso file e si rende lo sviluppo più modulare
  */
 
 /**
@@ -21,6 +17,8 @@ function json_response($data, $statusCode = 200) {
     header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
     echo json_encode($data);
 }
+
+
 
 function read_account($db)
 {
@@ -138,22 +136,20 @@ function delete_account($db)
  * La sicurezza è garantita dal router che fa un match esatto dell'URI.
  */
 function generic_table_handler($db) {
-    // Estrae l'URI della richiesta, es. /api/users
     $uri = strtok($_SERVER['REQUEST_URI'], '?');
-
-    // Rimuove /api/ per ottenere il nome della tabella, che corrisponde
-    // esattamente alla parte finale della rotta definita in routes.php.
     $table_name = str_replace('/api/', '', $uri);
 
     try {
         $results = $db->query("SELECT * FROM {$table_name}");
         json_response($results);
     } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
+// ===========================================================================
+// BRANCHE
+// ===========================================================================
 
 function get_iter($db)
 {
@@ -173,24 +169,11 @@ function get_iter($db)
     }
 }
 
-function read_branche($db) 
-{
-    try {
-        // EOD necessario per stringa literal multiriga
-        $sql = <<<EOD
-            SELECT 	*
-            FROM Branca
-        EOD;
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) 
-     
-    {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
+
+function mostra_messaggio_di_prova($db) {
+    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
 }
+
 
 function read_persone($db)
 {
@@ -203,71 +186,9 @@ function read_persone($db)
 
         $results = $db->query($sql);
         json_response($results);
+
     } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-//GET
-function read_servizi($db)
-{
-    try {
-        // EOD necessario per stringa literal multiriga
-        $sql = <<<EOD
-            SELECT *
-            FROM Servizio
-        EOD;
-
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
-        json_response(['error' => 'Errore interno del server.'], 500);
-    }
-}
-
-//POST 
-function create_servizio($db) 
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-    var_dump($data);
-    
-    // 2. Validazione: servono obbligatoriamente anno_associativo e id_persona
-    if (!$data || !isset($data['anno_associativo']) || !isset($data['id_persona'])) 
-        {
-            json_response(['error' => 'Dati mancanti (anno_associativo, id_persona)'], 400);
-            return;
-        }
-    try 
-    {
-        $sql = "INSERT INTO Servizio VALUES (?, ?, ?, ?, ?)";
-
-        // È fondamentale rispettare l'ordine dei punti di domanda!
-        $params = [
-            $data['descrizione'],          
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona'],
-            (int)$data['id_tipologia'],
-            (int)$data['id_unità'],
-        ];
-
-        // 5. Esecuzione tramite Helper
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => "Servizio aggiornato",
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto. '], 500);
-        mostra_messaggio_di_prova($db);
     }
 }
 
@@ -283,15 +204,31 @@ function create_iter($db)
         json_response(['error' => 'Dati mancanti (name, branca)'], 400);
         return;
     }
+}
+
+
+//PUT
+function update_product($db) {
+    // 1. Lettura del payload JSON
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // 2. Validazione: servono obbligatoriamente name e price
+    if (!$data || !isset($data['name']) || !isset($data['price'])) {
+        json_response(['error' => 'Dati mancanti (name, price)'], 400);
+        return;
+    }
 
     try {
-        $sql = "INSERT INTO Iter VALUES (NULL, ?, ?, ?)";
+        // 3. Query SQL
+        // Usiamo i ? perché il tuo helper usa mysqli::prepare
+        $sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE product_id = ?";
 
+        // 4. Preparazione Parametri
         // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
             $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],  // 2° ? -> description (stringa),
-            (int)$data['branca']         //3° ? -> branca(int)
+            (float)$data['price'],  // 2° ? -> price (cast a float per bindare come 'd')
+            $data['description'],   // 3° ? -> description (stringa)                      
         ];
 
         // 5. Esecuzione tramite Helper
@@ -299,63 +236,18 @@ function create_iter($db)
 
         json_response([
             'success' => true,
-            'message' => "Iter aggiornato (Nome e Branca).",
+            'message' => "Prodotto aggiornato (Nome e Prezzo).",
             'affected_rows' => $affected_rows
         ]);
 
     } catch (Exception $e) {
         // Log dell'errore server (opzionale)
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
+        // error_log($e->getMessage());
+        json_response(['error' => 'Errore durante l\'aggiornamento del prodotto.'], 500);
     }
 }
 
 
-//PUT
-function update_servizio($db)
-{
-
-}
-
-function delete_servizo($db)
-{
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    // Validazione
-    if (
-        !$data ||
-        !isset($data['anno_associativo']) ||
-        !isset($data['id_persona'])
-    ) {
-        json_response(['error' => 'Chiave primaria mancante'], 400);
-        return;
-    }
-
-    try {
-        $sql = "
-            DELETE FROM Servizio
-            WHERE anno_associativo = ?
-              AND id_persona = ?
-        ";
-
-        $params = [
-            (int)$data['anno_associativo'],
-            (int)$data['id_persona']
-        ];
-
-        $affected_rows = $db->query($sql, $params);
-
-        json_response([
-            'success' => true,
-            'message' => 'Servizio eliminato',
-            'affected_rows' => $affected_rows
-        ]);
-
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
-    }
-}
 
 function update_iter($db, $id)
 {
@@ -370,11 +262,8 @@ function update_iter($db, $id)
 
     try {
         // 3. Query SQL
-        // Usiamo i ? perché il tuo helper usa mysqli::prepare
         $sql = "UPDATE Iter SET name = ?, branca = ?, description = ? WHERE id_iter = ?";
 
-        // 4. Preparazione Parametri
-        // È fondamentale rispettare l'ordine dei punti di domanda!
         $params = [
             $data['name'],          // 1° ? -> name (stringa)
             (int)$data['branca'],   // 2° ? -> branca (int)
@@ -382,7 +271,6 @@ function update_iter($db, $id)
             (int)$id                // 4° ? -> id_iter (cast a int per bindare come 'i')
         ];
 
-        // 5. Esecuzione tramite Helper
         $affected_rows = $db->query($sql, $params);
 
         json_response([
@@ -390,13 +278,13 @@ function update_iter($db, $id)
             'message' => "Iter aggiornato (Nome e Branca).",
             'affected_rows' => $affected_rows
         ]);
-
     } catch (Exception $e) {
-        // Log dell'errore server (opzionale)
-        // error_log($e->getMessage());
+        error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento dell\'iter.'], 500);
     }
 }
+
+
 
 function create_persona($db) 
 {
@@ -552,6 +440,10 @@ function delete_persona($db, $id)
 
 }
 
+// ===========================================================================
+// ALTRO
+// ===========================================================================
+
 function authenticate_user($db) {
     $data = json_decode(file_get_contents('php://input'), true);
     json_response(['utente' => 'ciao']);
@@ -595,14 +487,6 @@ function delete_iter($db)
         json_response(['error' => 'Errore durante l\'eliminazione dell\'iter. '], 500);
     }
 }
-/**
- * Funzione di esempio per una rotta custom.
- */
-function mostra_messaggio_di_prova($db) {
-    json_response(['message' => 'Questa è una risposta dalla rotta di prova!']);
-}
-
-
 //sezione per metodi partecipa
 function get_all_partecipa($db) {
     try {
@@ -701,5 +585,139 @@ function delete_partecipa($db, $id_attivita, $id_unita) {
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'eliminazione della partecipazione.'], 500);
+    }
+}
+
+/**
+ * Handler: read_branche
+ * Rotta:   GET /api/branche
+ */
+function read_branche($db)
+{
+    try {
+        $sql = <<<EOD
+            SELECT  *
+            FROM    Branca
+        EOD;
+
+        $results = $db->query($sql);
+        json_response($results);
+
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+/**
+ * Handler: create_branche
+ * Rotta:   POST /api/branche
+ * Body JSON atteso:
+ *   { "nome": "Esploratori", "descrizione": "Ragazzi 12-16 anni" }
+ */
+function create_branche($db)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!$data || !isset($data['nome'])) {
+        json_response(['error' => 'Campo obbligatorio mancante: nome.'], 400);
+        return;
+    }
+
+    try {
+        $sql = <<<EOD
+            INSERT INTO Branca (nome, descrizione)
+            VALUES (?, ?)
+        EOD;
+
+        $params = [
+            $data['nome'],
+            $data['descrizione'] ?? null,
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success'       => true,
+            'message'       => 'Branca creata con successo.',
+            'affected_rows' => $affected_rows,
+        ]);
+
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+/**
+ * Handler: update_branche
+ * Rotta:   PUT /api/branche
+ * Body JSON atteso:
+ *   { "id_branca": 2, "nome": "Esploratori", "descrizione": "Descrizione aggiornata" }
+ */
+function update_branche($db)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!$data || !isset($data['id_branca']) || !isset($data['nome'])) {
+        json_response(['error' => 'Campi obbligatori mancanti: id_branca, nome.'], 400);
+        return;
+    }
+
+    try {
+        $sql = <<<EOD
+            UPDATE  Branca
+            SET     nome        = ?,
+                    descrizione = ?
+            WHERE   id_branca   = ?
+        EOD;
+
+        $params = [
+            $data['nome'],
+            $data['descrizione'] ?? null,
+            (int)$data['id_branca'],
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success'       => true,
+            'message'       => 'Branca aggiornata.',
+            'affected_rows' => $affected_rows,
+        ]);
+
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+/**
+ * Handler: delete_branche
+ * Rotta:   DELETE /api/branche
+ * Body JSON atteso:
+ *   { "id_branca": 2 }
+ */
+function delete_branche($db)
+{
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!$data || !isset($data['id_branca'])) {
+        json_response(['error' => 'Campo obbligatorio mancante: id_branca.'], 400);
+        return;
+    }
+
+    try {
+        $sql = <<<EOD
+            DELETE FROM Branca
+            WHERE id_branca = ?
+        EOD;
+
+        $affected_rows = $db->query($sql, [(int)$data['id_branca']]);
+
+        json_response([
+            'success'       => true,
+            'message'       => 'Branca eliminata.',
+            'affected_rows' => $affected_rows,
+        ]);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
