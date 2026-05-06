@@ -531,13 +531,16 @@ function authenticate_user($db)
 
     try
     {
-        $sql = "SELECT T.nome 
-                FROM Account A 
-                WHERE A.email = ? AND A.password = ?";
+        $sql = "SELECT A.username, T.nome 
+                FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
+                JOIN Servizio S ON P.id_persona = S.id_persona
+                JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
+                WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
 
         $params = [$data['email'], $data['password']];
-
         $result = $db->query($sql, $params);
+        $username = $result[0]['username'];
+        $tipologia = $result[0]['nome'];
 
         if (!$result || count($result) == 0)
         {
@@ -548,12 +551,16 @@ function authenticate_user($db)
         }
         else
         {
+            $_SESSION['username'] = $username;
+            $sessionId = session_id();
+
             json_response([
                 'success' => true,
                 'message' => 'Sei Autenticato',
+                'username' => $username,
+                'tipologia' => $tipologia,
+                'session_id' => $sessionId
             ]);
-
-            $_SESSION['nome'] = $result[0]['nome'];
         }
     }
     catch (Exception $e) 
