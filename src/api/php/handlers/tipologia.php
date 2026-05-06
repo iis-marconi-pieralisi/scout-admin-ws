@@ -15,4 +15,3 @@ function read_tipologia($db)
 {
 
 }
-?>

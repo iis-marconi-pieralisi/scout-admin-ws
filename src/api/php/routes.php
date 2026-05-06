@@ -7,86 +7,62 @@
  * Le rotte con :id catturano il parametro dall'URI e lo passano all'handler.
  */
 
-require_once 'handlers.php';
+// Include tutti i file PHP nella cartella handlers/ in modo automatico.
+foreach (glob(__DIR__ . '/handlers/*.php') as $handler_file) {
+    require_once $handler_file;
+}
 
 // ---------------------------------------------------------------------------
 // Tabella delle rotte
+// Aggiungere rispettando l'ordine alfabetico per comodità di lettura.
+// TODO #1: rimuovere rotte parametriche e usare sempre json (anche per GET)
+// TODO #2: uniformare le implementazioni degli handler (assicurandosi di usare la classe db helper)
+// TODO #3: verificare il funzionamento delle rotte
 // ---------------------------------------------------------------------------
 $routes = [
     'GET' => [
-        '/api/prova' => 'mostra_messaggio_di_prova',
-        '/api/iter' => 'read_iter',
-        '/api/users' => 'generic_table_handler',
-        '/api/products' => 'generic_table_handler',
-        '/api/orders' => 'get_orders_join',
-        '/api/partecipa' => 'get_all_partecipa',
-        '/api/branche' => 'read_branche',
-        '/api/account' => 'read_account',        
-        '/api/servizi'=>'read_servizi',
-        '/api/persona' => 'read_persone',
+        '/api/account' => 'read_account',
         '/api/attivita' => 'read_attivita',
-        '/api/pagamento' => 'read_pagamento',
+        '/api/branca' => 'read_branca',
         '/api/iscrizione' => 'read_iscrizione',
-        '/api/unita' => 'read_unita'
-
+        '/api/iter' => 'read_iter',
+        '/api/partecipa' => 'read_partecipa',
+        '/api/pagamento' => 'read_pagamento',
+        '/api/persona' => 'read_persona',
+        '/api/prova' => 'mostra_messaggio_di_prova',
+        '/api/servizio' => 'read_servizio',
+        '/api/unita' => 'read_unita',
     ],
     'POST' => [
-        '/api/products' => 'create_product',
-        '/api/partecipa' =>  'create_partecipa',
-        '/api/auth' => 'authenticate_user',
         '/api/account' => 'create_account',
-        '/api/iscrizione' => 'create_iscrizione',
-        '/api/iter' => 'create_iter',
-        '/api/branche' => 'create_branche',
+        //'/api/auth' => 'authenticate_user',
         '/api/attivita' => 'create_attivita',
+        '/api/branca' => 'create_branca',
+        '/api/iter' => 'create_iter',
+        '/api/iscrizione' => 'create_iscrizione',
         '/api/pagamento' => 'create_pagamento',
+        '/api/partecipa' => 'create_partecipa',
         '/api/unita' => 'create_unita'
     ],
-    
     'PUT' => [
-        '/api/products/:id' => 'update_product',
-        '/api/partecipa/:id_attivita/:id_unita' => 'update_partecipa',
         '/api/account/:id' => 'update_account',
-        '/api/iter/:id' => 'update_iter',
-        '/api/branche' => 'update_branche',
         '/api/attivita/:id_attivita' => 'update_attivita',
-        '/api/pagamento' => 'update_pagamento',
+        '/api/branca/:id' => 'update_branca',
+        '/api/iter/:id' => 'update_iter',
         '/api/iscrizione/:id' => 'update_iscrizione',
+        '/api/pagamento' => 'update_pagamento',
+        '/api/partecipa' => 'update_partecipa',
         '/api/unita' => 'update_unita'
     ],
-
     'DELETE' => [
-        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
         '/api/account' => 'delete_account',
-        '/api/persona/:id' => 'delete_persona',
-        'api/iter' => 'delete_iter',
-        '/api/branche' => 'delete_branche',
-        'api/attivita' => 'delete_attivita',
-        '/api/pagamento' => 'delete_pagamento',
+        '/api/attivita' => 'delete_attivita',
+        '/api/branca' => 'delete_branca',
+        '/api/iter' => 'delete_iter',
         '/api/iscrizione/:id' => 'delete_iscrizione',
+        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
+        '/api/pagamento' => 'delete_pagamento',
+        '/api/persona/:id' => 'delete_persona',
         '/api/unita' => 'delete_unita'
     ]
-
 ];
-
-// ---------------------------------------------------------------------------
-// Dispatch
-// ---------------------------------------------------------------------------
-$method = $_SERVER['REQUEST_METHOD'];
-$uri    = strtok($_SERVER['REQUEST_URI'], '?');
-
-foreach ($routes as [$routeMethod, $routePattern, $handler]) {
-
-    if ($routeMethod !== $method) continue;
-
-    // Converte :id in gruppo regex  es. /api/products/:id → #^/api/products/([^/]+)$#
-    $regex = '#^' . preg_replace('/:([a-zA-Z_]+)/', '([^/]+)', $routePattern) . '$#';
-
-    if (preg_match($regex, $uri, $matches)) {
-        array_shift($matches);   // rimuove il match completo, restano solo i :param
-        $handler($db, ...$matches);
-        exit;
-    }
-}
-
-json_response(['error' => 'Rotta non trovata.'], 404);

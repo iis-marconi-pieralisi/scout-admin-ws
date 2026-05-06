@@ -1,5 +1,5 @@
 <?php
-function read_persone($db)
+function read_persona($db)
 {
          try {
         // EOD necessario per stringa literal multiriga

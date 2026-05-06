@@ -1,5 +1,5 @@
 <?php
-function read_servizi($db)
+function read_servizio($db)
 {
     try {
         // EOD necessario per stringa literal multiriga

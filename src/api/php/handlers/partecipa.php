@@ -1,5 +1,5 @@
 <?php
-function get_all_partecipa($db) {
+function read_partecipa($db) {
     try {
         $sql = "SELECT * FROM Partecipa";
         $results = $db->query($sql);

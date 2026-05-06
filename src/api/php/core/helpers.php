@@ -1,14 +1,7 @@
 <?php
 
 /**
- * Funzioni Handler
- *
- * Queste funzioni sono chiamate dal router e si occupano di interagire
- * con il database e di restituire la risposta in formato JSON.
- */
-
-/**
- * Imposta l'header per la risposta JSON.
+ * Funzioni helper condivise.
  */
 function json_response($data, $statusCode = 200) {
     http_response_code($statusCode);
@@ -18,11 +11,6 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
-/**
- * Gestore generico per tabelle.
- * Estrae il nome della tabella dall'URI e restituisce tutti i record.
- * La sicurezza è garantita dal router che fa un match esatto dell'URI.
- */
 function generic_table_handler($db) {
     $uri = strtok($_SERVER['REQUEST_URI'], '?');
     $table_name = str_replace('/api/', '', $uri);
@@ -33,4 +21,8 @@ function generic_table_handler($db) {
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
+}
+
+function mostra_messaggio_di_prova($db) {
+    json_response(['message' => 'Questo è un messaggio di prova.']);
 }

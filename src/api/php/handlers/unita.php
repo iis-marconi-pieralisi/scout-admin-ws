@@ -1,3 +1,5 @@
+<?php
+
 function read_unita($db)
 {
     try {
