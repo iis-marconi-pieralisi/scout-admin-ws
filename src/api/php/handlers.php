@@ -1,5 +1,7 @@
 <?php
 
+    session_start();
+
 /**
  * Funzioni Handler
  *
@@ -530,10 +532,8 @@ function authenticate_user($db)
     try
     {
         $sql = "SELECT T.nome 
-                FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
-                JOIN Servizio S ON P.id_persona = S.id_persona
-                JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
-                WHERE A.email = ? AND A.password = ? AND S.anno_associativo = YEAR(CURDATE())";
+                FROM Account A 
+                WHERE A.email = ? AND A.password = ?";
 
         $params = [$data['email'], $data['password']];
 
@@ -550,11 +550,11 @@ function authenticate_user($db)
         {
             json_response([
                 'success' => true,
-                'message' => 'Ecco la tipologia',
-                'tipologia' => $result[0]['nome']
+                'message' => 'Sei Autenticato',
             ]);
+
+            $_SESSION['nome'] = $result[0]['nome'];
         }
-        
     }
     catch (Exception $e) 
     {
