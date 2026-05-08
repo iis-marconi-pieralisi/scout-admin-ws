@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Funzione di Routing (Lo Smistatore)
- *
- * Questa funzione riceve la mappa delle rotte e la richiesta attuale,
- * e si occupa di chiamare la funzione handler corretta.
+ * Funzione di Routing Semplificata
  *
  * @param array $routes La mappa di tutte le rotte disponibili (da routes.php).
  * @param string $method Il metodo HTTP della richiesta (es. 'GET', 'POST').
@@ -12,49 +9,34 @@
  * @param object $db L'istanza del nostro oggetto Database.
  */
 function route($routes, $method, $uri, $db) {
-    // 1. Pulizia: Rimuoviamo slash iniziali/finali per evitare errori vuoti
-    // Esempio: "/api/users/5/" diventa "api/users/5"
+    // 1. Pulizia dell'URI: estraiamo il percorso e rimuoviamo gli slash agli estremi
     $uriClean = trim(parse_url($uri, PHP_URL_PATH), '/');
-    $uriParts = explode('/', $uriClean); // ['api', 'users', '5']
 
-    // Cerchiamo tra tutte le rotte del metodo corrente (es. GET o PUT)
+    // Controlliamo se esiste il metodo richiesto nella mappa delle rotte
     if (isset($routes[$method])) {
+        
         foreach ($routes[$method] as $routePattern => $handler) {
-            
-            // Puliamo anche la rotta definita nel file
+            // Puliamo anche la rotta definita per avere un confronto equo
             $routeClean = trim($routePattern, '/');
-            $routeParts = explode('/', $routeClean); // ['api', 'users', ':id']
 
-            // SE i pezzi sono di numero diverso, non è questa la rotta giusta
-            if (count($uriParts) !== count($routeParts)) {
-                continue;
-            }
-
-            $params = [];
-            $match = true;
-
-            // Confrontiamo pezzo per pezzo
-            for ($i = 0; $i < count($routeParts); $i++) {
-                $partRoute = $routeParts[$i];
-                $partUri = $uriParts[$i];
-
-                // CASO A: È un parametro dinamico (inizia con ':')
-                if (str_starts_with($partRoute, ':')) {
-                    $params[] = $partUri; // Salviamo il valore (es. "5")
-                }
-                // CASO B: È una parola statica (es. "api" o "users")
-                elseif ($partRoute !== $partUri) {
-                    $match = false; // Non corrispondono, rotta sbagliata
-                    break; 
-                }
-            }
-
-            // Se siamo arrivati qui e $match è ancora true, abbiamo trovato la rotta!
-            if ($match) {
+            // 2. Confronto esatto: dato che non ci sono parametri dinamici, 
+            // la stringa dell'URI deve essere identica alla rotta.
+            if ($uriClean === $routeClean) {
+                
                 if (function_exists($handler)) {
                     header('Content-Type: application/json');
-                    // Passiamo DB + tutti i parametri trovati (es. l'ID)
-                    call_user_func_array($handler, array_merge([$db], $params));
+                    
+                    // 3. Estrazione dei dati JSON dal body (per TUTTI i metodi)
+                    $rawData = file_get_contents('php://input');
+                    $data = json_decode($rawData, true);
+                    
+                    // Se il body è vuoto o il JSON non è valido, assicurati di passare un array vuoto
+                    if (!is_array($data)) {
+                        $data = [];
+                    }
+
+                    // 4. Esecuzione dell'handler: passiamo il DB e i dati estratti
+                    $handler($db, $data);
                     return;
                 }
             }
@@ -63,5 +45,6 @@ function route($routes, $method, $uri, $db) {
 
     // Nessuna rotta trovata
     http_response_code(404);
+    header('Content-Type: application/json');
     echo json_encode(['error' => 'Endpoint non trovato.']);
 }

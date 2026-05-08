@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Router
- *
- * Mappa  METHOD + URI  →  handler function.
- * Le rotte con :id catturano il parametro dall'URI e lo passano all'handler.
- */
-
 // Include tutti i file PHP nella cartella handlers/ in modo automatico.
 foreach (glob(__DIR__ . '/handlers/*.php') as $handler_file) {
     require_once $handler_file;
@@ -15,9 +8,11 @@ foreach (glob(__DIR__ . '/handlers/*.php') as $handler_file) {
 // ---------------------------------------------------------------------------
 // Tabella delle rotte
 // Aggiungere rispettando l'ordine alfabetico per comodità di lettura.
+//
 // TODO #1: rimuovere rotte parametriche e usare sempre json (anche per GET)
 // TODO #2: uniformare le implementazioni degli handler (assicurandosi di usare la classe db helper)
 // TODO #3: verificare il funzionamento delle rotte
+// TODO #4: rimuovere json_decode dalle implementazioni degli handler perchè viene passato in automatico dal router.
 // ---------------------------------------------------------------------------
 $routes = [
     'GET' => [
