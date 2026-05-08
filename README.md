@@ -59,13 +59,6 @@ del branch principale e si hanno delle modifiche locali da caricare.
 
 ---
 
-# 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
-
-Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
-del branch principale e si hanno delle modifiche locali da caricare.
-
----
-
 ## 📋 Passaggi
 
 ### 1. 🔍 Controlla lo stato attuale
@@ -192,15 +185,106 @@ git pull
 
 
 ---
+## 🔀 Nomenclatura rotte e handlers
+
+### Standard rotte API
+
+Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD.
+
+| Rotta | Metodo HTTP | Operazione | File handler |
+|---|---|---|---|
+| `/api/branche` | `GET` | Lettura | `read_branche.php` |
+| `/api/branche` | `POST` | Creazione | `create_branche.php` |
+| `/api/branche` | `PUT` | Aggiornamento | `update_branche.php` |
+| `/api/branche` | `DELETE` | Eliminazione | `delete_branche.php` |
+
+### Regola di nomenclatura
+
 ```
-  ROTTA      METODO HTTP    NOME HANDLER(php)
-/api/branche --> Post    --> create-branche  
-             --> Get     --> read-branche
-             --> Delete  --> delete-branche
-             --> Pot     --> update-branche 
-Nome Handler<verbo_crud>_<nome_tabella>.php
+<operazione_crud>_<nome_tabella>.php
+```
+
+I verbi CRUD utilizzati sono: `create`, `read`, `update`, `delete`.
+
+**Esempi:**
+- `create_branca.php`
+- `read_partecipa.php`
+- `update_utente.php`
+- `delete_evento.php`
+
+---
+## 📁 Organizzazione degli handlers
+
+Ogni handler è un file PHP dedicato collocato in `src/api/php/handlers/`.
+
+```
+src/
+└── api/
+    └── php/
+        └── handlers/
+            ├── branca.php
+            ├── account.php
+            ├── attivita.php
+            ├── iter.php
+            ├── pagamento.php
+            ├── servizio.php
+            ├── partecipa.php
+            └── persona.php
+```
+## 🔀 Pull Request
+
+> Una Pull Request è come consegnare un lavoro al professore per la revisione:
+> carichi le tue modifiche su un branch separato e chiedi al responsabile
+> del progetto di approvarle prima che vengano unite al `main`.
+> In questo contesto didattico, utilizziamo un branch dedicato per ogni gruppo,
+> che viene mantenuto attivo per tutto il progetto e non viene eliminato dopo il merge.
+
+### ⌨️ Comandi
+
+#### 1. 🌿 Crea e/o spostati sul branch del gruppo (se non esiste già)
+```bash
+git checkout -b nome-del-tuo-gruppo
+```
+> Es: `git checkout -b admin`
+
+---
+
+#### 2. 💾 Aggiungi e committa le modifiche
+```bash
+git add *
+git commit -m "descrizione modifica"
+```
+
+---
+
+#### 3. 🚀 Carica il branch su GitHub
+```bash
+git push origin nome-del-tuo-gruppo
+```
+> Es: `git push origin admin`
+
+---
+
+#### 4. 🖥️ Apri la Pull Request su GitHub
+> Vai su GitHub, clicca il banner **"Compare & pull request"**,
+> aggiungi una descrizione e conferma con **"Create pull request"**.
+> A questo punto il professore (o il responsabile) potrà revisionare
+> e approvare le modifiche cliccando **"Merge pull request"**.
+
+---
+
+#### 5. ✅ Dopo l'approvazione, torna sul main e aggiornati
+```bash
+git checkout main
+git pull
 ```
 ---
+
+> **Nota:** A differenza del workflow standard, i branch dei gruppi vengono mantenuti attivi
+> per permettere aggiornamenti continui e facilitare la logistica didattica.
+
+---
+
 ## 👨‍👨‍👦‍👦 Composizione gruppi
 
 - Admin: [🗿n1k06](https://github.com/N1k06/), [⛰️pental74](https://github.com/pental74)
