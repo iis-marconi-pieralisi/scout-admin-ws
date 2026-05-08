@@ -22,7 +22,6 @@ function route($routes, $method, $uri, $db) {
             // 2. Confronto esatto: dato che non ci sono parametri dinamici, 
             // la stringa dell'URI deve essere identica alla rotta.
             if ($uriClean === $routeClean) {
-                
                 if (function_exists($handler)) {
                     header('Content-Type: application/json');
                     

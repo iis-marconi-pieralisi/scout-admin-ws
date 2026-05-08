@@ -11,7 +11,8 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
-function generic_table_handler($db) {
+// Esempio di handler generico, ritorna semplicemente tutti i record di una tabella specificata nell'URI.
+function generic_table_handler($db, $data) {
     $uri = strtok($_SERVER['REQUEST_URI'], '?');
     $table_name = str_replace('/api/', '', $uri);
 
@@ -23,6 +24,7 @@ function generic_table_handler($db) {
     }
 }
 
-function mostra_messaggio_di_prova($db) {
+// Un semplice handler di prova per testare il routing e la risposta JSON.
+function mostra_messaggio_di_prova($db, $data) {
     json_response(['message' => 'Questo è un messaggio di prova.']);
 }

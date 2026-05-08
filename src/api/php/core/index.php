@@ -1,7 +1,5 @@
 <?php
 
-// core/index.php
-
 // Mostra tutti gli errori - utile in fase di sviluppo
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
