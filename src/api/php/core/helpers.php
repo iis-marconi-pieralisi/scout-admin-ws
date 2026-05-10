@@ -11,6 +11,25 @@ function json_response($data, $statusCode = 200) {
     echo json_encode($data);
 }
 
+/**
+ * Valida che tutti i campi obbligatori siano presenti nei dati.
+ * Se mancano, invia una risposta JSON di errore e restituisce false.
+ * Altrimenti, restituisce true.
+ */
+function validate_required_fields($data, $required_fields) {
+    if (!$data) {
+        json_response(['error' => 'Dati mancanti.'], 400);
+        return false;
+    }
+    foreach ($required_fields as $field) {
+        if (!isset($data[$field])) {
+            json_response(['error' => 'Campo obbligatorio mancante: ' . $field], 400);
+            return false;
+        }
+    }
+    return true;
+}
+
 // Esempio di handler generico, ritorna semplicemente tutti i record di una tabella specificata nell'URI.
 function generic_table_handler($db, $data) {
     $uri = strtok($_SERVER['REQUEST_URI'], '?');

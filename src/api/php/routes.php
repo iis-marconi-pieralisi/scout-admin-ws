@@ -40,13 +40,15 @@ $routes = [
         '/api/unita' => 'create_unita'
     ],
     'PUT' => [
-        '/api/account/:id' => 'update_account',
-        '/api/attivita/:id_attivita' => 'update_attivita',
-        '/api/branca/:id' => 'update_branca',
-        '/api/iter/:id' => 'update_iter',
-        '/api/iscrizione/:id' => 'update_iscrizione',
+        '/api/account' => 'update_account',
+        '/api/attivita' => 'update_attivita',
+        '/api/branca' => 'update_branca',
+        '/api/iter' => 'update_iter',
+        '/api/iscrizione' => 'update_iscrizione',
         '/api/pagamento' => 'update_pagamento',
         '/api/partecipa' => 'update_partecipa',
+        '/api/persona' => 'update_persona',
+        '/api/servizio' => 'update_servizio',
         '/api/unita' => 'update_unita'
     ],
     'DELETE' => [
@@ -54,10 +56,10 @@ $routes = [
         '/api/attivita' => 'delete_attivita',
         '/api/branca' => 'delete_branca',
         '/api/iter' => 'delete_iter',
-        '/api/iscrizione/:id' => 'delete_iscrizione',
-        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
+        '/api/iscrizione' => 'delete_iscrizione',
+        '/api/partecipa' => 'delete_partecipa',
         '/api/pagamento' => 'delete_pagamento',
-        '/api/persona/:id' => 'delete_persona',
+        '/api/persona' => 'delete_persona',
         '/api/unita' => 'delete_unita'
     ]
 ];

@@ -24,20 +24,18 @@ function read_branca($db, $data)
 
 function create_branca($db, $data)
 {
-    if (!$data || !isset($data['nome'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: nome.'], 400);
-        return;
-    }
+    validate_required_fields($data, ['nome_branca', 'min_eta', 'max_eta']);
 
     try {
         $sql = <<<EOD
-            INSERT INTO Branca (nome, descrizione)
-            VALUES (?, ?)
+            INSERT INTO Branca (nome_branca, min_eta, max_eta)
+            VALUES (?, ?, ?)
         EOD;
 
         $params = [
-            $data['nome'],
-            $data['descrizione'] ?? null,
+            $data['nome_branca'],
+            (int)$data['min_eta'],
+            (int)$data['max_eta'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -55,22 +53,21 @@ function create_branca($db, $data)
 
 function update_branca($db, $data)
 {
-    if (!$data || !isset($data['id_branca']) || !isset($data['nome'])) {
-        json_response(['error' => 'Campi obbligatori mancanti: id_branca, nome.'], 400);
-        return;
-    }
+    validate_required_fields($data, ['id_branca', 'nome_branca', 'min_eta', 'max_eta']);
 
     try {
         $sql = <<<EOD
             UPDATE  Branca
-            SET     nome        = ?,
-                    descrizione = ?
+            SET     nome_branca = ?,
+                    min_eta     = ?,
+                    max_eta     = ?
             WHERE   id_branca   = ?
         EOD;
 
         $params = [
-            $data['nome'],
-            $data['descrizione'] ?? null,
+            $data['nome_branca'],
+            (int)$data['min_eta'],
+            (int)$data['max_eta'],
             (int)$data['id_branca'],
         ];
 
@@ -89,10 +86,7 @@ function update_branca($db, $data)
 
 function delete_branca($db, $data)
 {
-    if (!$data || !isset($data['id_branca'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: id_branca.'], 400);
-        return;
-    }
+    validate_required_fields($data, ['id_branca']);
 
     try {
         $sql = <<<EOD

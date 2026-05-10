@@ -180,23 +180,18 @@ git reset --soft HEAD~1
 > il numero di volte necessario.
 ---
 
-PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
-git pull
-
-
----
 ## 🔀 Nomenclatura rotte e handlers
 
 ### Standard rotte API
 
-Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD.
+Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD su una delle tabelle del DB (con nome al singolare).
 
 | Rotta | Metodo HTTP | Operazione | File handler |
 |---|---|---|---|
-| `/api/branche` | `GET` | Lettura | `read_branche.php` |
-| `/api/branche` | `POST` | Creazione | `create_branche.php` |
-| `/api/branche` | `PUT` | Aggiornamento | `update_branche.php` |
-| `/api/branche` | `DELETE` | Eliminazione | `delete_branche.php` |
+| `/api/branca` | `GET` | Lettura | `read_branca.php` |
+| `/api/branca` | `POST` | Creazione | `create_branca.php` |
+| `/api/branca` | `PUT` | Aggiornamento | `update_branca.php` |
+| `/api/branca` | `DELETE` | Eliminazione | `delete_branca.php` |
 
 ### Regola di nomenclatura
 

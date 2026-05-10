@@ -1,5 +1,6 @@
 <?php
-function read_partecipa($db) {
+function read_partecipa($db, $data)
+{
     try {
         $sql = "SELECT * FROM Partecipa";
         $results = $db->query($sql);
@@ -9,19 +10,21 @@ function read_partecipa($db) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-function create_partecipa($db) {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['id_attivita']) || !isset($data['id_unita'])) {
-        json_response(['error' => 'Dati mancanti (id_attivita, id_unita)'], 400);
+function create_partecipa($db, $data)
+{
+    $required_fields = ['id_attivita', 'id_unita'];
+    if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = "INSERT INTO Partecipa (id_attivita, id_unita) VALUES (?, ?)";
+        $sql = <<<EOD
+INSERT INTO Partecipa (id_attivita, id_unita) 
+VALUES (?, ?)
+EOD;
         $params = [
             (int)$data['id_attivita'],
-            (int)$data['id_unita']
+            (int)$data['id_unita'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -29,29 +32,30 @@ function create_partecipa($db) {
         json_response([
             'success' => true,
             'message' => 'Partecipazione creata con successo.',
-            'affected_rows' => $affected_rows
+            'affected_rows' => $affected_rows,
         ], 201);
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante la creazione della partecipazione.'], 500);
     }
 }
-function update_partecipa($db, $id_attivita, $id_unita) 
+function update_partecipa($db, $data)
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['new_id_attivita']) || !isset($data['new_id_unita'])) {
-        json_response(['error' => 'Dati mancanti (new_id_attivita, new_id_unita)'], 400);
+    $required_fields = ['id_attivita', 'id_unita', 'new_id_attivita', 'new_id_unita'];
+    if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = "UPDATE Partecipa SET id_attivita = ?, id_unita = ? WHERE id_attivita = ? AND id_unita = ?";
+        $sql = <<<EOD
+UPDATE Partecipa SET id_attivita = ?, id_unita = ? 
+WHERE id_attivita = ? AND id_unita = ?
+EOD;
         $params = [
-            (int)$data['new_id_attivita'],  
-            (int)$data['new_id_unita'],   
-            (int)$id_attivita,              
-            (int)$id_unita                  
+            (int)$data['new_id_attivita'],
+            (int)$data['new_id_unita'],
+            (int)$data['id_attivita'],
+            (int)$data['id_unita'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -64,20 +68,26 @@ function update_partecipa($db, $id_attivita, $id_unita)
         json_response([
             'success' => true,
             'message' => 'Partecipazione aggiornata con successo.',
-            'affected_rows' => $affected_rows
+            'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'aggiornamento della partecipazione.'], 500);
     }
+}
 
-    function delete_partecipa($db, $id_attivita, $id_unita) 
-    {
-        try {
+function delete_partecipa($db, $data)
+{
+    $required_fields = ['id_attivita', 'id_unita'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
+
+    try {
         $sql = "DELETE FROM Partecipa WHERE id_attivita = ? AND id_unita = ?";
         $params = [
-            (int)$id_attivita,
-            (int)$id_unita
+            (int)$data['id_attivita'],
+            (int)$data['id_unita'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -90,12 +100,10 @@ function update_partecipa($db, $id_attivita, $id_unita)
         json_response([
             'success' => true,
             'message' => 'Partecipazione eliminata con successo.',
-            'affected_rows' => $affected_rows
+            'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {
         error_log($e->getMessage());
         json_response(['error' => 'Errore durante l\'eliminazione della partecipazione.'], 500);
     }
-}
-    
 }

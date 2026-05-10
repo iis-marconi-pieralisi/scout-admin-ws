@@ -17,21 +17,18 @@ function read_unita($db)
 }
 
 
-function create_unita($db)
+function create_unita($db, $data)
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['nome_unita']) || !isset($data['id_branca'])) {
-        json_response(['error' => 'Campi obbligatori mancanti: nome_unita, id_branca.'], 400);
+    $required_fields = ['nome_unita', 'id_branca'];
+    if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            INSERT INTO Unita (nome_unita, id_branca)
-            VALUES (?, ?)
-        EOD;
-
+INSERT INTO Unita (nome_unita, id_branca)
+VALUES (?, ?)
+EOD;
         $params = [
             $data['nome_unita'],
             (int)$data['id_branca'],
@@ -40,23 +37,20 @@ function create_unita($db)
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success'       => true,
-            'message'       => 'Unita creata con successo.',
+            'success' => true,
+            'message' => 'Unita creata con successo.',
             'affected_rows' => $affected_rows,
-        ]);
-
+        ], 201);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
 
 
-function update_unita($db)
+function update_unita($db, $data)
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['id_unita']) || !isset($data['nome_unita']) || !isset($data['id_branca'])) {
-        json_response(['error' => 'Campi obbligatori mancanti: id_unita, nome_unita, id_branca.'], 400);
+    $required_fields = ['id_unita', 'nome_unita', 'id_branca'];
+    if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
@@ -88,12 +82,10 @@ function update_unita($db)
 }
 
 
-function delete_unita($db)
+function delete_unita($db, $data)
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data || !isset($data['id_unita'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: id_unita.'], 400);
+    $required_fields = ['id_unita'];
+    if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
@@ -106,11 +98,10 @@ function delete_unita($db)
         $affected_rows = $db->query($sql, [(int)$data['id_unita']]);
 
         json_response([
-            'success'       => true,
-            'message'       => 'Unita eliminata.',
+            'success' => true,
+            'message' => 'Unita eliminata con successo.',
             'affected_rows' => $affected_rows,
         ]);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
