@@ -1,34 +1,65 @@
 <?php
-// Questo array associa un URI e un metodo HTTP a una specifica funzione
-// definita nel file handlers.php.
 
+// Include tutti i file PHP nella cartella handlers/ in modo automatico.
+foreach (glob(__DIR__ . '/handlers/*.php') as $handler_file) {
+    require_once $handler_file;
+}
+
+// ---------------------------------------------------------------------------
+// Tabella delle rotte
+// Aggiungere rispettando l'ordine alfabetico per comodità di lettura.
+//
+// TODO #1: rimuovere rotte parametriche e usare sempre json (anche per GET)
+// TODO #2: uniformare le implementazioni degli handler (assicurandosi di usare la classe db helper)
+// TODO #3: verificare il funzionamento delle rotte
+// TODO #4: rimuovere json_decode dalle implementazioni degli handler perchè viene passato in automatico dal router.
+// ---------------------------------------------------------------------------
 $routes = [
-    // Rotte che rispondono al metodo GET
     'GET' => [
-        // Rotta custom che usa un suo handler specifico
+        '/api/account' => 'read_account',
+        '/api/attivita' => 'read_attivita',
+        '/api/branca' => 'read_branca',
+        '/api/iscrizione' => 'read_iscrizione',
+        '/api/iter' => 'read_iter',
+        '/api/partecipa' => 'read_partecipa',
+        '/api/pagamento' => 'read_pagamento',
+        '/api/persona' => 'read_persona',
         '/api/prova' => 'mostra_messaggio_di_prova',
-        '/api/account' => 'read_account',    
-        '/api/servizi'=>'read_servizi',
-        '/api/branche' => 'read_branche',
-        '/api/persone' => 'read_persone',
+        '/api/servizio' => 'read_servizio',
+        '/api/unita' => 'read_unita',
     ],
-
-    // Rotte che rispondono al metodo POST
     'POST' => [
-        '/api/auth' => 'authenticate_user',
-        '/api/products' => 'create_product',
-        '/api/account' => 'create_account'
+        '/api/account' => 'create_account',
+        //'/api/auth' => 'authenticate_user',
+        '/api/attivita' => 'create_attivita',
+        '/api/branca' => 'create_branca',
+        '/api/iter' => 'create_iter',
+        '/api/iscrizione' => 'create_iscrizione',
+        '/api/pagamento' => 'create_pagamento',
+        '/api/partecipa' => 'create_partecipa',
+        '/api/unita' => 'create_unita'
     ],
-    
     'PUT' => [
-        '/api/products/:id' => 'update_product',
-        '/api/account/:id' => 'update_account'
+        '/api/account' => 'update_account',
+        '/api/attivita' => 'update_attivita',
+        '/api/branca' => 'update_branca',
+        '/api/iter' => 'update_iter',
+        '/api/iscrizione' => 'update_iscrizione',
+        '/api/pagamento' => 'update_pagamento',
+        '/api/partecipa' => 'update_partecipa',
+        '/api/persona' => 'update_persona',
+        '/api/servizio' => 'update_servizio',
+        '/api/unita' => 'update_unita'
     ],
-    
-    // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
     'DELETE' => [
         '/api/account' => 'delete_account',
-        '/api/persona/:id' => 'delete_persona'
-    ],
-
+        '/api/attivita' => 'delete_attivita',
+        '/api/branca' => 'delete_branca',
+        '/api/iter' => 'delete_iter',
+        '/api/iscrizione' => 'delete_iscrizione',
+        '/api/partecipa' => 'delete_partecipa',
+        '/api/pagamento' => 'delete_pagamento',
+        '/api/persona' => 'delete_persona',
+        '/api/unita' => 'delete_unita'
+    ]
 ];
