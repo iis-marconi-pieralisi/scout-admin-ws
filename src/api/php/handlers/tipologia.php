@@ -19,9 +19,9 @@ function create_tipologia($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Tipologia (nome, descrizione)
-VALUES (?, ?)
-EOD;
+                INSERT INTO Tipologia (nome, descrizione)
+                VALUES (?, ?)
+                EOD;
         $params = [
             $data['nome'],
             $data['descrizione'],

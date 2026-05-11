@@ -30,7 +30,7 @@ $routes = [
     ],
     'POST' => [
         '/api/account' => 'create_account',
-        //'/api/auth' => 'authenticate_user',
+        '/api/auth' => 'authenticate_user',
         '/api/attivita' => 'create_attivita',
         '/api/branca' => 'create_branca',
         '/api/iter' => 'create_iter',
