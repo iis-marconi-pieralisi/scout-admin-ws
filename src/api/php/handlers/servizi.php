@@ -58,6 +58,7 @@ function read_servizio($db)
     }
 }
 
+
 //POST 
 function create_servizio($db) 
 {
@@ -99,6 +100,8 @@ function create_servizio($db)
         mostra_messaggio_di_prova($db);
     }
 }
+
+
 function update_servizio($db)
 {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -116,11 +119,10 @@ function update_servizio($db)
         return;
     }
 
-    try {
+    try 
+    {
         // aggiorna la descrizione del servizio identificato dalla chiave composta
-        $sql = "
-            UPDATE servizi SET descrizione = ? WHERE anno_associativo = ? AND id_persona = ? AND id_tipologia = ? AND id_unità = ?
-        ";
+        $sql = "UPDATE servizi SET descrizione = ? WHERE anno_associativo = ? AND id_persona = ? AND id_tipologia = ? AND id_unità = ?";
 
         $params = [
             $data['descrizione'],
@@ -138,7 +140,8 @@ function update_servizio($db)
             'affected_rows' => $affected_rows
         ]);
 
-    } catch (Exception $e) {
+    } catch (Exception $e) 
+    {
         json_response(['error' => 'Errore durante l\'aggiornamento del servizio.'], 500);
     }
 }
