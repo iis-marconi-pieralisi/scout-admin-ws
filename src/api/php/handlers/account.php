@@ -2,7 +2,10 @@
 function read_account($db, $data)
 {
     try {
-        $sql = "SELECT * FROM Account";
+        $sql = <<<EOD
+            SELECT * 
+            FROM Account
+            EOD;
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
@@ -12,21 +15,20 @@ function read_account($db, $data)
 
 function create_account($db, $data)
 {
-    $required_fields = ['username', 'password', 'email', 'id_persona'];
+    $required_fields = ['username', 'password', 'email'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-INSERT INTO Account (username, password, email, id_persona) 
-VALUES (?, ?, ?, ?)
-EOD;
+            INSERT INTO Account (username, password, email) 
+            VALUES (?, ?, ?)
+            EOD;
         $params = [
             $data['username'],
             password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
-            (int)$data['id_persona'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -43,20 +45,19 @@ EOD;
 
 function update_account($db, $data)
 {
-    $required_fields = ['username', 'password', 'email', 'id_persona'];
+    $required_fields = ['username', 'password', 'email'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-UPDATE Account SET password = ?, email = ?, id_persona = ? 
-WHERE username = ?
-EOD;
+            UPDATE Account SET password = ?, email = ? 
+            WHERE username = ?
+            EOD;
         $params = [
             password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
-            (int)$data['id_persona'],
             $data['username'],
         ];
 
@@ -80,7 +81,10 @@ function delete_account($db, $data)
     }
 
     try {
-        $sql = "DELETE FROM Account WHERE username = ?";
+        $sql = <<<EOD
+            DELETE FROM Account 
+            WHERE username = ?
+            EOD;
         $affected_rows = $db->query($sql, [$data['username']]);
 
         json_response([

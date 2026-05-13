@@ -2,7 +2,10 @@
 function read_iscrizione($db, $data)
 {
     try {
-        $sql = "SELECT * FROM Iscrizione";
+        $sql = <<<EOD
+            SELECT * 
+            FROM Iscrizione
+            EOD;
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
@@ -19,9 +22,9 @@ function create_iscrizione($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Iscrizione (anno_associativo, approvazione_capo, id_persona, id_pagamento, id_unita, id_iter) 
-VALUES (?, ?, ?, ?, ?, ?)
-EOD;
+            INSERT INTO Iscrizione (anno_associativo, approvazione_capo, id_persona, id_pagamento, id_unita, id_iter) 
+            VALUES (?, ?, ?, ?, ?, ?)
+            EOD;
         $params = [
             (int)$data['anno_associativo'],
             (bool)$data['approvazione_capo'],
@@ -52,9 +55,9 @@ function update_iscrizione($db, $data)
 
     try {
         $sql = <<<EOD
-UPDATE Iscrizione SET approvazione_capo = ?, id_pagamento = ?, id_unita = ?, id_iter = ? 
-WHERE anno_associativo = ? AND id_persona = ?
-EOD;
+            UPDATE Iscrizione SET approvazione_capo = ?, id_pagamento = ?, id_unita = ?, id_iter = ? 
+            WHERE anno_associativo = ? AND id_persona = ?
+            EOD;
         $params = [
             (bool)$data['approvazione_capo'],
             (int)$data['id_pagamento'],
@@ -84,7 +87,10 @@ function delete_iscrizione($db, $data)
     }
 
     try {
-        $sql = "DELETE FROM Iscrizione WHERE anno_associativo = ? AND id_persona = ?";
+        $sql = <<<EOD
+            DELETE FROM Iscrizione 
+            WHERE anno_associativo = ? AND id_persona = ?
+            EOD;
         $affected_rows = $db->query($sql, [(int)$data['anno_associativo'], (int)$data['id_persona']]);
 
         json_response([
