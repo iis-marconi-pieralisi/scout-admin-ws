@@ -1,5 +1,5 @@
 <?php
-function read_servizio($db, $data)
+function read_servizio($db)
 {
     try {
         $sql = "SELECT * FROM Servizio";
@@ -7,6 +7,8 @@ function read_servizio($db, $data)
         json_response($results);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
+        //json_response(['error' => $e->getMessage()], 500); // ← temporaneo per debug
+
     }
 }
 function create_servizio($db, $data)
@@ -38,7 +40,9 @@ EOD;
         ], 201);
     } catch (Exception $e) {
         error_log($e->getMessage());
-        json_response(['error' => 'Errore interno del server.'], 500);
+        //json_response(['error' => 'Errore interno del server.'], 500);
+        json_response(['error' => $e->getMessage()], 500); // ← temporaneo per debug
+
     }
 }
 function update_servizio($db, $data)
