@@ -19,7 +19,6 @@ $routes = [
         '/api/users' => 'generic_table_handler',
         '/api/products' => 'generic_table_handler',
         '/api/orders' => 'get_orders_join',
-<<<<<<< Updated upstream
         '/api/partecipa' => 'get_all_partecipa',
         '/api/branche' => 'read_branche',
         '/api/account' => 'read_account',        
@@ -27,16 +26,11 @@ $routes = [
         '/api/persona' => 'read_persone',
         '/api/attivita' => 'read_attivita',
         '/api/pagamento' => 'read_pagamento'
-=======
-        '/api/partecipa' => 'get_all_partecipa',     // lista tutto
-
     ],
->>>>>>> Stashed changes
 
-    ],
+
     'POST' => [
         '/api/products' => 'create_product',
-<<<<<<< Updated upstream
         '/api/partecipa' =>  'create_partecipa',
         '/api/auth' => 'authenticate_user',
         '/api/account' => 'create_account',
@@ -44,16 +38,12 @@ $routes = [
         '/api/branche' => 'create_branche',
         '/api/attivita' => 'create_attivita',
         '/api/pagamento' => 'create_pagamento'
-=======
-        '/api/auth' => 'authenticate_user',
-        'api/partecipa' =>  'create_partecipa',
->>>>>>> Stashed changes
+
     ],
     
     'PUT' => [
         '/api/products/:id' => 'update_product',
         '/api/partecipa/:id_attivita/:id_unita' => 'update_partecipa',
-<<<<<<< Updated upstream
         '/api/account/:id' => 'update_account',
         '/api/iter/:id' => 'update_iter',
         '/api/branche' => 'update_branche',
@@ -70,15 +60,6 @@ $routes = [
         'api/attivita' => 'delete_attivita',
         '/api/pagamento' => 'delete_pagamento'
     ]
-
-=======
-    ],
-    
-    'DELETE' => [
-        '/api/partecipa/:id_attivita/:id_unita' => 'delete_partecipa',
-    ]
-    // Puoi aggiungere qui altri metodi come PUT, DELETE, etc.
->>>>>>> Stashed changes
 ];
 
 // ---------------------------------------------------------------------------
