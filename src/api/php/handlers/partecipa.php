@@ -10,6 +10,7 @@ function read_partecipa($db, $data)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
 function create_partecipa($db, $data)
 {
     $required_fields = ['id_attivita', 'id_unita'];
@@ -19,10 +20,10 @@ function create_partecipa($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Partecipa (id_attivita, id_unita) 
-VALUES (?, ?)
-EOD;
-        $params = [
+        INSERT INTO Partecipa (id_attivita, id_unita) 
+        VALUES (?, ?)
+        EOD;
+                $params = [
             (int)$data['id_attivita'],
             (int)$data['id_unita'],
         ];
@@ -39,6 +40,7 @@ EOD;
         json_response(['error' => 'Errore durante la creazione della partecipazione.'], 500);
     }
 }
+
 function update_partecipa($db, $data)
 {
     $required_fields = ['id_attivita', 'id_unita', 'new_id_attivita', 'new_id_unita'];
@@ -48,9 +50,9 @@ function update_partecipa($db, $data)
 
     try {
         $sql = <<<EOD
-UPDATE Partecipa SET id_attivita = ?, id_unita = ? 
-WHERE id_attivita = ? AND id_unita = ?
-EOD;
+        UPDATE Partecipa SET id_attivita = ?, id_unita = ? 
+        WHERE id_attivita = ? AND id_unita = ?
+        EOD;
         $params = [
             (int)$data['new_id_attivita'],
             (int)$data['new_id_unita'],
