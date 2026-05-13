@@ -1,105 +1,87 @@
 <?php
-
-function read_unita($db)
+function read_pagamento($db, $data)
 {
     try {
-        $sql = <<<EOD
-            SELECT  *
-            FROM    Unita
-        EOD;
-
+        $sql = "SELECT * FROM Pagamento ORDER BY data DESC";
         $results = $db->query($sql);
         json_response($results);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-
-
-function create_unita($db, $data)
+function create_pagamento($db, $data)
 {
-    $required_fields = ['nome_unita', 'id_branca'];
+    $required_fields = ['importo', 'metodo', 'data'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-INSERT INTO Unita (nome_unita, id_branca)
-VALUES (?, ?)
+INSERT INTO Pagamento (importo, metodo, data) 
+VALUES (?, ?, ?)
 EOD;
         $params = [
-            $data['nome_unita'],
-            (int)$data['id_branca'],
+            $data['importo'],
+            $data['metodo'],
+            $data['data'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Unita creata con successo.',
+            'message' => 'Pagamento creato con successo.',
             'affected_rows' => $affected_rows,
         ], 201);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-
-
-function update_unita($db, $data)
+function update_pagamento($db, $data)
 {
-    $required_fields = ['id_unita', 'nome_unita', 'id_branca'];
+    $required_fields = ['id_pagamento', 'importo', 'metodo', 'data'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            UPDATE  Unita
-            SET     nome_unita  = ?,
-                    id_branca   = ?
-            WHERE   id_unita    = ?
-        EOD;
-
+UPDATE Pagamento SET importo = ?, metodo = ?, data = ? 
+WHERE id_pagamento = ?
+EOD;
         $params = [
-            $data['nome_unita'],
-            (int)$data['id_branca'],
-            (int)$data['id_unita'],
+            $data['importo'],
+            $data['metodo'],
+            $data['data'],
+            (int)$data['id_pagamento'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success'       => true,
-            'message'       => 'Unita aggiornata.',
+            'success' => true,
+            'message' => 'Pagamento aggiornato con successo.',
             'affected_rows' => $affected_rows,
         ]);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-
-
-function delete_unita($db, $data)
+function delete_pagamento($db, $data)
 {
-    $required_fields = ['id_unita'];
+    $required_fields = ['id_pagamento'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = <<<EOD
-            DELETE FROM Unita
-            WHERE id_unita = ?
-        EOD;
-
-        $affected_rows = $db->query($sql, [(int)$data['id_unita']]);
+        $sql = "DELETE FROM Pagamento WHERE id_pagamento = ?";
+        $affected_rows = $db->query($sql, [(int)$data['id_pagamento']]);
 
         json_response([
             'success' => true,
-            'message' => 'Unita eliminata con successo.',
+            'message' => 'Pagamento eliminato con successo.',
             'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {

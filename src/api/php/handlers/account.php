@@ -1,44 +1,39 @@
 <?php
-
-function read_unita($db)
+function read_account($db, $data)
 {
     try {
-        $sql = <<<EOD
-            SELECT  *
-            FROM    Unita
-        EOD;
-
+        $sql = "SELECT * FROM Account";
         $results = $db->query($sql);
         json_response($results);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
 
-
-function create_unita($db, $data)
+function create_account($db, $data)
 {
-    $required_fields = ['nome_unita', 'id_branca'];
+    $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-INSERT INTO Unita (nome_unita, id_branca)
-VALUES (?, ?)
+INSERT INTO Account (username, password, email, id_persona) 
+VALUES (?, ?, ?, ?)
 EOD;
         $params = [
-            $data['nome_unita'],
-            (int)$data['id_branca'],
+            $data['username'],
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['email'],
+            (int)$data['id_persona'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Unita creata con successo.',
+            'message' => 'Account creato con successo.',
             'affected_rows' => $affected_rows,
         ], 201);
     } catch (Exception $e) {
@@ -46,60 +41,51 @@ EOD;
     }
 }
 
-
-function update_unita($db, $data)
+function update_account($db, $data)
 {
-    $required_fields = ['id_unita', 'nome_unita', 'id_branca'];
+    $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            UPDATE  Unita
-            SET     nome_unita  = ?,
-                    id_branca   = ?
-            WHERE   id_unita    = ?
-        EOD;
-
+UPDATE Account SET password = ?, email = ?, id_persona = ? 
+WHERE username = ?
+EOD;
         $params = [
-            $data['nome_unita'],
-            (int)$data['id_branca'],
-            (int)$data['id_unita'],
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['email'],
+            (int)$data['id_persona'],
+            $data['username'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success'       => true,
-            'message'       => 'Unita aggiornata.',
+            'success' => true,
+            'message' => 'Account aggiornato con successo.',
             'affected_rows' => $affected_rows,
         ]);
-
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
 
-
-function delete_unita($db, $data)
+function delete_account($db, $data)
 {
-    $required_fields = ['id_unita'];
+    $required_fields = ['username'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = <<<EOD
-            DELETE FROM Unita
-            WHERE id_unita = ?
-        EOD;
-
-        $affected_rows = $db->query($sql, [(int)$data['id_unita']]);
+        $sql = "DELETE FROM Account WHERE username = ?";
+        $affected_rows = $db->query($sql, [$data['username']]);
 
         json_response([
             'success' => true,
-            'message' => 'Unita eliminata con successo.',
+            'message' => 'Account eliminato con successo.',
             'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {
