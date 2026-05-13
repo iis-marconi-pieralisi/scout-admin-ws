@@ -1,14 +1,8 @@
-
 <?php
-    function authenticate_user($db) 
+    function authenticate_user($db, $data) 
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        if (!$data || !isset($data['email']) || !isset($data['password'])) 
-        {
-            json_response(['error' => 'Dati mancanti'], 400);
+        if ( !validate_required_fields($data, ['email', 'password']) )
             return;
-        }
 
         try
         {
@@ -50,3 +44,4 @@
             json_response(['error' => $e->getMessage()], 500);
         }
     }
+?>
