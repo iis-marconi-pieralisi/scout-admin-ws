@@ -180,23 +180,18 @@ git reset --soft HEAD~1
 > il numero di volte necessario.
 ---
 
-PRIMA DI INIZIARE A LAVORARE BISOGNA SEMPRE FARE
-git pull
-
-
----
 ## 🔀 Nomenclatura rotte e handlers
 
 ### Standard rotte API
 
-Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD.
+Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde a un'operazione CRUD su una delle tabelle del DB (con nome al singolare).
 
 | Rotta | Metodo HTTP | Operazione | File handler |
 |---|---|---|---|
-| `/api/branche` | `GET` | Lettura | `read_branche.php` |
-| `/api/branche` | `POST` | Creazione | `create_branche.php` |
-| `/api/branche` | `PUT` | Aggiornamento | `update_branche.php` |
-| `/api/branche` | `DELETE` | Eliminazione | `delete_branche.php` |
+| `/api/branca` | `GET` | Lettura | `read_branca.php` |
+| `/api/branca` | `POST` | Creazione | `create_branca.php` |
+| `/api/branca` | `PUT` | Aggiornamento | `update_branca.php` |
+| `/api/branca` | `DELETE` | Eliminazione | `delete_branca.php` |
 
 ### Regola di nomenclatura
 
@@ -207,10 +202,10 @@ Le rotte seguono il pattern `/api/<nome_tabella>` e ogni metodo HTTP corrisponde
 I verbi CRUD utilizzati sono: `create`, `read`, `update`, `delete`.
 
 **Esempi:**
-- `create_branche.php`
+- `create_branca.php`
 - `read_partecipa.php`
-- `update_utenti.php`
-- `delete_eventi.php`
+- `update_utente.php`
+- `delete_evento.php`
 
 ---
 ## 📁 Organizzazione degli handlers
@@ -236,17 +231,16 @@ src/
 > Una Pull Request è come consegnare un lavoro al professore per la revisione:
 > carichi le tue modifiche su un branch separato e chiedi al responsabile
 > del progetto di approvarle prima che vengano unite al `main`.
-> Il nome del branch deve descrivere **cosa stai implementando**,
-> non il file che stai modificando. Es: `feature/crud-partecipa`,
-> `feature/rotta-branche`, `feature/login-utente`.
+> In questo contesto didattico, utilizziamo un branch dedicato per ogni gruppo,
+> che viene mantenuto attivo per tutto il progetto e non viene eliminato dopo il merge.
 
 ### ⌨️ Comandi
 
-#### 1. 🌿 Crea e spostati sul nuovo branch
+#### 1. 🌿 Crea e/o spostati sul branch del gruppo (se non esiste già)
 ```bash
-git checkout -b feature/cosa-stai-implementando
+git checkout -b nome-del-tuo-gruppo
 ```
-> Es: `git checkout -b feature/crud-partecipa`
+> Es: `git checkout -b admin`
 
 ---
 
@@ -260,9 +254,9 @@ git commit -m "descrizione modifica"
 
 #### 3. 🚀 Carica il branch su GitHub
 ```bash
-git push origin feature/cosa-stai-implementando
+git push origin nome-del-tuo-gruppo
 ```
-> Es: `git push origin feature/crud-partecipa`
+> Es: `git push origin admin`
 
 ---
 
@@ -281,11 +275,8 @@ git pull
 ```
 ---
 
-#### 6. 🗑️ Elimina il branch locale
-```bash
-git branch -d feature/cosa-stai-implementando
-```
-> ⚠️ `-d` elimina solo se il branch è già stato mergiato, quindi è sicuro!
+> **Nota:** A differenza del workflow standard, i branch dei gruppi vengono mantenuti attivi
+> per permettere aggiornamenti continui e facilitare la logistica didattica.
 
 ---
 

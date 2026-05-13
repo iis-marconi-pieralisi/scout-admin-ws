@@ -1,18 +1,16 @@
 <?php
 
-// core/index.php (Il Direttore d'Orchestra)
-
 // Mostra tutti gli errori - utile in fase di sviluppo
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // 1. Carica i file necessari nell'ordine corretto
 
+// Funzioni helper condivise (json_response, generic_table_handler)
+require_once __DIR__ . '/helpers.php';
+
 // La mappa delle rotte (risale di un livello)
 require_once __DIR__ . '/../routes.php';
-
-// Le funzioni che gestiscono le rotte (risale di un livello)
-require_once __DIR__ . '/../handlers.php';
 
 // La funzione di routing (nella stessa cartella)
 require_once __DIR__ . '/router.php';
