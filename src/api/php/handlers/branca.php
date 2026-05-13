@@ -24,7 +24,10 @@ function read_branca($db, $data)
 
 function create_branca($db, $data)
 {
-    validate_required_fields($data, ['nome_branca', 'min_eta', 'max_eta']);
+    $required_fields = ['nome_branca', 'min_eta', 'max_eta'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
 
     try {
         $sql = <<<EOD
@@ -53,7 +56,10 @@ function create_branca($db, $data)
 
 function update_branca($db, $data)
 {
-    validate_required_fields($data, ['id_branca', 'nome_branca', 'min_eta', 'max_eta']);
+    $required_fields = ['id_branca', 'nome_branca', 'min_eta', 'max_eta'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
 
     try {
         $sql = <<<EOD
@@ -86,7 +92,10 @@ function update_branca($db, $data)
 
 function delete_branca($db, $data)
 {
-    validate_required_fields($data, ['id_branca']);
+    $required_fields = ['id_branca'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
 
     try {
         $sql = <<<EOD
