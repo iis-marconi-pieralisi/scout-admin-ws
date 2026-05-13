@@ -1,5 +1,6 @@
 <?php
-function read_attivita($db){
+function read_attivita($db, $data)
+{
     try {
         $sql = "SELECT * FROM Attivita ORDER BY data DESC";
         $results = $db->query($sql);
@@ -8,38 +9,91 @@ function read_attivita($db){
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-function create_attivita($db){
-    try {
-        $sql = "INSERT INTO Attivita VALUES (nome, descrizione, luogo _partenza, luogo_arrivo, data, id_persona)";
-    }
-    catch(Exception $e)
-    {}
-}
-function update_attivita($db){
-    try {
-        $sql = "UPDATE Attivita SET id_attivita = ? , nome = ? , descrizione = ? , luogo _partenza = ? , luogo_arrivo = ? , data = ? , id_persona = ? WHERE id_attivita = ?";
-        $results = $db->query($sql);
-        json_response($results);
-    } catch (Exception $e) {
-        json_response(['error' => 'Errore interno del server.'], 500);
-        $sql = "INSERT INTO Iter VALUES (NULL, ?, ?, ?)";
 
+function create_attivita($db, $data)
+{
+    $required_fields = ['nome', 'luogo_partenza', 'luogo_arrivo', 'data', 'id_persona'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
+
+    try {
+        $sql = <<<EOD
+            INSERT INTO Attivita (nome, descrizione, luogo_partenza, luogo_arrivo, data, id_persona) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        EOD;
         $params = [
-            $data['name'],          // 1° ? -> name (stringa)
-            $data['description'],  // 2° ? -> description (stringa),
-            (int)$data['branca']         //3° ? -> branca(int)
+            $data['nome'],
+            $data['descrizione'] ?? null,
+            $data['luogo_partenza'],
+            $data['luogo_arrivo'],
+            $data['data'],
+            (int)$data['id_persona'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => "Iter aggiornato (Nome e Branca).",
-            'affected_rows' => $affected_rows
-        ]);
-
+            'message' => 'Attività creata con successo.',
+            'affected_rows' => $affected_rows,
+        ], 201);
     } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante la creazione dell\' iter. '], 500);
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+function update_attivita($db, $data)
+{
+    $required_fields = ['id_attivita', 'nome', 'luogo_partenza', 'luogo_arrivo', 'data', 'id_persona'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
+
+    try {
+        $sql = <<<EOD
+            UPDATE Attivita SET nome = ?, descrizione = ?, luogo_partenza = ?, luogo_arrivo = ?, data = ?, id_persona = ? 
+            WHERE id_attivita = ?
+        EOD;
+        $params = [
+            $data['nome'],
+            $data['descrizione'] ?? null,
+            $data['luogo_partenza'],
+            $data['luogo_arrivo'],
+            $data['data'],
+            (int)$data['id_persona'],
+            (int)$data['id_attivita'],
+        ];
+
+        $affected_rows = $db->query($sql, $params);
+
+        json_response([
+            'success' => true,
+            'message' => 'Attività aggiornata con successo.',
+            'affected_rows' => $affected_rows,
+        ]);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
+    }
+}
+
+function delete_attivita($db, $data)
+{
+    $required_fields = ['id_attivita'];
+    if (!validate_required_fields($data, $required_fields)) {
+        return;
+    }
+
+    try {
+        $sql = "DELETE FROM Attivita WHERE id_attivita = ?";
+        $affected_rows = $db->query($sql, [(int)$data['id_attivita']]);
+
+        json_response([
+            'success' => true,
+            'message' => 'Attività eliminata con successo.',
+            'affected_rows' => $affected_rows,
+        ]);
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
     }
 }

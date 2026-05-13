@@ -1,40 +1,41 @@
 <?php
-function read_branche($db) 
+
+function read_branca($db, $data) 
 {
     try {
         // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
-            SELECT 	*
+            SELECT  *
             FROM Branca
         EOD;
+        
+        // Se in futuro vorrai usare il body del JSON per filtrare (es. $data['filtro']),
+        // potrai estrarlo comodamente da $data.
+        
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) 
-     
     {
         // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
         // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-function create_branche($db)
-{
-    $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!$data || !isset($data['nome'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: nome.'], 400);
-        return;
-    }
+function create_branca($db, $data)
+{
+    validate_required_fields($data, ['nome_branca', 'min_eta', 'max_eta']);
 
     try {
         $sql = <<<EOD
-            INSERT INTO Branca (nome, descrizione)
-            VALUES (?, ?)
+            INSERT INTO Branca (nome_branca, min_eta, max_eta)
+            VALUES (?, ?, ?)
         EOD;
 
         $params = [
-            $data['nome'],
-            $data['descrizione'] ?? null,
+            $data['nome_branca'],
+            (int)$data['min_eta'],
+            (int)$data['max_eta'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -49,26 +50,24 @@ function create_branche($db)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-function update_branche($db)
-{
-    $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!$data || !isset($data['id_branca']) || !isset($data['nome'])) {
-        json_response(['error' => 'Campi obbligatori mancanti: id_branca, nome.'], 400);
-        return;
-    }
+function update_branca($db, $data)
+{
+    validate_required_fields($data, ['id_branca', 'nome_branca', 'min_eta', 'max_eta']);
 
     try {
         $sql = <<<EOD
             UPDATE  Branca
-            SET     nome        = ?,
-                    descrizione = ?
+            SET     nome_branca = ?,
+                    min_eta     = ?,
+                    max_eta     = ?
             WHERE   id_branca   = ?
         EOD;
 
         $params = [
-            $data['nome'],
-            $data['descrizione'] ?? null,
+            $data['nome_branca'],
+            (int)$data['min_eta'],
+            (int)$data['max_eta'],
             (int)$data['id_branca'],
         ];
 
@@ -84,14 +83,10 @@ function update_branche($db)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-function delete_branche($db)
-{
-    $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!$data || !isset($data['id_branca'])) {
-        json_response(['error' => 'Campo obbligatorio mancante: id_branca.'], 400);
-        return;
-    }
+function delete_branca($db, $data)
+{
+    validate_required_fields($data, ['id_branca']);
 
     try {
         $sql = <<<EOD

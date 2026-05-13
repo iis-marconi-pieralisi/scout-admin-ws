@@ -2,3 +2,5 @@
 .devcontainer/mariadb_run
 src/api/php/vendor
 src/api/php/composer.lock
+contrib_reports/*.log
+contrib_reports/*.md
