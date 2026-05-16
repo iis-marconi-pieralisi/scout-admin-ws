@@ -24,8 +24,7 @@ function read_branca($db, $data)
 
 function create_branca($db, $data)
 {
-    if ( !validate_required_fields($data, ['nome_branca', 'min_eta', 'max_eta']) )
-        return;
+    validate_required_fields($data, ['nome_branca', 'min_eta', 'max_eta']);
 
     try {
         $sql = <<<EOD

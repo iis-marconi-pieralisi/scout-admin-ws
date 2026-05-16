@@ -28,6 +28,7 @@
                 $tipologia = $result[0]['nome'];
                 
                 $_SESSION['username'] = $username;
+                $_SESSION['tipologia'] = $tipologia;
                 $sessionId = session_id();
 
                 json_response([

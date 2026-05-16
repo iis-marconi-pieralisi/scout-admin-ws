@@ -1,5 +1,5 @@
 <?php
-function read_account($db)
+function read_account($db, $data)
 {
     try {
         $sql = "SELECT * FROM Account";
@@ -12,30 +12,25 @@ function read_account($db)
 
 function create_account($db, $data)
 {
-    $required_fields = ['username', 'password', 'email'];
+    $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
-    echo "PROVA";
-
     try {
         $sql = <<<EOD
-        INSERT INTO Account (username, password, email) 
-        VALUES (?, ?, ?)
-        EOD;
-
-            echo "PROVA2";
+INSERT INTO Account (username, password, email, id_persona) 
+VALUES (?, ?, ?, ?)
+EOD;
         $params = [
             $data['username'],
             password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
+            (int)$data['id_persona'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
-        echo "PROVA3";
-        
         json_response([
             'success' => true,
             'message' => 'Account creato con successo.',
