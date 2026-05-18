@@ -1,41 +1,37 @@
 <?php
-function read_attivita($db, $data)
+function read_iter($db, $data)
 {
     try {
-        $sql = "SELECT * FROM Attivita ORDER BY data DESC";
+        $sql = "SELECT * FROM Iter";
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-
-function create_attivita($db, $data)
+function create_iter($db, $data)
 {
-    $required_fields = ['nome', 'luogo_partenza', 'luogo_arrivo', 'data', 'id_persona'];
+    $required_fields = ['nome', 'id_branca'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            INSERT INTO Attivita (nome, descrizione, luogo_partenza, luogo_arrivo, data, id_persona) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        EOD;
+INSERT INTO Iter (nome, descrizione, id_branca) 
+VALUES (?, ?, ?)
+EOD;
         $params = [
             $data['nome'],
             $data['descrizione'] ?? null,
-            $data['luogo_partenza'],
-            $data['luogo_arrivo'],
-            $data['data'],
-            (int)$data['id_persona'],
+            (int)$data['id_branca'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Attività creata con successo.',
+            'message' => 'Iter creato con successo.',
             'affected_rows' => $affected_rows,
         ], 201);
     } catch (Exception $e) {
@@ -43,54 +39,50 @@ function create_attivita($db, $data)
     }
 }
 
-function update_attivita($db, $data)
+function update_iter($db, $data)
 {
-    $required_fields = ['id_attivita', 'nome', 'luogo_partenza', 'luogo_arrivo', 'data', 'id_persona'];
+    $required_fields = ['id_iter', 'nome', 'id_branca'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            UPDATE Attivita SET nome = ?, descrizione = ?, luogo_partenza = ?, luogo_arrivo = ?, data = ?, id_persona = ? 
-            WHERE id_attivita = ?
-        EOD;
+UPDATE Iter SET nome = ?, descrizione = ?, id_branca = ? 
+WHERE id_iter = ?
+EOD;
         $params = [
             $data['nome'],
             $data['descrizione'] ?? null,
-            $data['luogo_partenza'],
-            $data['luogo_arrivo'],
-            $data['data'],
-            (int)$data['id_persona'],
-            (int)$data['id_attivita'],
+            (int)$data['id_branca'],
+            (int)$data['id_iter'],
         ];
 
         $affected_rows = $db->query($sql, $params);
 
         json_response([
             'success' => true,
-            'message' => 'Attività aggiornata con successo.',
+            'message' => 'Iter aggiornato con successo.',
             'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-
-function delete_attivita($db, $data)
+function delete_iter($db, $data)
 {
-    $required_fields = ['id_attivita'];
+    $required_fields = ['id_iter'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = "DELETE FROM Attivita WHERE id_attivita = ?";
-        $affected_rows = $db->query($sql, [(int)$data['id_attivita']]);
+        $sql = "DELETE FROM Iter WHERE id_iter = ?";
+        $affected_rows = $db->query($sql, [(int)$data['id_iter']]);
 
         json_response([
             'success' => true,
-            'message' => 'Attività eliminata con successo.',
+            'message' => 'Iter eliminato con successo.',
             'affected_rows' => $affected_rows,
         ]);
     } catch (Exception $e) {
