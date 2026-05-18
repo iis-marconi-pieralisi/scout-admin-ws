@@ -19,11 +19,8 @@ function create_partecipa($db, $data)
     }
 
     try {
-        $sql = <<<EOD
-        INSERT INTO Partecipa (id_attivita, id_unita) 
-        VALUES (?, ?)
-        EOD;
-                $params = [
+        $sql = "INSERT INTO Partecipa (id_attivita, id_unita) VALUES (?, ?)";
+        $params = [
             (int)$data['id_attivita'],
             (int)$data['id_unita'],
         ];
