@@ -2,12 +2,27 @@
 function read_partecipa($db, $data)
 {
     try {
-        $sql = "SELECT * FROM Partecipa";
-        $results = $db->query($sql);
+        if (!empty($data['id_attivita']) && !empty($data['id_unita'])) {
+            $sql = "SELECT * FROM Partecipa WHERE id_attivita = ? AND id_unita = ?";
+            $params = [
+                (int)$data['id_attivita'],
+                (int)$data['id_unita'],
+            ];
+            $results = $db->query($sql, $params);
+        } else {
+            $sql = "SELECT * FROM Partecipa";
+            $results = $db->query($sql);
+        }
+
+        if (empty($results)) {
+            json_response(['error' => 'Partecipazione non trovata.'], 404);
+            return;
+        }
+
         json_response($results);
     } catch (Exception $e) {
         error_log($e->getMessage());
-        json_response(['error' => 'Errore interno del server.'], 500);
+        json_response(['error' => 'Errore durante il recupero delle partecipazioni.'], 500);
     }
 }
 
