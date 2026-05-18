@@ -1,16 +1,22 @@
 <?php
-function read_servizio($db)
+
+function read_servizio($db, $data)
 {
     try {
-        $sql = "SELECT * FROM Servizio";
+        $sql = <<<EOD
+            SELECT  *
+            FROM    Servizio
+        EOD;
+
         $results = $db->query($sql);
         json_response($results);
+
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
-        //json_response(['error' => $e->getMessage()], 500); // ← temporaneo per debug
-
     }
 }
+
+
 function create_servizio($db, $data)
 {
     $required_fields = ['descrizione', 'anno_associativo', 'id_persona', 'id_tipologia', 'id_unita'];
@@ -20,9 +26,10 @@ function create_servizio($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Servizio (descrizione, anno_associativo, id_persona, id_tipologia, id_unita)
-VALUES (?, ?, ?, ?, ?)
-EOD;
+            INSERT INTO Servizio (descrizione, anno_associativo, id_persona, id_tipologia, id_unita)
+            VALUES (?, ?, ?, ?, ?)
+        EOD;
+
         $params = [
             $data['descrizione'],
             (int)$data['anno_associativo'],
@@ -34,17 +41,17 @@ EOD;
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success' => true,
-            'message' => 'Servizio creato con successo.',
+            'success'       => true,
+            'message'       => 'Servizio creato con successo.',
             'affected_rows' => $affected_rows,
         ], 201);
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        //json_response(['error' => 'Errore interno del server.'], 500);
-        json_response(['error' => $e->getMessage()], 500); // ← temporaneo per debug
 
+    } catch (Exception $e) {
+        json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
+
 function update_servizio($db, $data)
 {
     $required_fields = ['anno_associativo', 'id_persona', 'descrizione', 'id_tipologia', 'id_unita'];
@@ -54,9 +61,14 @@ function update_servizio($db, $data)
 
     try {
         $sql = <<<EOD
-UPDATE Servizio SET descrizione = ?, id_tipologia = ?, id_unita = ?
-WHERE anno_associativo = ? AND id_persona = ?
-EOD;
+            UPDATE  Servizio
+            SET     descrizione  = ?,
+                    id_tipologia = ?,
+                    id_unita     = ?
+            WHERE   anno_associativo = ?
+            AND     id_persona       = ?
+        EOD;
+
         $params = [
             $data['descrizione'],
             (int)$data['id_tipologia'],
@@ -68,15 +80,17 @@ EOD;
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success' => true,
-            'message' => 'Servizio aggiornato con successo.',
+            'success'       => true,
+            'message'       => 'Servizio aggiornato con successo.',
             'affected_rows' => $affected_rows,
         ]);
+
     } catch (Exception $e) {
-        error_log($e->getMessage());
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
+
 function delete_servizio($db, $data)
 {
     $required_fields = ['anno_associativo', 'id_persona'];
@@ -86,9 +100,11 @@ function delete_servizio($db, $data)
 
     try {
         $sql = <<<EOD
-DELETE FROM Servizio
-WHERE anno_associativo = ? AND id_persona = ?
-EOD;
+            DELETE FROM Servizio
+            WHERE   anno_associativo = ?
+            AND     id_persona       = ?
+        EOD;
+
         $params = [
             (int)$data['anno_associativo'],
             (int)$data['id_persona'],
@@ -97,12 +113,12 @@ EOD;
         $affected_rows = $db->query($sql, $params);
 
         json_response([
-            'success' => true,
-            'message' => 'Servizio eliminato con successo.',
+            'success'       => true,
+            'message'       => 'Servizio eliminato con successo.',
             'affected_rows' => $affected_rows,
         ]);
+
     } catch (Exception $e) {
-        error_log($e->getMessage());
-        json_response(['error' => 'Errore durante DELETE Servizio'], 500);
+        json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
