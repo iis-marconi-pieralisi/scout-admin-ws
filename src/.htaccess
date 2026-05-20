@@ -1,0 +1,10 @@
+DirectoryIndex frontend/*.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Richieste API: reindirizza solo /api/* al router PHP
+    RewriteCond %{REQUEST_URI} ^/api/
+    RewriteRule ^api/(.*)$ api/php/core/index.php [L,QSA]
+</IfModule>
