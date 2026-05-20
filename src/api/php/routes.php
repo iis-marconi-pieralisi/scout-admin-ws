@@ -27,6 +27,7 @@ $routes = [
         '/api/prova' => 'mostra_messaggio_di_prova',
         '/api/servizio' => 'read_servizio',
         '/api/unita' => 'read_unita',
+        '/api/tipologia' => 'read_tipologia'
     ],
     'POST' => [
         '/api/account' => 'create_account',
@@ -37,7 +38,10 @@ $routes = [
         '/api/iscrizione' => 'create_iscrizione',
         '/api/pagamento' => 'create_pagamento',
         '/api/partecipa' => 'create_partecipa',
-        '/api/unita' => 'create_unita'
+        '/api/unita' => 'create_unita',
+        '/api/tipologia' => 'create_tipologia',
+        '/api/persona' => 'create_persona',
+
     ],
     'PUT' => [
         '/api/account' => 'update_account',
@@ -49,7 +53,9 @@ $routes = [
         '/api/partecipa' => 'update_partecipa',
         '/api/persona' => 'update_persona',
         '/api/servizio' => 'update_servizio',
-        '/api/unita' => 'update_unita'
+        '/api/unita' => 'update_unita',
+        '/api/tipologia' => 'update_tipologia'
+
     ],
     'DELETE' => [
         '/api/account' => 'delete_account',
@@ -60,6 +66,7 @@ $routes = [
         '/api/partecipa' => 'delete_partecipa',
         '/api/pagamento' => 'delete_pagamento',
         '/api/persona' => 'delete_persona',
-        '/api/unita' => 'delete_unita'
+        '/api/unita' => 'delete_unita',
+        '/api/tipologia' => 'delete_tipologia'
     ]
 ];
