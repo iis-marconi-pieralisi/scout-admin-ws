@@ -1,4 +1,89 @@
 <?php
+/* test rotta GET (respons 200 ok)
+[
+  {
+    "id_attivita": 5,
+    "id_unita": 1
+  },
+  {
+    "id_attivita": 5,
+    "id_unita": 2
+  },
+  {
+    "id_attivita": 2,
+    "id_unita": 3
+  },
+  {
+    "id_attivita": 5,
+    "id_unita": 3
+  },
+  {
+    "id_attivita": 3,
+    "id_unita": 4
+  },
+  {
+    "id_attivita": 5,
+    "id_unita": 4
+  },
+  {
+    "id_attivita": 1,
+    "id_unita": 5
+  },
+  {
+    "id_attivita": 2,
+    "id_unita": 5
+  },
+  {
+    "id_attivita": 4,
+    "id_unita": 5
+  },
+  {
+    "id_attivita": 5,
+    "id_unita": 5
+  },
+  {
+    "id_attivita": 4,
+    "id_unita": 6
+  },
+  {
+    "id_attivita": 5,
+    "id_unita": 6
+  },
+  {
+    "id_attivita": 1,
+    "id_unita": 7
+  },
+  {
+    "id_attivita": 3,
+    "id_unita": 7
+  },
+  {
+    "id_attivita": 4,
+    "id_unita": 7
+  }
+]
+
+
+{ test rotta POST (respons 200 ok)
+  "success": true,
+  "message": "Partecipazione creata con successo.",
+  "affected_rows": 1
+}
+
+
+{ test rotta PUT (respons 200 ok)
+  "success": true,
+  "message": "Partecipazione aggiornata con successo.",
+  "affected_rows": 1
+}
+
+
+{ test rotta DELETE (respons 200 ok)
+  "success": true,
+  "message": "Partecipazione eliminata con successo.",
+  "affected_rows": 1
+}
+*/
 function read_partecipa($db, $data)
 {
     try {
