@@ -1,29 +1,26 @@
-# 🧠 Funzionamento tecnico del sistema
+# 🧠 Architettura del sistema
 
-Questo documento descrive come funziona realmente il backend a livello architetturale.
+Il progetto è suddiviso in due macro-sezioni principali:
 
----
-
-# ⚙️ Flusso generale
-
-Il sistema segue questo flusso:
-
-Client → Router → Handler → Database → Response JSON
+* Backend
+* Frontend
 
 ---
 
-# 🌐 Routing engine
+# ⚙️ Backend
+
+## 🌐 Routing engine
 
 Il routing non è automatico ma gestito manualmente tramite:
 
-- router personalizzato
-- mappa rotte → file handler
+* router personalizzato
+* mappa rotte → file handler
 
 Questo permette controllo totale sugli endpoint.
 
 ---
 
-# 🧭 Request lifecycle
+## 🧭 Request lifecycle
 
 Ogni richiesta passa per:
 
@@ -36,57 +33,57 @@ Ogni richiesta passa per:
 
 ---
 
-# 🧱 Core system
+## 🧱 Core system
 
 Il core contiene la logica centrale del sistema.
 
 Responsabilità:
 
-- connessione database
-- funzioni comuni
-- gestione base routing
+* connessione database
+* funzioni comuni
+* gestione base routing
 
 ---
 
-# 🗄️ Database layer
+## 🗄️ Database layer
 
 Il database viene gestito tramite un layer centralizzato.
 
 Caratteristiche:
 
-- connessione unica
-- riutilizzo query
-- gestione errori uniforme
+* connessione unica
+* riutilizzo query
+* gestione errori uniforme
 
 ---
 
-# 📡 API structure
+## 📡 API structure
 
 Ogni endpoint rappresenta una risorsa.
 
 Esempio logico:
 
-- `/api/persona`
-- `/api/branca`
+* `/api/persona`
+* `/api/branca`
 
 Ogni endpoint supporta operazioni CRUD.
 
 ---
 
-# 🔁 Handler system
+## 🔁 Handler system
 
 Ogni handler:
 
-- riceve input HTTP
-- valida dati
-- esegue query
-- restituisce JSON
+* riceve input HTTP
+* valida dati
+* esegue query
+* restituisce JSON
 
 Non deve contenere logica di routing.
 
 ---
 
-# 📤 Response system
+## 📤 Response system
 
 Tutte le risposte seguono uno standard unico:
 
@@ -99,38 +96,44 @@ Tutte le risposte seguono uno standard unico:
 
 ---
 
-# ⚠️ Error handling
+## ⚠️ Error handling
 
 Errori gestiti sempre lato backend:
 
-- input non valido
-- query fallite
-- risorse non trovate
+* input non valido
+* query fallite
+* risorse non trovate
 
 ---
 
-# 🌍 Apache & rewrite
+## 🌍 Apache & rewrite
 
-Il sistema usa mod_rewrite per:
+Il sistema usa `mod_rewrite` per:
 
-- rimuovere index.php dall’URL
-- gestire endpoint puliti
+* rimuovere `index.php` dall’URL
+* gestire endpoint puliti
 
 ---
 
-# 📦 Dipendenze
+## 📦 Dipendenze
 
 Composer viene usato solo per:
 
-- gestione librerie PHP
-- autoload classi
+* gestione librerie PHP
+* autoload classi
 
 ---
 
-# 🧠 Concetto chiave
+## 🧠 Concetto chiave backend
 
-Il sistema è:
+Il sistema backend è:
 
-- modulare
-- separato per responsabilità
-- scalabile per nuove API
+* modulare
+* separato per responsabilità
+* scalabile per nuove API
+
+---
+
+# 🎨 Frontend
+
+//sezione in progresso 
