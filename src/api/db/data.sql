@@ -1,13 +1,5 @@
 USE root_db;
 
-INSERT INTO `Account` (`username`, `email`, `password`, `id_persona`) VALUES
-('antonio.conti', 'antonio.conti@gruppoMI12.it', 'Password5!', 5),
-('elena.ferrari', 'elena.ferrari@gruppoMI12.it', 'Password4!', 4),
-('francesca.neri', 'francesca.neri@gruppoMI12.it', 'Password2!', 8),
-('giorgio.ferrari', 'giorgio.ferrari@gruppoMI12.it', 'Password3!', 3),
-('riccardo.conti', 'riccardo.conti@gruppoMI12.it', 'Password6!', 14),
-('roberto.sala', 'roberto.sala@gruppoMI12.it', 'Password1!', 7);
-
 INSERT INTO `Attivita` (`id_attivita`, `nome`, `descrizione`, `luogo_partenza`, `luogo_arrivo`, `data`, `id_persona`) VALUES
 (1, 'Campo Estivo Lupetti', 'Campo di una settimana in montagna per i lupetti', 'Milano, sede gruppo', 'Aprica, Val Camonica', '2025-07-05', 7),
 (2, 'Uscita Guide Autunno', 'Uscita di un giorno per attività di orientamento', 'Milano, sede gruppo', 'Parco del Ticino', '2025-10-18', 3),
@@ -94,6 +86,14 @@ INSERT INTO `Persona` (`id_persona`, `nome`, `cognome`, `data_nascita`, `luogo_n
 (12, 'Lorenzo', 'Ferrari', '2008-05-03', 'Milano', 'Milano', 'Via Manzoni 18', '20121', '3289988771', 3, 4),
 (13, 'Alessia', 'Conti', '2006-12-29', 'Milano', 'Milano', 'Corso Buenos Aires 3', '20124', '3201234567', 5, 6),
 (14, 'Riccardo', 'Conti', '2003-09-11', 'Milano', 'Milano', 'Corso Buenos Aires 3', '20124', '3201234567', 5, 6);
+
+INSERT INTO `Account` (`username`, `email`, `password`, `id_persona`) VALUES
+('antonio.conti', 'antonio.conti@gruppoMI12.it', 'Password5!', 5),
+('elena.ferrari', 'elena.ferrari@gruppoMI12.it', 'Password4!', 4),
+('francesca.neri', 'francesca.neri@gruppoMI12.it', 'Password2!', 8),
+('giorgio.ferrari', 'giorgio.ferrari@gruppoMI12.it', 'Password3!', 3),
+('riccardo.conti', 'riccardo.conti@gruppoMI12.it', 'Password6!', 14),
+('roberto.sala', 'roberto.sala@gruppoMI12.it', 'Password1!', 7);
 
 INSERT INTO `Servizio` (`descrizione`, `anno_associativo`, `id_persona`, `id_tipologia`, `id_unita`) VALUES
 ('Capo riparto guide', 2026, 3, 1, 3),

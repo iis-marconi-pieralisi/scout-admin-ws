@@ -37,7 +37,8 @@ $routes = [
         '/api/iscrizione' => 'create_iscrizione',
         '/api/pagamento' => 'create_pagamento',
         '/api/partecipa' => 'create_partecipa',
-        '/api/unita' => 'create_unita'
+        '/api/unita' => 'create_unita',
+        '/api/registration' => 'registration',
     ],
     'PUT' => [
         '/api/account' => 'update_account',
