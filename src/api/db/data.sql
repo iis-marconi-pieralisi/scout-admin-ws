@@ -104,10 +104,16 @@ INSERT INTO `Servizio` (`descrizione`, `anno_associativo`, `id_persona`, `id_tip
 ('Assistente cerchio coccinelle', 2026, 8, 2, 2);
 
 INSERT INTO `Tipologia` (`id_tipologia`, `nome`, `descrizione`) VALUES
-(1, 'Capo Unità', 'Responsabile della conduzione dell unità scout'),
-(2, 'Assistente', 'Supporto alla conduzione delle attività'),
-(3, 'Tesoriere', 'Gestione economica del gruppo'),
-(4, 'Segretario', 'Gestione documentale e amministrativa');
+(0, 'Admin', 'Responsabile della piattaforma con accesso completo a tutte le funzionalità'),
+(1, 'Capo Gruppo', 'Responsabile generale del gruppo scout'),
+(2, 'Capo Unità', 'Responsabile della conduzione dell unità scout'),
+(3, 'Aiuto Capo Gruppo', 'Supporto al Capo Gruppo nelle sue funzioni e responsabilità'),
+(4, 'Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
+(5, 'Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'), -- verificare se minorenne o maggiorenne
+(6, 'Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
+(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout');
+(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout');
+(9, 'Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
 
 INSERT INTO `Unita` (`id_unita`, `nome_unita`, `id_branca`) VALUES
 (1, 'Branco Akela — Milano 12', 1),

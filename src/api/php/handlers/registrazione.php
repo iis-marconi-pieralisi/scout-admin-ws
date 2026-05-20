@@ -40,7 +40,7 @@
             if ($affected_rows > 0)
             {
                 $result = $db->query("SELECT MAX(id_persona) AS id_persona FROM Persona", []);
-                $id_persona = $result[0]['id_persona'];
+                $id_persona = $result[0]['id_persona']; //da modificare MANU
 
                 $sql = <<<EOD
                         INSERT INTO Account (username, password, email, id_persona) 
