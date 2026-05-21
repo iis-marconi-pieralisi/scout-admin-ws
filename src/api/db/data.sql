@@ -123,5 +123,3 @@ INSERT INTO `Unita` (`id_unita`, `nome_unita`, `id_branca`) VALUES
 (5, 'Fuoco Rover — Milano 12', 5),
 (6, 'Clan Scolte — Milano 12', 6),
 (7, 'Clan RS — Milano 12', 7);
-
-
