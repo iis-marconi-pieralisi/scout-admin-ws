@@ -1,11 +1,13 @@
 <?php
 function read_tipologia($db, $data)
 {
-    try {
+    try 
+    {
         $sql = "SELECT * FROM Tipologia";
         $results = $db->query($sql);
         json_response($results);
-    } catch (Exception $e) {
+    } catch (Exception $e) 
+    {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
@@ -13,20 +15,19 @@ function read_tipologia($db, $data)
 function create_tipologia($db, $data)
 {
     $required_fields = ['nome', 'descrizione'];
-    if (!validate_required_fields($data, $required_fields)) {
+    if (!validate_required_fields($data, $required_fields)) 
+    {
         return;
     }
 
-    try {
+    try 
+    {
         $sql = <<<EOD
-INSERT INTO Tipologia (nome, descrizione)
-VALUES (?, ?)
-EOD;
-        $params = [
-            $data['nome'],
-            $data['descrizione'],
-        ];
+        INSERT INTO Tipologia (nome, descrizione)
+        VALUES (?, ?)
+        EOD;
 
+        $params = [$data['nome'],$data['descrizione'],];
         $affected_rows = $db->query($sql, $params);
 
         json_response([
@@ -34,7 +35,8 @@ EOD;
             'message' => 'Tipologia creata con successo.',
             'affected_rows' => $affected_rows,
         ], 201);
-    } catch (Exception $e) {
+    } catch (Exception $e) 
+    {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
@@ -42,15 +44,17 @@ EOD;
 function update_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia', 'nome', 'descrizione'];
-    if (!validate_required_fields($data, $required_fields)) {
+    if (!validate_required_fields($data, $required_fields)) 
+    {
         return;
     }
 
-    try {
+    try 
+    {
         $sql = <<<EOD
-UPDATE Tipologia SET nome = ?, descrizione = ?
-WHERE id_tipologia = ?
-EOD;
+        UPDATE Tipologia SET nome = ?, descrizione = ?
+        WHERE id_tipologia = ?
+        EOD;
         $params = [
             $data['nome'],
             $data['descrizione'],
@@ -64,7 +68,8 @@ EOD;
             'message' => 'Tipologia aggiornata con successo.',
             'affected_rows' => $affected_rows,
         ]);
-    } catch (Exception $e) {
+    } catch (Exception $e) 
+    {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
@@ -72,14 +77,16 @@ EOD;
 function delete_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia'];
-    if (!validate_required_fields($data, $required_fields)) {
+    if (!validate_required_fields($data, $required_fields)) 
+    {
         return;
     }
 
-    try {
+    try 
+    {
         $sql = <<<EOD
-DELETE FROM Tipologia WHERE id_tipologia = ?
-EOD;
+        DELETE FROM Tipologia WHERE id_tipologia = ?
+        EOD;
         $affected_rows = $db->query($sql, [(int)$data['id_tipologia']]);
 
         json_response([
@@ -87,7 +94,8 @@ EOD;
             'message' => 'Tipologia eliminata con successo.',
             'affected_rows' => $affected_rows,
         ]);
-    } catch (Exception $e) {
+    } catch (Exception $e) 
+    {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
