@@ -24,18 +24,42 @@
             }
             else
             {
+                session_start();
                 $username = $result[0]['username'];
-                $tipologia = $result[0]['nome'];
-                
+                $tipologie = array_column($result, 'nome');
+
+                if($tipologie[0] == 'Membro')
+                {
+                    $sql = "SELECT P.data_nascita 
+                            FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
+                            WHERE A.username = ?";
+
+                    $result = $db->query($sql, [$username]);
+                    $data_nascita = $result[0]['data_nascita'];
+                    $oggi = new DateTime();
+                    $nascita = new DateTime($data_nascita);
+                    $eta = $oggi->diff($nascita)->y; // anni compiuti
+
+                    if ($eta >= 18) 
+                    {
+                        $tipologie[0] = "Maggiorenne";
+                    } 
+                    else 
+                    {
+                        $tipologie[0] = "Minorenne";
+
+                    }
+                }
+            
                 $_SESSION['username'] = $username;
-                $_SESSION['tipologia'] = $tipologia;
+                $_SESSION['tipologie'] = $tipologie;
                 $sessionId = session_id();
 
                 json_response([
                     'success' => true,
                     'message' => 'Sei Autenticato',
                     'username' => $username,
-                    'tipologia' => $tipologia,
+                    'tipologie' => $tipologie,
                     'session_id' => $sessionId
                 ]);
             }

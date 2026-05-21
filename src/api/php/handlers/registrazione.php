@@ -39,8 +39,25 @@
 
             if ($affected_rows > 0)
             {
-                $result = $db->query("SELECT MAX(id_persona) AS id_persona FROM Persona", []);
-                $id_persona = $result[0]['id_persona']; //da modificare MANU
+                $sql = <<<EOD
+                        SELECT id_persona FROM Persona 
+                        WHERE nome = ? AND cognome = ? AND data_nascita = ? AND luogo_nascita = ? 
+                        AND citta_residenza = ? AND via_residenza = ? AND cap_residenza = ? AND telefono = ?
+                        EOD;
+
+                $params = [
+                $data['nome'],
+                $data['cognome'],
+                $data['data_nascita'],
+                $data['luogo_nascita'],
+                $data['citta_residenza'],
+                $data['via_residenza'],
+                $data['cap_residenza'],
+                $data['telefono'],
+                ]; 
+
+                $result = $db->query($sql, $params);
+                $id_persona = $result[0]['id_persona'];
 
                 $sql = <<<EOD
                         INSERT INTO Account (username, password, email, id_persona) 

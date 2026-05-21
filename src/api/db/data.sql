@@ -111,8 +111,8 @@ INSERT INTO `Tipologia` (`id_tipologia`, `nome`, `descrizione`) VALUES
 (4, 'Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
 (5, 'Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'), -- verificare se minorenne o maggiorenne
 (6, 'Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
-(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout');
-(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout');
+(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout'),
+(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout',
 (9, 'Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
 
 INSERT INTO `Unita` (`id_unita`, `nome_unita`, `id_branca`) VALUES
