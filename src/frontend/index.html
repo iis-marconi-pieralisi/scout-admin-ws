@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .campo {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .campo:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .errore {
+            color: #dc3545;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>Accedi</h1>
+        <p>Inserisci le tue credenziali</p>
+
+        <input id="email" class="campo" type="email" placeholder="Email">
+        <input id="password" class="campo" type="password" placeholder="Password">
+        <div id="errore" class="errore">Email o password non validi.</div>
+
+        <button onclick="login()">Entra</button>
+    </div>
+
+    <script>
+        function login() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errore = document.getElementById("errore");
+
+            if (!email || !password) {
+                errore.textContent = "Compila tutti i campi.";
+                errore.style.display = "block";
+                return;
+            }
+
+            errore.style.display = "none";
+
+            fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/dashboard.html";
+                } else {
+                    errore.textContent = data.message || "Email o password non validi.";
+                    errore.style.display = "block";
+                }
+            })
+            .catch(() => {
+                errore.textContent = "Errore di connessione. Riprova.";
+                errore.style.display = "block";
+            });
+        }
+
+        // Invio con tasto Enter
+        document.addEventListener("keydown", e => {
+            if (e.key === "Enter") login();
+        });
+    </script>
+
+</body>
+</html>
