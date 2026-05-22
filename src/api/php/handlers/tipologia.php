@@ -1,4 +1,9 @@
 <?php
+// ==========================================
+// TEST DELLA ROTTA GET TIPOLOGIA 
+// Comando per replicare il test con HTTPie:
+// http GET http://localhost:8080/api/tipologia
+// ==========================================
 function read_tipologia($db, $data)
 {
     try 
@@ -12,6 +17,11 @@ function read_tipologia($db, $data)
     }
 }
 
+// ==========================================
+// TEST DELLA ROTTA POST TIPOLOGIA
+// Comando per replicare il test con HTTPie:
+// http POST http://localhost:3000/api/tipologia nome="prova Unita" descrizione="prova unità scout"
+// ==========================================
 function create_tipologia($db, $data)
 {
     $required_fields = ['nome', 'descrizione'];
@@ -41,6 +51,11 @@ function create_tipologia($db, $data)
     }
 }
 
+// ==========================================
+// TEST DELLA ROTTA PUT TIPOLOGIA 
+// Comando per replicare il test con HTTPie:
+// http PUT http://localhost:3000/api/tipologia id_tipologia=1 nome="provaa" descrizione="prova1"
+// ==========================================
 function update_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia', 'nome', 'descrizione'];
@@ -74,6 +89,11 @@ function update_tipologia($db, $data)
     }
 }
 
+// ==========================================
+// TEST DELLA ROTTA DELETE TIPOLOGIA 
+// Comando per replicare il test con HTTPie:
+// http DELETE http://localhost:3000/api/tipologia id_tipologia:=20
+// ==========================================
 function delete_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia'];

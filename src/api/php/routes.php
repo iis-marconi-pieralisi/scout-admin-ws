@@ -40,6 +40,7 @@ $routes = [
         '/api/partecipa' => 'create_partecipa',
         '/api/unita' => 'create_unita',
         '/api/registration' => 'registration',
+        '/api/tipologia' => 'create_tipologia'
     ],
     'PUT' => [
         '/api/account' => 'update_account',
