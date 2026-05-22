@@ -22,18 +22,17 @@ INSERT INTO `Pagamento` (`id_pagamento`, `importo`, `metodo`, `data`) VALUES
 (5, 120.00, 'Contanti', '2025-09-20'),
 (6, 120.00, 'Bonifico', '2025-09-22');
 
-INSERT INTO `Tipologia` (`id_tipologia`, `nome`, `descrizione`) VALUES
-(0, 'Admin', 'Responsabile della piattaforma con accesso completo a tutte le funzionalità'),
-(1, 'Capo Gruppo', 'Responsabile generale del gruppo scout'),
-(2, 'Capo Unità', 'Responsabile della conduzione dell unità scout'),
-(3, 'Aiuto Capo Gruppo', 'Supporto al Capo Gruppo nelle sue funzioni e responsabilità'),
-(4, 'Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
-(5, 'Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'),
-(6, 'Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
-(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout'),
-(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout'),
-(9, 'Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
-
+INSERT INTO `Tipologia` (`nome`, `descrizione`) VALUES
+('Admin', 'Responsabile della piattaforma con accesso completo a tutte le funzionalità'),
+('Capo Gruppo', 'Responsabile generale del gruppo scout'),
+('Capo Unità', 'Responsabile della conduzione dell unità scout'),
+('Aiuto Capo Gruppo', 'Supporto al Capo Gruppo nelle sue funzioni e responsabilità'),
+('Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
+('Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'),
+('Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
+('Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout'),
+('Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout'),
+('Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
 
 -- ==========================================
 -- LIVELLO 2: Dipendono da Branca
@@ -131,12 +130,12 @@ INSERT INTO `Iscrizione` (`anno_associativo`, `approvazione_capo`, `id_persona`,
 (2025, 1, 14, 6, 7, 23);
 
 INSERT INTO `Servizio` (`descrizione`, `anno_associativo`, `id_persona`, `id_tipologia`, `id_unita`) VALUES
-('Capo riparto guide', 2026, 3, 1, 3),
-('Capo reparto esploratori', 2026, 4, 1, 4),
-('Tesoriere gruppo Milano 12', 2026, 5, 3, 7),
-('Segretario clan RS', 2026, 6, 4, 7),
-('Capo branco lupetti Milano 12', 2026, 7, 1, 1),
-('Assistente cerchio coccinelle', 2026, 8, 2, 2);
+('Capo riparto guide', 2026, 3, 2, 3),
+('Capo reparto esploratori', 2026, 4, 2, 4),
+('Tesoriere gruppo Milano 12', 2026, 5, 4, 7),
+('Segretario clan RS', 2026, 6, 5, 7),
+('Capo branco lupetti Milano 12', 2026, 7, 2, 1),
+('Assistente cerchio coccinelle', 2026, 8, 3, 2);
 
 INSERT INTO `Partecipa` (`id_attivita`, `id_unita`) VALUES
 (1, 1),

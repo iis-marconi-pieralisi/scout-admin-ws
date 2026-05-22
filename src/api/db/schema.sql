@@ -1,6 +1,5 @@
 -- ricrea da zero tutto il db a prescindere
-USE root_db;
-DROP DATABASE root_db;
+DROP DATABASE IF EXISTS root_db;
 CREATE DATABASE root_db;
 USE root_db;
 
