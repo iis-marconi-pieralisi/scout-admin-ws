@@ -1,0 +1,21 @@
+# Imposta il file di indice di default
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Richieste API: reindirizza /api/* al router PHP
+    RewriteCond %{REQUEST_URI} ^/api/
+    RewriteRule ^api/(.*)$ api/php/core/index.php [L,QSA]
+
+    # 2. Richiesta vuota (es. http://<nomehost>/): serve frontend/index.html
+    RewriteRule ^$ frontend/index.html [L]
+
+    # 3. Qualsiasi altra richiesta (es. http://<nomehost>/<nomefile>):
+    # serve i file dalla cartella frontend/
+    # Le RewriteCond evitano loop infiniti e non toccano le richieste API
+    RewriteCond %{REQUEST_URI} !^/api/
+    RewriteCond %{REQUEST_URI} !^/frontend/
+    RewriteRule ^(.*)$ frontend/$1 [L]
+</IfModule>

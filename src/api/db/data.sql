@@ -1,11 +1,9 @@
 USE root_db;
 
-INSERT INTO `Attivita` (`id_attivita`, `nome`, `descrizione`, `luogo_partenza`, `luogo_arrivo`, `data`, `id_persona`) VALUES
-(1, 'Campo Estivo Lupetti', 'Campo di una settimana in montagna per i lupetti', 'Milano, sede gruppo', 'Aprica, Val Camonica', '2025-07-05', 7),
-(2, 'Uscita Guide Autunno', 'Uscita di un giorno per attività di orientamento', 'Milano, sede gruppo', 'Parco del Ticino', '2025-10-18', 3),
-(3, 'Route Esploratori', 'Percorso a piedi di 3 giorni sulle Prealpi', 'Lecco', 'Piani Resinelli', '2025-09-27', 4),
-(4, 'Servizio Mensa Caritas', 'Servizio alla mensa della Caritas diocesana', 'Milano, sede gruppo', 'Milano, Caritas Diocesi', '2025-11-02', 14),
-(5, 'Giornata Mondiale Scout', 'Celebrazione WOSM con tutte le unità del gruppo', 'Milano, sede gruppo', 'Parco Sempione', '2025-02-22', 5);
+-- ==========================================
+-- LIVELLO 1: Tabelle Indipendenti (Padri)
+-- Nessuna chiave esterna, possono essere popolate per prime.
+-- ==========================================
 
 INSERT INTO `Branca` (`id_branca`, `nome_branca`, `min_eta`, `max_eta`) VALUES
 (1, 'Lupetti', 8, 11),
@@ -16,13 +14,39 @@ INSERT INTO `Branca` (`id_branca`, `nome_branca`, `min_eta`, `max_eta`) VALUES
 (6, 'Scolte', 16, 20),
 (7, 'RS', 21, 150);
 
-INSERT INTO `Iscrizione` (`anno_associativo`, `approvazione_capo`, `id_persona`, `id_pagamento`, `id_unita`, `id_iter`) VALUES
-(2025, 1, 9, 1, 2, 6),
-(2025, 1, 10, 2, 1, 3),
-(2025, 1, 11, 3, 3, 10),
-(2025, 1, 12, 4, 4, 14),
-(2025, 0, 13, 5, 6, 21),
-(2025, 1, 14, 6, 7, 23);
+INSERT INTO `Pagamento` (`id_pagamento`, `importo`, `metodo`, `data`) VALUES
+(1, 120.00, 'Bonifico', '2025-09-10'),
+(2, 120.00, 'Contanti', '2025-09-12'),
+(3, 120.00, 'Bonifico', '2025-09-15'),
+(4, 120.00, 'Carta', '2025-09-18'),
+(5, 120.00, 'Contanti', '2025-09-20'),
+(6, 120.00, 'Bonifico', '2025-09-22');
+
+INSERT INTO `Tipologia` (`id_tipologia`, `nome`, `descrizione`) VALUES
+(0, 'Admin', 'Responsabile della piattaforma con accesso completo a tutte le funzionalità'),
+(1, 'Capo Gruppo', 'Responsabile generale del gruppo scout'),
+(2, 'Capo Unità', 'Responsabile della conduzione dell unità scout'),
+(3, 'Aiuto Capo Gruppo', 'Supporto al Capo Gruppo nelle sue funzioni e responsabilità'),
+(4, 'Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
+(5, 'Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'),
+(6, 'Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
+(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout'),
+(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout'),
+(9, 'Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
+
+
+-- ==========================================
+-- LIVELLO 2: Dipendono da Branca
+-- ==========================================
+
+INSERT INTO `Unita` (`id_unita`, `nome_unita`, `id_branca`) VALUES
+(1, 'Branco Akela — Milano 12', 1),
+(2, 'Cerchio Coccinelle — Milano 12', 2),
+(3, 'Riparto Guide — Milano 12', 3),
+(4, 'Reparto Esploratori — Milano 12', 4),
+(5, 'Fuoco Rover — Milano 12', 5),
+(6, 'Clan Scolte — Milano 12', 6),
+(7, 'Clan RS — Milano 12', 7);
 
 INSERT INTO `Iter` (`id_iter`, `nome`, `descrizione`, `id_branca`) VALUES
 (1, 'Cucciolo', NULL, 1),
@@ -49,27 +73,12 @@ INSERT INTO `Iter` (`id_iter`, `nome`, `descrizione`, `id_branca`) VALUES
 (22, 'Scolta semplice', NULL, 6),
 (23, 'Responsabile', NULL, 7);
 
-INSERT INTO `Pagamento` (`id_pagamento`, `importo`, `metodo`, `data`) VALUES
-(1, 120.00, 'Bonifico', '2025-09-10'),
-(2, 120.00, 'Contanti', '2025-09-12'),
-(3, 120.00, 'Bonifico', '2025-09-15'),
-(4, 120.00, 'Carta', '2025-09-18'),
-(5, 120.00, 'Contanti', '2025-09-20'),
-(6, 120.00, 'Bonifico', '2025-09-22');
 
-INSERT INTO `Partecipa` (`id_attivita`, `id_unita`) VALUES
-(1, 1),
-(5, 1),
-(5, 2),
-(2, 3),
-(5, 3),
-(3, 4),
-(5, 4),
-(4, 5),
-(5, 5),
-(5, 6),
-(4, 7),
-(5, 7);
+-- ==========================================
+-- LIVELLO 3: Persona (Autoreferenziale)
+-- Gli adulti vengono inseriti per primi (sono tutori di se stessi), 
+-- poi i minorenni (che puntano agli adulti appena inseriti).
+-- ==========================================
 
 INSERT INTO `Persona` (`id_persona`, `nome`, `cognome`, `data_nascita`, `luogo_nascita`, `citta_residenza`, `via_residenza`, `cap_residenza`, `telefono`, `id_tutore1`, `id_tutore2`) VALUES
 (1, 'Marco', 'Bianchi', '1975-03-12', 'Milano', 'Milano', 'Via Dante 5', '20121', '3331122330', 1, NULL),
@@ -87,6 +96,11 @@ INSERT INTO `Persona` (`id_persona`, `nome`, `cognome`, `data_nascita`, `luogo_n
 (13, 'Alessia', 'Conti', '2006-12-29', 'Milano', 'Milano', 'Corso Buenos Aires 3', '20124', '3201234567', 5, 6),
 (14, 'Riccardo', 'Conti', '2003-09-11', 'Milano', 'Milano', 'Corso Buenos Aires 3', '20124', '3201234567', 5, 6);
 
+
+-- ==========================================
+-- LIVELLO 4: Dipendono da Persona
+-- ==========================================
+
 INSERT INTO `Account` (`username`, `email`, `password`, `id_persona`) VALUES
 ('antonio.conti', 'antonio.conti@gruppoMI12.it', 'Password5!', 5),
 ('elena.ferrari', 'elena.ferrari@gruppoMI12.it', 'Password4!', 4),
@@ -94,6 +108,27 @@ INSERT INTO `Account` (`username`, `email`, `password`, `id_persona`) VALUES
 ('giorgio.ferrari', 'giorgio.ferrari@gruppoMI12.it', 'Password3!', 3),
 ('riccardo.conti', 'riccardo.conti@gruppoMI12.it', 'Password6!', 14),
 ('roberto.sala', 'roberto.sala@gruppoMI12.it', 'Password1!', 7);
+
+INSERT INTO `Attivita` (`id_attivita`, `nome`, `descrizione`, `luogo_partenza`, `luogo_arrivo`, `data`, `id_persona`) VALUES
+(1, 'Campo Estivo Lupetti', 'Campo di una settimana in montagna per i lupetti', 'Milano, sede gruppo', 'Aprica, Val Camonica', '2025-07-05', 7),
+(2, 'Uscita Guide Autunno', 'Uscita di un giorno per attività di orientamento', 'Milano, sede gruppo', 'Parco del Ticino', '2025-10-18', 3),
+(3, 'Route Esploratori', 'Percorso a piedi di 3 giorni sulle Prealpi', 'Lecco', 'Piani Resinelli', '2025-09-27', 4),
+(4, 'Servizio Mensa Caritas', 'Servizio alla mensa della Caritas diocesana', 'Milano, sede gruppo', 'Milano, Caritas Diocesi', '2025-11-02', 14),
+(5, 'Giornata Mondiale Scout', 'Celebrazione WOSM con tutte le unità del gruppo', 'Milano, sede gruppo', 'Parco Sempione', '2025-02-22', 5);
+
+
+-- ==========================================
+-- LIVELLO 5: Tabelle Pivot finali (Iscrizione, Servizio, Partecipa)
+-- Queste dipendono da quasi tutte le tabelle precedenti.
+-- ==========================================
+
+INSERT INTO `Iscrizione` (`anno_associativo`, `approvazione_capo`, `id_persona`, `id_pagamento`, `id_unita`, `id_iter`) VALUES
+(2025, 1, 9, 1, 2, 6),
+(2025, 1, 10, 2, 1, 3),
+(2025, 1, 11, 3, 3, 10),
+(2025, 1, 12, 4, 4, 14),
+(2025, 0, 13, 5, 6, 21),
+(2025, 1, 14, 6, 7, 23);
 
 INSERT INTO `Servizio` (`descrizione`, `anno_associativo`, `id_persona`, `id_tipologia`, `id_unita`) VALUES
 ('Capo riparto guide', 2026, 3, 1, 3),
@@ -103,25 +138,16 @@ INSERT INTO `Servizio` (`descrizione`, `anno_associativo`, `id_persona`, `id_tip
 ('Capo branco lupetti Milano 12', 2026, 7, 1, 1),
 ('Assistente cerchio coccinelle', 2026, 8, 2, 2);
 
-INSERT INTO `Tipologia` (`id_tipologia`, `nome`, `descrizione`) VALUES
-(0, 'Admin', 'Responsabile della piattaforma con accesso completo a tutte le funzionalità'),
-(1, 'Capo Gruppo', 'Responsabile generale del gruppo scout'),
-(2, 'Capo Unità', 'Responsabile della conduzione dell unità scout'),
-(3, 'Aiuto Capo Gruppo', 'Supporto al Capo Gruppo nelle sue funzioni e responsabilità'),
-(4, 'Aiuto Capo Unità', 'Supporto al Capo Unità nelle sue funzioni e responsabilità'),
-(5, 'Membro', 'Membro ordinario del gruppo scout senza ruoli specifici'), -- verificare se minorenne o maggiorenne
-(6, 'Assistente Spirituale', 'Supporto spirituale e religioso per il gruppo scout'),
-(7, 'Responsabile Comunicazione', 'Gestione della comunicazione interna ed esterna del gruppo scout'),
-(8, 'Segretario', 'Gestione delle attività amministrative e organizzative del gruppo scout',
-(9, 'Tesoriere', 'Gestione delle finanze e dei pagamenti del gruppo scout');
-
-INSERT INTO `Unita` (`id_unita`, `nome_unita`, `id_branca`) VALUES
-(1, 'Branco Akela — Milano 12', 1),
-(2, 'Cerchio Coccinelle — Milano 12', 2),
-(3, 'Riparto Guide — Milano 12', 3),
-(4, 'Reparto Esploratori — Milano 12', 4),
-(5, 'Fuoco Rover — Milano 12', 5),
-(6, 'Clan Scolte — Milano 12', 6),
-(7, 'Clan RS — Milano 12', 7);
-
-
+INSERT INTO `Partecipa` (`id_attivita`, `id_unita`) VALUES
+(1, 1),
+(5, 1),
+(5, 2),
+(2, 3),
+(5, 3),
+(3, 4),
+(5, 4),
+(4, 5),
+(5, 5),
+(5, 6),
+(4, 7),
+(5, 7);
