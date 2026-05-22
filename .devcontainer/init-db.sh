@@ -35,17 +35,10 @@ if [ ! -f "$SCHEMA_FILE" ] || [ ! -f "$DATA_FILE" ]; then
   exit 1
 fi
 
-initialized=$(mysql -h db -u root -proot --ssl=0 -N -s -e "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='root_db';")
-if [ "$initialized" != "0" ] && [ -n "$initialized" ]; then
-  echo "Database già inizializzato, nessuna azione necessaria."
-  exit 0
-fi
+printf "Esecuzione Drop e ricreazione Schema...\n"
+mysql -h db -u root -proot --ssl=0 --default-character-set=utf8mb4 < "$SCHEMA_FILE"
+printf "Schema caricato con successo.\n"
 
-printf "Import schema...\n"
-mysql -h db -u root -proot --ssl=0 < "$SCHEMA_FILE"
-printf "DB schema loaded.\n"
-
-printf "Import data...\n"
-mysql -h db -u root -proot --ssl=0 < "$DATA_FILE"
-printf "DB populated.\n"
-printf "Initialization complete.\n"
+printf "Esecuzione Seeding dei dati...\n"
+mysql -h db -u root -proot --ssl=0 --default-character-set=utf8mb4 < "$DATA_FILE"
+printf "Database spianato e ripopolato con successo!\n"

@@ -15,7 +15,7 @@ INSERT INTO `Branca` (`id_branca`, `nome_branca`, `min_eta`, `max_eta`) VALUES
 (7, 'RS', 21, 150);
 
 INSERT INTO `Pagamento` (`id_pagamento`, `importo`, `metodo`, `data`) VALUES
-(1, 120.00, 'Bonifico', '2025-09-10'),
+(1, 120.00, 'Carta', '2025-09-10'),
 (2, 120.00, 'Contanti', '2025-09-12'),
 (3, 120.00, 'Bonifico', '2025-09-15'),
 (4, 120.00, 'Carta', '2025-09-18'),

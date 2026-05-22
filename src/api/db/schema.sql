@@ -1,6 +1,6 @@
 -- ricrea da zero tutto il db a prescindere
 DROP DATABASE IF EXISTS root_db;
-CREATE DATABASE root_db;
+CREATE DATABASE root_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE root_db;
 
 -- Tabella Account
