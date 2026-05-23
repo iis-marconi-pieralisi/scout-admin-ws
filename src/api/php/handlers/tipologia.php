@@ -2,7 +2,7 @@
 // ==========================================
 // TEST DELLA ROTTA GET TIPOLOGIA 
 // Comando per replicare il test con HTTPie:
-// http GET http://localhost:8080/api/tipologia
+// https://urban-trout-jjp75gwr9jgx3j5g-3000.app.github.dev/api/tipologia
 // ==========================================
 function read_tipologia($db, $data)
 {
@@ -19,8 +19,7 @@ function read_tipologia($db, $data)
 
 // ==========================================
 // TEST DELLA ROTTA POST TIPOLOGIA
-// Comando per replicare il test con HTTPie:
-// http POST http://localhost:3000/api/tipologia nome="prova Unita" descrizione="prova unità scout"
+// 
 // ==========================================
 function create_tipologia($db, $data)
 {
