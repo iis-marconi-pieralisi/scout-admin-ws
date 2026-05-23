@@ -32,14 +32,15 @@ $routes = [
 
     'POST' => [
         '/api/account' => 'create_account',
-        //'/api/auth' => 'authenticate_user',
+        '/api/auth' => 'authenticate_user',
         '/api/attivita' => 'create_attivita',
         '/api/branca' => 'create_branca',
         '/api/iter' => 'create_iter',
         '/api/iscrizione' => 'create_iscrizione',
         '/api/pagamento' => 'create_pagamento',
         '/api/partecipa' => 'create_partecipa',
-        '/api/unita' => 'create_unita'
+        '/api/unita' => 'create_unita',
+        '/api/registration' => 'registration',
     ],
     'PUT' => [
         '/api/account' => 'update_account',

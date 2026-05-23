@@ -18,12 +18,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # --- NUOVA SEZIONE: Configurazione Apache DocumentRoot ---
-ENV APACHE_DOCUMENT_ROOT /var/www/html/src/api/php
+ENV APACHE_DOCUMENT_ROOT /var/www/html/src/
 
 # Aggiorna i virtual host di default di Apache
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf
 # Aggiorna la configurazione di directory di Apache
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 # --------------------------------------------------------
 
 # Imposta la directory di lavoro (puoi lasciarla sulla root del progetto)
