@@ -9,7 +9,8 @@ services:
       MARIADB_PASSWORD: user
       TZ: Europe/Rome
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      # RIMOSSO IL './' INIZIALE. Ora è un volume gestito da Docker
+      - mariadb_data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin:5.2.1-apache
@@ -32,3 +33,7 @@ services:
       - db
     ports:
       - "3000:80"
+
+# AGGIUNGI QUESTA SEZIONE IN FONDO AL FILE
+volumes:
+  mariadb_data:
