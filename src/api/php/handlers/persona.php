@@ -1,4 +1,5 @@
 <?php
+//http GET https://turbo-acorn-4jpv7r9jj6rr24wr-3000.app.github.dev/api/persona --raw ''
 function read_persona($db, $data)
 {
     try 
@@ -12,19 +13,20 @@ function read_persona($db, $data)
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
-/*curl POST https://cautious-palm-tree-x5gpw4q55vqr26gg9-3000.app.github.dev/api/persona \
-     "Content-Type: application/json" \
-        {
-           "nome": "prova_post",
-           "cognome": "prova_post",
-           "data_nascita": "2000-00-00",
-           "luogo_nascita": "prova_post",
-           "citta_residenza": "prova_post",
-           "via_residenza": "prova_post",
-           "cap_residenza": "00000",
-           "telefono": "",
-           "id_tutore1": 1
-         }
+/*
+http POST https://turbo-acorn-4jpv7r9jj6rr24wr-3000.app.github.dev/api/persona --raw 
+'{
+        "nome": "prova_post",
+        "cognome": "prova_post",
+        "data_nascita": "2000-00-00",
+        "luogo_nascita": "prova_post",
+        "citta_residenza": "prova_post",
+        "via_residenza": "prova_post",
+        "cap_residenza": "00000",
+        "telefono": "0",
+        "id_tutore1": 1
+       
+}'
 */
 
 function create_persona($db, $data)
@@ -67,21 +69,23 @@ function create_persona($db, $data)
         json_response(['error' => 'Errore durante la creazione della persona.'], 500);
     }
 }
-/*{
-        put
-
+/*
+http PUT https://turbo-acorn-4jpv7r9jj6rr24wr-3000.app.github.dev/api/persona --raw 
+'{
         "id_persona": 1,
-        "nome": "prova_post",
-        "cognome": "prova_post",
+        "nome": "prova",
+        "cognome": "prova",
         "data_nascita": "2000-00-00",
-        "luogo_nascita": "prova_post",
-        "citta_residenza": "prova_post",
-        "via_residenza": "prova_post",
+        "luogo_nascita": "prova",
+        "citta_residenza": "prova",
+        "via_residenza": "prova",
         "cap_residenza": "00000",
         "telefono": "0",
-        "id_tutore1": 1
-       
-} */
+        "id_tutore1": 2,
+        "id_tutore2": null
+}
+'
+ */
 
 function update_persona($db, $data)
 {
@@ -124,12 +128,11 @@ function update_persona($db, $data)
     }
 }
 /*
-{
-    delete
-
-    "id_persona": 20
+http DELETE https://turbo-acorn-4jpv7r9jj6rr24wr-3000.app.github.dev/api/persona --raw 
+'{
+        "id_persona": 15
        
-}
+}'
 */
 function delete_persona($db, $data)
 {
