@@ -1,5 +1,12 @@
 <?php
 
+/*http GET https://bookish-space-zebra-x5xp4gggw77vhp4xg-3000.app.github.dev/api/unita*/
+/*http POST https://bookish-space-zebra-x5xp4gggw77vhp4xg-3000.app.github.dev/api/unita 
+--raw 
+'{
+  "nome_unita": "Unita di test",
+  "id_branca": 1
+}'*/
 function read_unita($db)
 {
     try {
