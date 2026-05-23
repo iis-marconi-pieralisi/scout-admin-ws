@@ -1,9 +1,8 @@
 <?php
-// ==========================================
-// TEST DELLA ROTTA GET TIPOLOGIA 
-// Comando per replicare il test con HTTPie:
-// https://urban-trout-jjp75gwr9jgx3j5g-3000.app.github.dev/api/tipologia
-// ==========================================
+/*
+    TEST DELLA ROTTA GET TIPOLOGIA 
+    http GET https://probable-adventure-4jpv7r9q6jwwcj545-3000.app.github.dev/api/tipologia
+*/
 function read_tipologia($db, $data)
 {
     try 
@@ -17,10 +16,14 @@ function read_tipologia($db, $data)
     }
 }
 
-// ==========================================
-// TEST DELLA ROTTA POST TIPOLOGIA
-// 
-// ==========================================
+/*
+    TEST DELLA ROTTA POST TIPOLOGIA
+    http POST https://probable-adventure-4jpv7r9q6jwwcj545-3000.app.github.dev/api/tipologia --raw ' {
+    "id_tipologia": 11,
+    "nome": "prova utente ",
+    "descrizione": "prova"
+  }'
+*/
 function create_tipologia($db, $data)
 {
     $required_fields = ['nome', 'descrizione'];
@@ -50,11 +53,13 @@ function create_tipologia($db, $data)
     }
 }
 
-// ==========================================
-// TEST DELLA ROTTA PUT TIPOLOGIA 
-// Comando per replicare il test con HTTPie:
-// http PUT http://localhost:3000/api/tipologia id_tipologia=1 nome="provaa" descrizione="prova1"
-// ==========================================
+/* TEST DELLA ROTTA PUT TIPOLOGIA 
+    http PUT https://probable-adventure-4jpv7r9q6jwwcj545-3000.app.github.dev/api/tipologia --raw ' {
+    "id_tipologia": 11,
+    "nome": "prova utente ",
+    "descrizione": "prova 2"
+  }'
+*/
 function update_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia', 'nome', 'descrizione'];
@@ -88,11 +93,15 @@ function update_tipologia($db, $data)
     }
 }
 
-// ==========================================
-// TEST DELLA ROTTA DELETE TIPOLOGIA 
-// Comando per replicare il test con HTTPie:
-// http DELETE http://localhost:3000/api/tipologia id_tipologia:=20
-// ==========================================
+/*
+ TEST DELLA ROTTA DELETE TIPOLOGIA 
+ http DELETE https://probable-adventure-4jpv7r9q6jwwcj545-3000.app.github.dev/api/tipologia --raw ' 
+ {
+    "id_tipologia": 12,
+    "nome": "prova utente2 ",
+    "descrizione": "prova 3"
+  }'
+*/
 function delete_tipologia($db, $data)
 {
     $required_fields = ['id_tipologia'];
