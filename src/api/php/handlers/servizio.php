@@ -3,12 +3,26 @@
 function read_servizio($db, $data)
 {
     try {
-        $sql = <<<EOD
-            SELECT  *
-            FROM    Servizio
-        EOD;
+        if (!empty($data['anno_associativo']) && !empty($data['id_persona'])) {
+            $sql = <<<EOD
+                SELECT  *
+                FROM    Servizio
+                WHERE   anno_associativo = ?
+                AND     id_persona       = ?
+            EOD;
+            $params = [
+                (int)$data['anno_associativo'],
+                (int)$data['id_persona'],
+            ];
+            $results = $db->query($sql, $params);
+        } else {
+            $sql = <<<EOD
+                SELECT  *
+                FROM    Servizio
+            EOD;
+            $results = $db->query($sql);
+        }
 
-        $results = $db->query($sql);
         json_response($results);
 
     } catch (Exception $e) {
