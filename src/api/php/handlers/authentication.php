@@ -26,9 +26,9 @@
             {
                 session_start();
                 $username = $result[0]['username'];
-                $tipologie = array_column($result, 'nome');
+                $tipologia = $result[0]['tipologia'];
 
-                if($tipologie[0] == 'Membro')
+                if($tipologia == 'Membro')
                 {
                     $sql = "SELECT P.data_nascita 
                             FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
@@ -42,24 +42,24 @@
 
                     if ($eta >= 18) 
                     {
-                        $tipologie[0] = "Maggiorenne";
+                        $tipologia = "Maggiorenne";
                     } 
                     else 
                     {
-                        $tipologie[0] = "Minorenne";
+                        $tipologia = "Minorenne";
 
                     }
                 }
             
                 $_SESSION['username'] = $username;
-                $_SESSION['tipologie'] = $tipologie;
+                $_SESSION['tipologia'] = $tipologia;
                 $sessionId = session_id();
 
                 json_response([
                     'success' => true,
                     'message' => 'Sei Autenticato',
                     'username' => $username,
-                    'tipologie' => $tipologie,
+                    'tipologia' => $tipologia,
                     'session_id' => $sessionId
                 ]);
             }

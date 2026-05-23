@@ -27,6 +27,9 @@ $routes = [
         '/api/prova' => 'mostra_messaggio_di_prova',
         '/api/servizio' => 'read_servizio',
         '/api/unita' => 'read_unita',
+        
+        
+        '/api/permesso' => 'prova_permesso',
     ],
     'POST' => [
         '/api/account' => 'create_account',
