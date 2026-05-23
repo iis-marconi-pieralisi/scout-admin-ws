@@ -1,4 +1,33 @@
 <?php
+
+/**
+ * Test svolti
+ *
+ * read_iscrizione:
+ * - Restituisce tutte le iscrizioni presenti
+ * - Restituisce [] se la tabella è vuota
+ *
+ * create_iscrizione:
+ * - Crea un'iscrizione con tutti i campi obbligatori validi
+ * - Rifiuta la richiesta se manca uno dei campi obbligatori 
+ *   (anno_associativo, approvazione_capo, id_persona, id_pagamento, id_unita, id_iter)
+ * - Restituisce 500 se una FK non esiste (id_persona, id_pagamento, id_unita, id_iter)
+ * - Effettua il cast corretto dei tipi (int, bool) prima dell'inserimento
+ *
+ * update_iscrizione:
+ * - Aggiorna approvazione_capo, id_pagamento, id_unita, id_iter
+ *   identificando il record tramite anno_associativo + id_persona
+ * - Restituisce affected_rows=0 se la coppia chiave non esiste (nessun errore)
+ * - Rifiuta la richiesta se manca uno dei campi obbligatori
+ * - Effettua il cast corretto dei tipi (int, bool) prima dell'aggiornamento
+ *
+ * delete_iscrizione:
+ * - Elimina l'iscrizione identificata da anno_associativo + id_persona
+ * - Restituisce affected_rows=0 se la coppia chiave non esiste (nessun errore)
+ * - Rifiuta la richiesta se manca anno_associativo o id_persona
+ *
+*/
+
 function read_iscrizione($db, $data)
 {
     try {

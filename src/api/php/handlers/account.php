@@ -1,4 +1,31 @@
 <?php
+
+/**
+ * Test svolti
+ *
+ * read_account:
+ * - Restituisce tutti gli account presenti
+ * - Restituisce [] se la tabella è vuota
+ *
+ * create_account:
+ * - Crea un account con username, password, email validi
+ * - Rifiuta la richiesta se manca uno dei campi obbligatori
+ * - Restituisce 500 se username già esistente (UNIQUE constraint)
+ * - Salva la password come hash bcrypt (non in chiaro)
+ *
+ * update_account:
+ * - Aggiorna password ed email di un account esistente
+ * - Restituisce affected_rows=0 se username non esiste (nessun errore)
+ * - Rifiuta la richiesta se manca uno dei campi obbligatori
+ * - Salva la nuova password come hash bcrypt (non in chiaro)
+ *
+ * delete_account:
+ * - Elimina l'account con lo username indicato
+ * - Restituisce affected_rows=0 se username non esiste (nessun errore)
+ * - Rifiuta la richiesta se manca il campo "username"
+ *
+ */
+
 function read_account($db, $data)
 {
     try {
