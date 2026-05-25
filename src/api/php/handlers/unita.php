@@ -1,13 +1,23 @@
 <?php
 
-/*http GET https://bookish-space-zebra-x5xp4gggw77vhp4xg-3000.app.github.dev/api/unita*/
-/*http POST https://bookish-space-zebra-x5xp4gggw77vhp4xg-3000.app.github.dev/api/unita 
---raw 
-'{
-  "nome_unita": "Unita di test",
-  "id_branca": 1
-}'*/
-function read_unita($db)
+/*http GET https://friendly-waffle-69w5pxxx996rf4v79-3000.app.github.dev/api/unita*/
+/*http POST https://friendly-waffle-69w5pxxx996rf4v79-3000.app.github.dev/api/unita --raw 
+    {
+         "nome_unita": "Unita di test",
+         "id_branca": 1
+    } */
+/*http PUT https://friendly-waffle-69w5pxxx996rf4v79-3000.app.github.dev/api/unita --raw 
+    {
+        "id_unita": 1,
+        "nome_unita": "Unita aggiornata",
+        "id_branca": 1
+    }*/ 
+/*http DELETE https://friendly-waffle-69w5pxxx996rf4v79-3000.app.github.dev/api/unita --raw 
+    {
+        "id_unita": 1
+    }*/
+
+function read_unita($db, $data)
 {
     try {
         $sql = <<<EOD
@@ -33,9 +43,10 @@ function create_unita($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Unita (nome_unita, id_branca)
-VALUES (?, ?)
-EOD;
+        INSERT INTO Unita (nome_unita, id_branca)
+        VALUES (?, ?)
+        EOD;
+        
         $params = [
             $data['nome_unita'],
             (int)$data['id_branca'],
