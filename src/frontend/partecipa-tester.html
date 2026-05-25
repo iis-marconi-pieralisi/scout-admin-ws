@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Partecipa — API Tester</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@700;800&display=swap"/>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1f2436;
+      --border: #2a3050;
+      --accent: #00e5a0;
+      --accent2: #3d8eff;
+      --danger: #ff5470;
+      --warning: #ffb020;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --radius: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--surface) !important;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .navbar-brand span {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .navbar-brand small {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      margin-left: 8px;
+    }
+
+    /* ── Layout ── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 52px;
+      height: calc(100vh - 52px);
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .route-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--radius);
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, color 0.15s;
+      margin-bottom: 4px;
+    }
+    .route-btn:hover { background: var(--surface2); }
+    .route-btn.is-active { background: var(--surface2); color: var(--accent); }
+    .method-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      min-width: 46px;
+      text-align: center;
+    }
+    .badge-get    { background: rgba(0,229,160,0.15); color: var(--accent); }
+    .badge-post   { background: rgba(61,142,255,0.15); color: var(--accent2); }
+    .badge-put    { background: rgba(255,176,32,0.15); color: var(--warning); }
+    .badge-delete { background: rgba(255,84,112,0.15); color: var(--danger); }
+
+    /* ── Main panel ── */
+    .main-panel {
+      padding: 2rem;
+      max-width: 900px;
+    }
+
+    /* ── URL bar ── */
+    .url-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .url-bar .method-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .url-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+    .send-btn {
+      background: var(--accent);
+      color: #0f1117;
+      border: none;
+      border-radius: 7px;
+      padding: 0.45rem 1.2rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .send-btn:hover { opacity: 0.85; }
+    .send-btn:active { transform: scale(0.97); }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Section cards ── */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .section-body { padding: 1rem; }
+
+    /* ── Field rows ── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field input::placeholder { color: var(--muted); }
+
+    /* ── Response ── */
+    .response-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.75rem;
+    }
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
+    .status-2xx { background: rgba(0,229,160,0.15); color: var(--accent); }
+    .status-4xx { background: rgba(255,176,32,0.15); color: var(--warning); }
+    .status-5xx { background: rgba(255,84,112,0.15); color: var(--danger); }
+    .time-label { font-size: 0.72rem; color: var(--muted); }
+
+    .response-body {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 120px;
+      max-height: 420px;
+      overflow-y: auto;
+      color: var(--text);
+    }
+    .response-body.empty { color: var(--muted); font-style: italic; }
+
+    /* JSON syntax highlight */
+    .json-key    { color: var(--accent2); }
+    .json-string { color: var(--accent); }
+    .json-number { color: var(--warning); }
+    .json-bool   { color: var(--danger); }
+    .json-null   { color: var(--muted); }
+
+    /* ── Loading spinner ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* ── Notifications ── */
+    .notif {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 100;
+      max-width: 300px;
+    }
+    .notif.show { opacity: 1; transform: translateY(0); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" role="navigation">
+  <div class="navbar-brand">
+    <span>Partecipa</span>
+    <small>/ API Tester</small>
+  </div>
+</nav>
+
+<div class="main-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <p class="sidebar-label">Rotte</p>
+    <button class="route-btn is-active" onclick="selectRoute('read')">
+      <span class="method-badge badge-get">GET</span> read
+    </button>
+    <button class="route-btn" onclick="selectRoute('create')">
+      <span class="method-badge badge-post">POST</span> create
+    </button>
+    <button class="route-btn" onclick="selectRoute('update')">
+      <span class="method-badge badge-put">PUT</span> update
+    </button>
+    <button class="route-btn" onclick="selectRoute('delete')">
+      <span class="method-badge badge-delete">DELETE</span> delete
+    </button>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-panel">
+
+    <!-- URL bar -->
+    <div class="url-bar">
+      <span class="method-tag" id="methodTag">GET</span>
+      <input class="url-input" id="urlInput" type="text" value="http://localhost/api/partecipa" spellcheck="false"/>
+      <button class="send-btn" id="sendBtn" onclick="sendRequest()">Send</button>
+    </div>
+
+    <!-- Params / Body -->
+    <div class="section-card" id="paramsCard">
+      <div class="section-header">
+        <span class="section-dot"></span>
+        <span id="paramsLabel">Parametri</span>
+      </div>
+      <div class="section-body" id="paramsBody">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- Response -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-dot" style="background:var(--accent2)"></span>
+        Risposta
+      </div>
+      <div class="section-body">
+        <div class="response-meta" id="responseMeta" style="display:none">
+          <span class="status-pill" id="statusPill"></span>
+          <span class="time-label" id="timeLabel"></span>
+        </div>
+        <div class="response-body empty" id="responseBody">// La risposta apparirà qui...</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Notifica -->
+<div class="notif" id="notif"></div>
+
+<script>
+  const routes = {
+    read: {
+      method: 'GET',
+      label: 'Parametri (opzionali — lascia vuoti per fetch-all)',
+      fields: [
+        { key: 'id_attivita', placeholder: 'es. 1', label: 'id_attivita' },
+        { key: 'id_unita',    placeholder: 'es. 2', label: 'id_unita' },
+      ],
+    },
+    create: {
+      method: 'POST',
+      label: 'Body',
+      fields: [
+        { key: 'id_attivita', placeholder: 'es. 1', label: 'id_attivita', required: true },
+        { key: 'id_unita',    placeholder: 'es. 2', label: 'id_unita',    required: true },
+      ],
+    },
+    update: {
+      method: 'PUT',
+      label: 'Body',
+      fields: [
+        { key: 'id_attivita',     placeholder: 'es. 1', label: 'id_attivita (corrente)',     required: true },
+        { key: 'id_unita',        placeholder: 'es. 2', label: 'id_unita (corrente)',        required: true },
+        { key: 'new_id_attivita', placeholder: 'es. 3', label: 'new_id_attivita',            required: true },
+        { key: 'new_id_unita',    placeholder: 'es. 4', label: 'new_id_unita',               required: true },
+      ],
+    },
+    delete: {
+      method: 'DELETE',
+      label: 'Body',
+      fields: [
+        { key: 'id_attivita', placeholder: 'es. 1', label: 'id_attivita', required: true },
+        { key: 'id_unita',    placeholder: 'es. 2', label: 'id_unita',    required: true },
+      ],
+    },
+  };
+
+  const methodColors = {
+    GET:    'var(--accent)',
+    POST:   'var(--accent2)',
+    PUT:    'var(--warning)',
+    DELETE: 'var(--danger)',
+  };
+
+  let currentRoute = 'read';
+
+  function selectRoute(name) {
+    currentRoute = name;
+
+    // sidebar active
+    document.querySelectorAll('.route-btn').forEach(b => b.classList.remove('is-active'));
+    event.currentTarget.classList.add('is-active');
+
+    const r = routes[name];
+
+    // method tag
+    const tag = document.getElementById('methodTag');
+    tag.textContent = r.method;
+    tag.style.color = methodColors[r.method];
+    tag.style.background = methodColors[r.method] + '22';
+
+    // params label
+    document.getElementById('paramsLabel').textContent = r.label;
+
+    // build fields
+    const body = document.getElementById('paramsBody');
+    const pairs = [];
+    for (let i = 0; i < r.fields.length; i += 2) {
+      pairs.push(r.fields.slice(i, i + 2));
+    }
+    body.innerHTML = pairs.map(pair => `
+      <div class="field-row" style="margin-bottom:0.75rem">
+        ${pair.map(f => `
+          <div class="field">
+            <label>${f.label}${f.required ? ' <span style="color:var(--danger)">*</span>' : ''}</label>
+            <input id="f_${f.key}" type="number" placeholder="${f.placeholder}" min="1"/>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    // reset response
+    resetResponse();
+  }
+
+  function resetResponse() {
+    document.getElementById('responseMeta').style.display = 'none';
+    const rb = document.getElementById('responseBody');
+    rb.textContent = '// La risposta apparirà qui...';
+    rb.className = 'response-body empty';
+  }
+
+  async function sendRequest() {
+    const url   = document.getElementById('urlInput').value.trim();
+    const r     = routes[currentRoute];
+    const btn   = document.getElementById('sendBtn');
+
+    // collect fields
+    const payload = {};
+    for (const f of r.fields) {
+      const el = document.getElementById('f_' + f.key);
+      if (el && el.value !== '') payload[f.key] = parseInt(el.value, 10);
+    }
+
+    // basic validation
+    if (currentRoute !== 'read') {
+      const missing = r.fields.filter(f => f.required && !(f.key in payload)).map(f => f.label);
+      if (missing.length) {
+        showNotif('Campi obbligatori mancanti: ' + missing.join(', '));
+        return;
+      }
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Send';
+
+    const rb = document.getElementById('responseBody');
+    rb.className = 'response-body empty';
+    rb.textContent = '// In attesa...';
+
+    const t0 = performance.now();
+
+    try {
+      const opts = { method: r.method, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } };
+      let finalUrl = url;
+
+      if (r.method === 'GET') {
+        if (Object.keys(payload).length) {
+          finalUrl += '?' + new URLSearchParams(payload).toString();
+        }
+      } else {
+        opts.body = JSON.stringify(payload);
+      }
+
+      const res  = await fetch(finalUrl, opts);
+      const ms   = Math.round(performance.now() - t0);
+      const text = await res.text();
+
+      let parsed;
+      try { parsed = JSON.parse(text); } catch { parsed = null; }
+
+      // status pill
+      const pill = document.getElementById('statusPill');
+      pill.textContent = res.status + ' ' + res.statusText;
+      pill.className = 'status-pill ' + (res.ok ? 'status-2xx' : res.status >= 500 ? 'status-5xx' : 'status-4xx');
+
+      document.getElementById('timeLabel').textContent = ms + ' ms';
+      document.getElementById('responseMeta').style.display = 'flex';
+
+      rb.className = 'response-body';
+      rb.innerHTML = parsed ? syntaxHighlight(parsed) : escapeHtml(text);
+
+    } catch (err) {
+      const ms = Math.round(performance.now() - t0);
+      document.getElementById('responseMeta').style.display = 'flex';
+      document.getElementById('statusPill').textContent = 'Network Error';
+      document.getElementById('statusPill').className = 'status-pill status-5xx';
+      document.getElementById('timeLabel').textContent = ms + ' ms';
+      rb.className = 'response-body';
+      rb.innerHTML = `<span style="color:var(--danger)">${escapeHtml(err.message)}</span>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send';
+    }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function syntaxHighlight(json) {
+    const str = JSON.stringify(json, null, 2);
+    return escapeHtml(str).replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      match => {
+        if (/^"/.test(match)) {
+          return /:$/.test(match)
+            ? `<span class="json-key">${match}</span>`
+            : `<span class="json-string">${match}</span>`;
+        }
+        if (/true|false/.test(match)) return `<span class="json-bool">${match}</span>`;
+        if (/null/.test(match))       return `<span class="json-null">${match}</span>`;
+        return `<span class="json-number">${match}</span>`;
+      }
+    );
+  }
+
+  function showNotif(msg) {
+    const n = document.getElementById('notif');
+    n.textContent = msg;
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 3000);
+  }
+
+  // init
+  selectRoute('read');
+</script>
+</body>
+</html>
