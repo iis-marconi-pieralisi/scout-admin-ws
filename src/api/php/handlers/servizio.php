@@ -2,27 +2,15 @@
 
 function read_servizio($db, $data)
 {
-    try {
-        if (!empty($data['anno_associativo']) && !empty($data['id_persona'])) {
-            $sql = <<<EOD
-                SELECT  *
-                FROM    Servizio
-                WHERE   anno_associativo = ?
-                AND     id_persona       = ?
-            EOD;
-            $params = [
-                (int)$data['anno_associativo'],
-                (int)$data['id_persona'],
-            ];
-            $results = $db->query($sql, $params);
-        } else {
-            $sql = <<<EOD
-                SELECT  *
-                FROM    Servizio
-            EOD;
-            $results = $db->query($sql);
-        }
+    // http GET https://automatic-waffle-5g5x5prqr5653pvxw-3000.app.github.dev/api/servizio
 
+    try {
+        $sql = <<<EOD
+            SELECT  *
+            FROM    Servizio
+        EOD;
+
+        $results = $db->query($sql);
         json_response($results);
 
     } catch (Exception $e) {
@@ -33,6 +21,14 @@ function read_servizio($db, $data)
 
 function create_servizio($db, $data)
 {
+    // http POST https://automatic-waffle-5g5x5prqr5653pvxw-3000.app.github.dev/api/servizio --raw '{
+    //   "descrizione": "Servizio di test",
+    //   "anno_associativo": 2024,
+    //   "id_persona": 1,
+    //   "id_tipologia": 1,
+    //   "id_unita": 1
+    // }'
+
     $required_fields = ['descrizione', 'anno_associativo', 'id_persona', 'id_tipologia', 'id_unita'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
@@ -68,6 +64,14 @@ function create_servizio($db, $data)
 
 function update_servizio($db, $data)
 {
+    // http PUT https://automatic-waffle-5g5x5prqr5653pvxw-3000.app.github.dev/api/servizio --raw '{
+    //   "descrizione": "Servizio aggiornato",
+    //   "anno_associativo": 2024,
+    //   "id_persona": 1,
+    //   "id_tipologia": 1,
+    //   "id_unita": 1
+    // }'
+
     $required_fields = ['anno_associativo', 'id_persona', 'descrizione', 'id_tipologia', 'id_unita'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
@@ -107,6 +111,11 @@ function update_servizio($db, $data)
 
 function delete_servizio($db, $data)
 {
+    // http DELETE https://automatic-waffle-5g5x5prqr5653pvxw-3000.app.github.dev/api/servizio --raw '{
+    //   "anno_associativo": 2024,
+    //   "id_persona": 1
+    // }'
+
     $required_fields = ['anno_associativo', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
