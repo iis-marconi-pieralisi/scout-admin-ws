@@ -1,6 +1,12 @@
 <?php
 function read_account($db, $data)
 {
+    if(!check_permission('account', 'R', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     try {
         $sql = "SELECT * FROM Account";
         $results = $db->query($sql);
@@ -12,6 +18,12 @@ function read_account($db, $data)
 
 function create_account($db, $data)
 {
+    if(!check_permission('account', 'C', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
@@ -43,6 +55,12 @@ EOD;
 
 function update_account($db, $data)
 {
+    if(!check_permission('account', 'U', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
@@ -74,6 +92,13 @@ EOD;
 
 function delete_account($db, $data)
 {
+
+    if(!check_permission('account', 'D', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     $required_fields = ['username'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
