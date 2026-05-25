@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing Iscrizione CRUD</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Testing Iscrizione CRUD</h1>
+
+            <div class="columns is-multiline">
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="subtitle is-5" id="iscrizioneFormTitle">Crea iscrizione</h2>
+                        <form id="iscrizioneForm">
+                            <div class="field">
+                                <label class="label">Anno associativo</label>
+                                <div class="control">
+                                    <input id="iscrizioneAnno" class="input" type="number" placeholder="2026" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="checkbox">
+                                    <input id="iscrizioneApprovazioneCapo" type="checkbox">
+                                    Approvazione capo
+                                </label>
+                            </div>
+                            <div class="field">
+                                <label class="label">ID Persona</label>
+                                <div class="control">
+                                    <input id="iscrizioneIdPersona" class="input" type="number" placeholder="es. 1" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">ID Pagamento</label>
+                                <div class="control">
+                                    <input id="iscrizioneIdPagamento" class="input" type="number" placeholder="es. 1" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">ID Unità</label>
+                                <div class="control">
+                                    <input id="iscrizioneIdUnita" class="input" type="number" placeholder="es. 1" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">ID Iter</label>
+                                <div class="control">
+                                    <input id="iscrizioneIdIter" class="input" type="number" placeholder="es. 1" required>
+                                </div>
+                            </div>
+                            <div class="field is-grouped is-grouped-right">
+                                <div class="control">
+                                    <button id="iscrizioneSubmitButton" class="button is-primary" type="submit">Crea</button>
+                                </div>
+                                <div class="control">
+                                    <button id="iscrizioneResetButton" class="button is-light" type="button">Annulla</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="subtitle is-5">Risposta API</h2>
+                        <div class="content">
+                            <pre id="apiResponse" class="is-family-monospace" style="white-space: pre-wrap; word-break: break-word; max-height: 320px; overflow-y: auto;">Nessuna azione eseguita ancora.</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h2 class="subtitle is-5">Lista iscrizioni</h2>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <button id="refreshButton" class="button is-link is-light">Aggiorna</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Anno</th>
+                                <th>Approvazione</th>
+                                <th>ID Persona</th>
+                                <th>ID Pagamento</th>
+                                <th>ID Unità</th>
+                                <th>ID Iter</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="iscrizioneTableBody">
+                            <tr><td colspan="7">Caricamento iscrizioni...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="./main.js"></script>
+    <script src="./iscrizione.js"></script>
+</body>
+</html>
