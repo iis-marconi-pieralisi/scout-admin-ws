@@ -1,9 +1,24 @@
 const API_ISCRIZIONE = '/api/iscrizione';
+let iscrizioneCache = [];
 let iscrizioneFormMode = 'create';
+let iscrizioneEditingRowKey = null;
+
+function setIscrizioneInlineStatus(message = '', type = 'info') {
+    const statusEl = getById('iscrizioneInlineStatus');
+    if (!statusEl) return;
+    statusEl.textContent = message;
+    let className = 'help';
+    if (message) {
+        className += type === 'error' ? ' has-text-danger' : type === 'warning' ? ' has-text-warning' : ' has-text-info';
+    }
+    statusEl.className = className;
+}
 
 function renderIscrizioni(items) {
     const tableBody = getById('iscrizioneTableBody');
     if (!tableBody) return;
+
+    iscrizioneCache = Array.isArray(items) ? items : [];
 
     if (!Array.isArray(items) || items.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7">Nessuna iscrizione trovata.</td></tr>';
@@ -12,7 +27,7 @@ function renderIscrizioni(items) {
 
     tableBody.innerHTML = items.map(item => {
         return `
-            <tr>
+            <tr data-iscrizione-anno="${escapeAttr(item.anno_associativo)}" data-iscrizione-id-persona="${escapeAttr(item.id_persona)}">
                 <td>${escapeHtml(item.anno_associativo)}</td>
                 <td>${escapeHtml(item.approvazione_capo)}</td>
                 <td>${escapeHtml(item.id_persona)}</td>
@@ -20,7 +35,7 @@ function renderIscrizioni(items) {
                 <td>${escapeHtml(item.id_unita)}</td>
                 <td>${escapeHtml(item.id_iter)}</td>
                 <td>
-                    <button class="button is-small is-info" type="button" onclick="loadIscrizione('${escapeAttr(item.anno_associativo)}', '${escapeAttr(item.id_persona)}', '${escapeAttr(item.approvazione_capo)}', '${escapeAttr(item.id_pagamento)}', '${escapeAttr(item.id_unita)}', '${escapeAttr(item.id_iter)}')">Modifica</button>
+                    <button class="button is-small is-info" type="button" onclick="editIscrizioneRow('${escapeAttr(item.anno_associativo)}', '${escapeAttr(item.id_persona)}')">Modifica</button>
                     <button class="button is-small is-danger ml-2" type="button" onclick="deleteIscrizioneRow('${escapeAttr(item.anno_associativo)}', '${escapeAttr(item.id_persona)}')">Elimina</button>
                 </td>
             </tr>
@@ -42,15 +57,82 @@ function setIscrizioneFormMode(mode) {
     }
 }
 
-function loadIscrizione(anno, idPersona, approvazione, idPagamento, idUnita, idIter) {
-    setValue('iscrizioneAnno', anno);
-    setValue('iscrizioneIdPersona', idPersona);
-    setChecked('iscrizioneApprovazioneCapo', approvazione === '1' || approvazione === 'true' || approvazione === true);
-    setValue('iscrizioneIdPagamento', idPagamento);
-    setValue('iscrizioneIdUnita', idUnita);
-    setValue('iscrizioneIdIter', idIter);
-    setIscrizioneFormMode('edit');
-    showResponse({ info: `Iscrizione caricata: ${anno} / ${idPersona}` });
+function findIscrizioneRow(anno, idPersona) {
+    const rows = document.querySelectorAll('#iscrizioneTableBody tr');
+    return Array.from(rows).find(row => row.dataset.iscrizioneAnno === String(anno) && row.dataset.iscrizioneIdPersona === String(idPersona));
+}
+
+function editIscrizioneRow(anno, idPersona) {
+    const iscrizione = iscrizioneCache.find(item => String(item.anno_associativo) === String(anno) && String(item.id_persona) === String(idPersona));
+    if (!iscrizione) return;
+
+    const row = findIscrizioneRow(anno, idPersona);
+    if (!row) return;
+
+    iscrizioneEditingRowKey = `${anno}-${idPersona}`;
+    setIscrizioneCreateFormEnabled(false);
+    setIscrizioneInlineStatus('Modifica in corso nella tabella. Salva o annulla per tornare al form di creazione.', 'warning');
+
+    const approvazioneChecked = iscrizione.approvazione_capo === '1' || iscrizione.approvazione_capo === 'true' || iscrizione.approvazione_capo === true;
+
+    row.innerHTML = `
+        <td>${escapeHtml(iscrizione.anno_associativo)}</td>
+        <td class="has-text-centered"><input name="editIscrizioneApprovazione" type="checkbox" class="checkbox" ${approvazioneChecked ? 'checked' : ''}></td>
+        <td>${escapeHtml(iscrizione.id_persona)}</td>
+        <td><input name="editIscrizioneIdPagamento" class="input" type="number" value="${escapeAttr(iscrizione.id_pagamento)}"></td>
+        <td><input name="editIscrizioneIdUnita" class="input" type="number" value="${escapeAttr(iscrizione.id_unita)}"></td>
+        <td><input name="editIscrizioneIdIter" class="input" type="number" value="${escapeAttr(iscrizione.id_iter)}"></td>
+        <td>
+            <button class="button is-small is-success" type="button" onclick="saveIscrizioneRow('${escapeAttr(iscrizione.anno_associativo)}', '${escapeAttr(iscrizione.id_persona)}')">Salva</button>
+            <button class="button is-small is-light ml-2" type="button" onclick="cancelIscrizioneRow()">Annulla</button>
+        </td>
+    `;
+}
+
+function cancelIscrizioneRow() {
+    iscrizioneEditingRowKey = null;
+    setIscrizioneCreateFormEnabled(true);
+    setIscrizioneInlineStatus('', 'info');
+    renderIscrizioni(iscrizioneCache);
+}
+
+async function saveIscrizioneRow(anno, idPersona) {
+    const row = findIscrizioneRow(anno, idPersona);
+    if (!row) return;
+
+    const approvazioneInput = row.querySelector('input[name="editIscrizioneApprovazione"]');
+    const pagamentoInput = row.querySelector('input[name="editIscrizioneIdPagamento"]');
+    const unitaInput = row.querySelector('input[name="editIscrizioneIdUnita"]');
+    const iterInput = row.querySelector('input[name="editIscrizioneIdIter"]');
+
+    if (!pagamentoInput || !unitaInput || !iterInput) return;
+
+    const payload = {
+        anno_associativo: anno,
+        id_persona: idPersona,
+        approvazione_capo: approvazioneInput ? approvazioneInput.checked : false,
+        id_pagamento: pagamentoInput.value.trim(),
+        id_unita: unitaInput.value.trim(),
+        id_iter: iterInput.value.trim(),
+    };
+
+    try {
+        const saveButton = row.querySelector('button.is-success');
+        const cancelButton = row.querySelector('button.is-light');
+        if (saveButton) saveButton.disabled = true;
+        if (cancelButton) cancelButton.disabled = true;
+        setIscrizioneInlineStatus('Salvataggio in corso...', 'info');
+
+        const result = await apiRequest('PUT', API_ISCRIZIONE, payload);
+        showResponse(result);
+        iscrizioneEditingRowKey = null;
+        setIscrizioneCreateFormEnabled(true);
+        setIscrizioneInlineStatus('Iscrizione aggiornata correttamente.', 'info');
+        fetchIscrizioni();
+    } catch (error) {
+        handleFetchError(error);
+        setIscrizioneInlineStatus('Errore durante il salvataggio. Riprova.', 'error');
+    }
 }
 
 async function deleteIscrizioneRow(anno, idPersona) {
@@ -66,7 +148,33 @@ async function deleteIscrizioneRow(anno, idPersona) {
     }
 }
 
+function setIscrizioneCreateFormEnabled(enabled) {
+    const submitButton = getById('iscrizioneSubmitButton');
+    const resetButton = getById('iscrizioneResetButton');
+    const fields = [
+        'iscrizioneAnno',
+        'iscrizioneApprovazioneCapo',
+        'iscrizioneIdPersona',
+        'iscrizioneIdPagamento',
+        'iscrizioneIdUnita',
+        'iscrizioneIdIter',
+    ];
+
+    if (submitButton) submitButton.disabled = !enabled;
+    if (resetButton) resetButton.disabled = !enabled;
+
+    fields.forEach(id => {
+        const input = getById(id);
+        if (input) input.disabled = !enabled;
+    });
+}
+
 async function fetchIscrizioni() {
+    if (iscrizioneEditingRowKey) {
+        setIscrizioneInlineStatus('Completa o annulla la modifica in corso prima di aggiornare la lista.', 'warning');
+        return;
+    }
+
     try {
         const data = await apiRequest('GET', API_ISCRIZIONE);
         renderIscrizioni(data);
@@ -116,7 +224,5 @@ function initIscrizionePage() {
     setIscrizioneFormMode('create');
     fetchIscrizioni();
 }
-
-window.loadIscrizione = loadIscrizione;
 
 window.addEventListener('DOMContentLoaded', initIscrizionePage);

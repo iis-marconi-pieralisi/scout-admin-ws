@@ -34,6 +34,16 @@
                                     <input id="accountEmail" class="input" type="email" placeholder="es. nome@example.com" required>
                                 </div>
                             </div>
+                            <div class="field">
+                                <label class="label">ID Persona</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select id="accountPersonaId" required>
+                                            <option value="">Caricamento persone...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="field is-grouped is-grouped-right">
                                 <div class="control">
                                     <button id="accountSubmitButton" class="button is-primary" type="submit">Crea</button>
@@ -75,12 +85,14 @@
                         <thead>
                             <tr>
                                 <th>Username</th>
+                                <th>Password</th>
                                 <th>Email</th>
+                                <th>Persona</th>
                                 <th>Azioni</th>
                             </tr>
                         </thead>
                         <tbody id="accountTableBody">
-                            <tr><td colspan="3">Caricamento account...</td></tr>
+                            <tr><td colspan="5">Caricamento account...</td></tr>
                         </tbody>
                     </table>
                 </div>

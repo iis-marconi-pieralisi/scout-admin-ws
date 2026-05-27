@@ -42,20 +42,21 @@ function read_account($db, $data)
 
 function create_account($db, $data)
 {
-    $required_fields = ['username', 'password', 'email'];
+    $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
         $sql = <<<EOD
-            INSERT INTO Account (username, password, email) 
-            VALUES (?, ?, ?)
+            INSERT INTO Account (username, password, email, id_persona) 
+            VALUES (?, ?, ?, ?)
             EOD;
         $params = [
             $data['username'],
             password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
+            (int)$data['id_persona'],
         ];
 
         $affected_rows = $db->query($sql, $params);
@@ -72,21 +73,35 @@ function create_account($db, $data)
 
 function update_account($db, $data)
 {
-    $required_fields = ['username', 'password', 'email'];
+    $required_fields = ['username', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
+    $originalUsername = isset($data['original_username']) && $data['original_username'] !== '' ? $data['original_username'] : $data['username'];
+
     try {
-        $sql = <<<EOD
-            UPDATE Account SET password = ?, email = ? 
-            WHERE username = ?
-            EOD;
+        $fields = ['email = ?', 'id_persona = ?'];
         $params = [
-            password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
-            $data['username'],
+            (int)$data['id_persona'],
         ];
+
+        if (!empty($data['password'])) {
+            array_unshift($params, password_hash($data['password'], PASSWORD_BCRYPT));
+            array_unshift($fields, 'password = ?');
+        }
+
+        if ($originalUsername !== $data['username']) {
+            $fields[] = 'username = ?';
+            $params[] = $data['username'];
+        }
+
+        $sql = sprintf(
+            "UPDATE Account SET %s WHERE username = ?",
+            implode(', ', $fields)
+        );
+        $params[] = $originalUsername;
 
         $affected_rows = $db->query($sql, $params);
 
