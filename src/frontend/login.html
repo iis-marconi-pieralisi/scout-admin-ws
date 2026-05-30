@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Scout Admin</title>
+</head>
+<body>
+
+<h1>Accedi a Scout Admin</h1>
+
+<p id="messaggio"></p>
+
+<form id="form-login">
+
+    <label for="email">Email *</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password *</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <input type="submit" value="Accedi">
+
+</form>
+
+<br>
+<p>Non hai un account? <a href="registrazione.html">Registrati</a></p>
+
+<script>
+    document.getElementById('form-login').addEventListener('submit', async function(e)
+    {
+        e.preventDefault();
+
+        const mex = document.getElementById('messaggio');
+
+        const payload = {
+            email:    document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value,
+        };
+
+        try
+        {
+            const res  = await fetch('../api/php/handlers/authentication.php', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload),
+            });
+
+            const json = await res.json();
+
+            if (res.ok && json.success)
+            {
+                mex.textContent = 'Benvenuto, ' + json.username + '!';
+                mex.style.color = 'green';
+            }
+            else
+            {
+                mex.textContent = json.message || 'Credenziali non valide.';
+                mex.style.color = 'red';
+            }
+        }
+        catch (e)
+        {
+            mex.textContent = 'Impossibile contattare il server.';
+            mex.style.color = 'red';
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
 
         try
         {
-            $sql = "SELECT A.username, A.password, T.nome 
+            $sql = "SELECT A.username, A.password, T.nome as tipologia
                     FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
                     JOIN Servizio S ON P.id_persona = S.id_persona
                     JOIN Tipologia T ON S.id_tipologia = T.id_tipologia

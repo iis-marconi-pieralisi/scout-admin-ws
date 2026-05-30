@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione — Scout Admin</title>
+</head>
+<body>
+
+<h1>Registrazione nuovo membro</h1>
+
+<p id="messaggio"></p>
+
+<form id="form-registrazione">
+
+    <fieldset>
+        <legend>Dati anagrafici</legend>
+
+        <label for="nome">Nome *</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="cognome">Cognome *</label><br>
+        <input type="text" id="cognome" name="cognome" required><br><br>
+
+        <label for="data_nascita">Data di nascita *</label><br>
+        <input type="date" id="data_nascita" name="data_nascita" required><br><br>
+
+        <label for="luogo_nascita">Luogo di nascita *</label><br>
+        <input type="text" id="luogo_nascita" name="luogo_nascita" required><br><br>
+    </fieldset>
+
+    <br>
+
+    <fieldset>
+        <legend>Residenza</legend>
+
+        <label for="citta_residenza">Città *</label><br>
+        <input type="text" id="citta_residenza" name="citta_residenza" required><br><br>
+
+        <label for="via_residenza">Via e numero civico *</label><br>
+        <input type="text" id="via_residenza" name="via_residenza" required><br><br>
+
+        <label for="cap_residenza">CAP *</label><br>
+        <input type="text" id="cap_residenza" name="cap_residenza" maxlength="5" pattern="[0-9]{5}" required><br><br>
+    </fieldset>
+
+    <br>
+
+    <fieldset>
+        <legend>Contatto</legend>
+
+        <label for="telefono">Telefono *</label><br>
+        <input type="tel" id="telefono" name="telefono" required><br><br>
+    </fieldset>
+
+    <br>
+
+    <fieldset>
+        <legend>Tutori</legend>
+
+        <label for="id_tutore1">Tutore 1 *</label><br>
+        <select id="id_tutore1" name="id_tutore1" required>
+            <option value="">— Caricamento... —</option>
+        </select><br><br>
+
+        <label for="id_tutore2">Tutore 2 (opzionale)</label><br>
+        <select id="id_tutore2" name="id_tutore2">
+            <option value="">— Nessuno —</option>
+        </select><br><br>
+    </fieldset>
+
+    <br>
+
+    <fieldset>
+        <legend>Credenziali di accesso</legend>
+
+        <label for="username">Username *</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="email">Email *</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password *</label><br>
+        <input type="password" id="password" name="password" minlength="8" required><br><br>
+
+        <label for="password_confirm">Conferma password *</label><br>
+        <input type="password" id="password_confirm" name="password_confirm" required><br><br>
+    </fieldset>
+
+    <br>
+
+    <input type="submit" value="Registra membro">
+
+</form>
+
+<script>
+    async function caricaTutori()
+    {
+        try
+        {
+            const res = await fetch('/api/tutori');
+            const tutori = await res.json();
+
+            const sel1 = document.getElementById('id_tutore1');
+            const sel2 = document.getElementById('id_tutore2');
+
+            sel1.innerHTML = '<option value="">— Seleziona —</option>';
+
+            tutori.forEach(function(t)
+            {
+                const label = t.cognome + ' ' + t.nome;
+                sel1.appendChild(new Option(label, t.id_persona));
+                sel2.appendChild(new Option(label, t.id_persona));
+            });
+        }
+        catch (e)
+        {
+            document.getElementById('id_tutore1').innerHTML = '<option value="">— Errore caricamento —</option>';
+        }
+    }
+
+    caricaTutori();
+
+    // Submit via fetch
+    document.getElementById('form-registrazione').addEventListener('submit', async function(e)
+    {
+        e.preventDefault();
+
+        const password         = document.getElementById('password').value;
+        const password_confirm = document.getElementById('password_confirm').value;
+        const mex              = document.getElementById('messaggio');
+
+        if (password !== password_confirm)
+        {
+            mex.textContent = 'Le due password non coincidono.';
+            mex.style.color = 'red';
+            return;
+        }
+
+        const id_tutore2 = document.getElementById('id_tutore2').value;
+
+        const payload = {
+            nome:             document.getElementById('nome').value.trim(),
+            cognome:          document.getElementById('cognome').value.trim(),
+            data_nascita:     document.getElementById('data_nascita').value,
+            luogo_nascita:    document.getElementById('luogo_nascita').value.trim(),
+            citta_residenza:  document.getElementById('citta_residenza').value.trim(),
+            via_residenza:    document.getElementById('via_residenza').value.trim(),
+            cap_residenza:    document.getElementById('cap_residenza').value.trim(),
+            telefono:         document.getElementById('telefono').value.trim(),
+            id_tutore1:       document.getElementById('id_tutore1').value,
+            username:         document.getElementById('username').value.trim(),
+            email:            document.getElementById('email').value.trim(),
+            password:         password,
+        };
+
+        if (id_tutore2) payload.id_tutore2 = id_tutore2;
+
+        try
+        {
+            const res  = await fetch('/api/registration', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload),
+            });
+
+            const json = await res.json();
+
+            if (res.ok && json.success)
+            {
+                mex.textContent = json.success;
+                mex.style.color = 'green';
+                document.getElementById('form-registrazione').reset();
+                caricaTutori();
+            }
+            else
+            {
+                mex.textContent = json.error || 'Errore durante la registrazione.';
+                mex.style.color = 'red';
+            }
+        }
+        catch (e)
+        {
+            mex.textContent = 'Impossibile contattare il server.';
+            mex.style.color = 'red';
+        }
+    });
+</script>
+
+</body>
+</html>
