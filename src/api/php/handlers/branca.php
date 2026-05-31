@@ -1,6 +1,6 @@
 <?php
 
-function read_branca($db)
+function read_branca($db, $data)
 {
     try {
         $sql = <<<EOD
