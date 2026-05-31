@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing Account CRUD</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Testing Account CRUD</h1>
+           
+            <div class="columns is-multiline">
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="subtitle is-5" id="accountFormTitle">Crea account</h2>
+                        <form id="accountForm">
+                            <div class="field">
+                                <label class="label">Username</label>
+                                <div class="control">
+                                    <input id="accountUsername" class="input" type="text" placeholder="es. mario.rossi" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Password</label>
+                                <div class="control">
+                                    <input id="accountPassword" class="input" type="password" placeholder="Password" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    <input id="accountEmail" class="input" type="email" placeholder="es. nome@example.com" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">ID Persona</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select id="accountPersonaId" required>
+                                            <option value="">Caricamento persone...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field is-grouped is-grouped-right">
+                                <div class="control">
+                                    <button id="accountSubmitButton" class="button is-primary" type="submit">Crea</button>
+                                </div>
+                                <div class="control">
+                                    <button id="accountResetButton" class="button is-light" type="button">Annulla</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="subtitle is-5">Risposta API</h2>
+                        <div class="content">
+                            <pre id="apiResponse" class="is-family-monospace" style="white-space: pre-wrap; word-break: break-word; max-height: 320px; overflow-y: auto;">Nessuna azione eseguita ancora.</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h2 class="subtitle is-5">Lista account</h2>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <button id="refreshButton" class="button is-link is-light">Aggiorna</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Email</th>
+                                <th>Persona</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountTableBody">
+                            <tr><td colspan="5">Caricamento account...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="./main.js"></script>
+    <script src="./account.js"></script>
+</body>
+</html>
