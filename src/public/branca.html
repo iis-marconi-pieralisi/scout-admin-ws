@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tester CRUD Branca</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <style>
+        .table-container {
+            max-height: 55vh;
+            overflow: auto;
+        }
+        .is-clickable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Tester CRUD Branca</h1>
+                <h2 class="subtitle">Endpoint <code>/api/branca</code></h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div id="notificationArea"></div>
+
+            <div class="box">
+                <div class="columns is-multiline">
+                    <div class="column is-full">
+                        <h3 class="title is-5">Modulo Branca</h3>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Nome branca</label>
+                            <div class="control">
+                                <input id="nomeBranca" class="input" type="text" placeholder="es. Lupetti">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Età minima</label>
+                            <div class="control">
+                                <input id="minEta" class="input" type="number" min="0" placeholder="es. 8">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Età massima</label>
+                            <div class="control">
+                                <input id="maxEta" class="input" type="number" min="0" placeholder="es. 11">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Azione</label>
+                            <div class="buttons">
+                                <button id="saveButton" class="button is-primary is-fullwidth">Crea / Aggiorna</button>
+                                <button id="cancelEditButton" class="button is-light is-fullwidth" style="display:none;">Annulla</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="editingId" value="">
+            </div>
+
+            <div class="level mb-4">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input id="searchInput" class="input" type="text" placeholder="Filtra per nome o ID...">
+                            </div>
+                            <div class="control">
+                                <button id="refreshButton" class="button is-info">Aggiorna tabella</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable is-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome branca</th>
+                            <th>Età minima</th>
+                            <th>Età massima</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brancaTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const apiUrl = '/api/branca';
+        const nomeBrancaInput = document.getElementById('nomeBranca');
+        const minEtaInput = document.getElementById('minEta');
+        const maxEtaInput = document.getElementById('maxEta');
+        const saveButton = document.getElementById('saveButton');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const editingIdInput = document.getElementById('editingId');
+        const searchInput = document.getElementById('searchInput');
+        const refreshButton = document.getElementById('refreshButton');
+        const tableBody = document.getElementById('brancaTableBody');
+        const notificationArea = document.getElementById('notificationArea');
+        let brancas = [];
+
+        async function fetchBrancas() {
+            try {
+                const response = await fetch(apiUrl, { method: 'GET' });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore caricamento brande.', 'is-danger');
+                    return;
+                }
+                brancas = Array.isArray(json) ? json : [];
+                renderTable(brancas);
+            } catch (error) {
+                showNotification('Errore di rete: impossibile caricare le branche.', 'is-danger');
+            }
+        }
+
+        function renderTable(items) {
+            const filter = searchInput.value.trim().toLowerCase();
+            const filtered = items.filter(item => {
+                const values = [item.id_branca, item.nome_branca, item.min_eta, item.max_eta].join(' ').toLowerCase();
+                return values.includes(filter);
+            });
+            tableBody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${item.id_branca}</td>
+                    <td>${escapeHtml(item.nome_branca)}</td>
+                    <td>${item.min_eta}</td>
+                    <td>${item.max_eta}</td>
+                    <td>
+                        <button class="button is-small is-info mr-2" onclick="startEdit(${item.id_branca})">Modifica</button>
+                        <button class="button is-small is-danger" onclick="deleteBranca(${item.id_branca})">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            return text.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showNotification(message, type = 'is-info') {
+            notificationArea.innerHTML = `
+                <div class="notification ${type}">
+                    <button class="delete" onclick="this.parentElement.remove()"></button>
+                    ${escapeHtml(message)}
+                </div>
+            `;
+        }
+
+        function clearNotification() {
+            notificationArea.innerHTML = '';
+        }
+
+        function resetForm() {
+            editingIdInput.value = '';
+            nomeBrancaInput.value = '';
+            minEtaInput.value = '';
+            maxEtaInput.value = '';
+            cancelEditButton.style.display = 'none';
+            saveButton.textContent = 'Crea / Aggiorna';
+        }
+
+        function populateForm(item) {
+            editingIdInput.value = item.id_branca;
+            nomeBrancaInput.value = item.nome_branca;
+            minEtaInput.value = item.min_eta;
+            maxEtaInput.value = item.max_eta;
+            cancelEditButton.style.display = 'inline-flex';
+            saveButton.textContent = 'Aggiorna';
+            nomeBrancaInput.focus();
+        }
+
+        window.startEdit = function(id) {
+            const item = brancas.find(entry => entry.id_branca === id);
+            if (!item) {
+                showNotification('Elemento non trovato per la modifica.', 'is-warning');
+                return;
+            }
+            populateForm(item);
+        };
+
+        async function deleteBranca(id) {
+            if (!confirm('Eliminare questa branca?')) {
+                return;
+            }
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_branca: id })
+                });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore durante l\'eliminazione.', 'is-danger');
+                    return;
+                }
+                showNotification(json.message || 'Branca eliminata.', 'is-success');
+                await fetchBrancas();
+                resetForm();
+            } catch (error) {
+                showNotification('Errore di rete durante l\'eliminazione.', 'is-danger');
+            }
+        }
+
+        async function submitForm() {
+            const nome = nomeBrancaInput.value.trim();
+            const minEta = minEtaInput.value.trim();
+            const maxEta = maxEtaInput.value.trim();
+            const editingId = editingIdInput.value;
+
+            if (!nome || !minEta || !maxEta) {
+                showNotification('Compila tutti i campi prima di inviare.', 'is-warning');
+                return;
+            }
+            if (Number(minEta) > Number(maxEta)) {
+                showNotification('L\'età minima non può essere maggiore dell\'età massima.', 'is-warning');
+                return;
+            }
+
+            const payload = {
+                nome_branca: nome,
+                min_eta: Number(minEta),
+                max_eta: Number(maxEta)
+            };
+
+            let method = 'POST';
+            if (editingId) {
+                method = 'PUT';
+                payload.id_branca = Number(editingId);
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore durante il salvataggio.', 'is-danger');
+                    return;
+                }
+                showNotification(json.message || 'Salvataggio avvenuto con successo.', 'is-success');
+                await fetchBrancas();
+                resetForm();
+            } catch (error) {
+                showNotification('Errore di rete durante il salvataggio.', 'is-danger');
+            }
+        }
+
+        saveButton.addEventListener('click', async () => {
+            clearNotification();
+            await submitForm();
+        });
+
+        cancelEditButton.addEventListener('click', () => {
+            resetForm();
+            clearNotification();
+        });
+
+        refreshButton.addEventListener('click', async () => {
+            clearNotification();
+            await fetchBrancas();
+        });
+
+        searchInput.addEventListener('input', () => {
+            renderTable(brancas);
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchBrancas();
+        });
+    </script>
+</body>
+</html>
