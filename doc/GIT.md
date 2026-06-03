@@ -12,14 +12,14 @@ Il progetto utilizza un workflow collaborativo basato su:
 - integrazione tramite Pull Request
 - protezione del branch principale (`main`)
 
-L’obiettivo è evitare modifiche dirette su `main` e garantire codice verificato.
+L'obiettivo è evitare modifiche dirette su `main` e garantire codice verificato.
 
 ---
 
 # 🌿 Strategia branch
 
 - `main` → versione stabile del progetto
-- branch di lavoro → sviluppo funzionalità
+- branch di lavoro → uno per ogni gruppo (es. `MM71`)
 - merge solo tramite Pull Request
 
 ---
@@ -57,7 +57,7 @@ Quando appare un conflitto:
 
 # 🧠 Regola importante
 
-👉 Il codice finale NON deve essere “una delle due versioni”, ma una versione corretta e unificata.
+👉 Il codice finale NON deve essere "una delle due versioni", ma una versione corretta e unificata.
 
 ---
 
@@ -85,8 +85,83 @@ Le Pull Request servono a:
 
 ---
 
+# 📝 Messaggi di commit
+
+Formato obbligatorio:
+
+```
+type: descrizione breve
+```
+
+Tipi:
+
+- `feat` → nuova funzionalità
+- `fix` → correzione bug
+- `refactor` → riscrittura senza cambiare comportamento
+- `docs` → solo documentazione
+
+✔ corretto:
+- `feat: aggiunto handler read_branca`
+- `fix: corretto cast id_persona in iscrizione`
+
+❌ scorretto:
+- `modifica`
+- `aggiornato roba`
+- `wip`
+
+---
+
+# 🌿 Gestione branch del gruppo
+
+Il branch del gruppo viene mantenuto attivo per tutto il progetto.
+
+Per spostarsi sul branch:
+
+```bash
+git checkout MM71
+```
+
+Per crearlo se non esiste:
+
+```bash
+git checkout -b MM71
+```
+
+Per pushare:
+
+```bash
+git push origin MM71
+```
+
+---
+
+# 🔁 Flusso completo consigliato
+
+Prima di iniziare a lavorare:
+
+```bash
+git fetch
+git stash
+git pull
+git stash pop
+```
+
+Dopo aver fatto le modifiche:
+
+```bash
+git add *
+git commit -m "type: descrizione"
+git push origin MM71
+```
+
+Poi aprire la Pull Request su GitHub.
+
+---
+
 # 📌 Best practice
 
 - mai pushare codice non testato
 - mai risolvere conflitti senza leggere il codice
 - fare commit piccoli e logici
+- un commit = una cosa sola
+- non committare file di configurazione locali (già in `.gitignore`)
