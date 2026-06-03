@@ -57,6 +57,65 @@ scout-admin-ws
 - Arresta: `docker compose -f .devcontainer/docker-compose.yml down`
 - Accesso container: `docker compose -f .devcontainer/docker-compose.yml exec php-app bash`
 
+---
+
+## 📁 Struttura del progetto
+
+```
+scout-admin-ws-MM71/
+├── .devcontainer/
+│   ├── Dockerfile
+│   ├── devcontainer.json
+│   ├── docker-compose.yml
+│   └── init-db.sh
+├── doc/
+│   ├── Codice.md
+│   ├── Convenzioni.md
+│   └── GIT.md
+├── src/
+│   ├── api/
+│   │   ├── db/
+│   │   │   ├── schema.sql
+│   │   │   └── data.sql
+│   │   └── php/
+│   │       ├── core/
+│   │       │   ├── Database.php
+│   │       │   ├── helpers.php
+│   │       │   ├── index.php
+│   │       │   └── router.php
+│   │       ├── handlers/
+│   │       └── routes.php
+│   └── public/
+│       ├── index.html
+│       ├── account.html
+│       ├── account.js
+│       ├── branca.html
+│       ├── iscrizione.html
+│       ├── iscrizione.js
+│       └── main.js
+└── README.md
+```
+
+---
+
+## 🗄️ Tabelle del database
+
+| Tabella | Descrizione |
+|---|---|
+| `Account` | Credenziali di accesso, collegato a `Persona` |
+| `Persona` | Anagrafica degli iscritti, con riferimento ai tutori |
+| `Branca` | Fasce d'età (es. Lupetti, Esploratori...) |
+| `Unita` | Unità scout, appartenenti a una Branca |
+| `Iter` | Percorso formativo associato a una Branca |
+| `Attivita` | Attività organizzate, con luogo e data |
+| `Iscrizione` | Associazione Persona ↔ Unità per anno associativo |
+| `Servizio` | Ruolo di una Persona in una Unità |
+| `Tipologia` | Tipo di servizio (es. Capo, Membro...) |
+| `Pagamento` | Pagamento legato a un'iscrizione |
+| `Partecipa` | Relazione Attività ↔ Unità |
+
+---
+
 # 🔄 Procedura: Aggiornare il proprio Codespace e caricare le modifiche
 
 Questa procedura va seguita quando si è **rimasti indietro** rispetto alla versione
@@ -222,14 +281,19 @@ src/
 └── api/
     └── php/
         └── handlers/
-            ├── branca.php
             ├── account.php
             ├── attivita.php
+            ├── authentication.php
+            ├── branca.php
+            ├── iscrizione.php
             ├── iter.php
             ├── pagamento.php
-            ├── servizio.php
             ├── partecipa.php
-            └── persona.php
+            ├── persona.php
+            ├── registrazione.php
+            ├── servizio.php
+            ├── tipologia.php
+            └── unita.php
 ```
 ## 🔀 Pull Request
 
