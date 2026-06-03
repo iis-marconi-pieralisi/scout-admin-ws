@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tester CRUD Tipologia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <style>
+        .table-container {
+            max-height: 55vh;
+            overflow: auto;
+        }
+        .is-clickable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Tester CRUD Tipologia</h1>
+                <h2 class="subtitle">Endpoint <code>/api/tipologia</code></h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div id="notificationArea"></div>
+
+            <div class="box">
+                <div class="columns is-multiline">
+                    <div class="column is-full">
+                        <h3 class="title is-5">Modulo Tipologia</h3>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Nome</label>
+                            <div class="control">
+                                <input id="nomeTipologia" class="input" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Descrizione</label>
+                            <div class="control">
+                                <input id="descrizioneTipologia" class="input" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Azione</label>
+                            <div class="buttons">
+                                <button id="saveButton" class="button is-primary is-fullwidth">Crea / Aggiorna</button>
+                                <button id="cancelEditButton" class="button is-light is-fullwidth" style="display:none;">Annulla</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="editingId" value="">
+            </div>
+
+            <div class="level mb-4">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input id="searchInput" class="input" type="text" placeholder="Filtra per nome o ID...">
+                            </div>
+                            <div class="control">
+                                <button id="refreshButton" class="button is-info">Aggiorna tabella</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable is-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome tipologia</th>
+                            <th>Descrizione</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brancaTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const apiUrl = '/api/tipologia';
+        const nomeTipologiaInput = document.getElementById('nomeTipologia');
+        const descrizioneTipologiaInput = document.getElementById('descrizioneTipologia');
+
+        const saveButton = document.getElementById('saveButton');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const editingIdInput = document.getElementById('editingId');
+        const searchInput = document.getElementById('searchInput');
+        const refreshButton = document.getElementById('refreshButton');
+        const tableBody = document.getElementById('brancaTableBody');
+        const notificationArea = document.getElementById('notificationArea');
+        let tipologia = [];
+
+        async function fetchTipologia() 
+        {
+            
+        }
+
+        function renderTable(items) 
+        {
+            
+        }
+
+        function escapeHtml(text) 
+        {
+          
+        }
+
+        function showNotification(message, type = 'is-info') 
+        {
+            
+        }
+        function clearNotification() 
+        {
+            notificationArea.innerHTML = '';
+        }
+
+        function resetForm() 
+        {
+            
+        }
+
+        function populateForm(item) 
+        {
+           
+        }
+
+       
+
+        
+    </script>
+</body>
+</html>
