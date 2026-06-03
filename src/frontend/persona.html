@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tester CRUD persona</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <style>
+        .table-container {
+            max-height: 55vh;
+            overflow: auto;
+        }
+        .is-clickable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Tester CRUD persona</h1>
+                <h2 class="subtitle">Endpoint <code>/api/persona</code></h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div id="notificationArea"></div>
+
+            <div class="box">
+                <div class="columns is-multiline">
+                    <div class="column is-full">
+                        <h3 class="title is-5">Modulo persona</h3>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Nome persona</label>
+                            <div class="control">
+                                <input id="nomePersona" class="input" type="text" >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cognome persona-->
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">cognome persona</label>
+                            <div class="control">
+                                <input id="cognomePersona" class="input" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">data di nascita</label>
+                            <div class="control">
+                                <input type="date" id="data_nascitaPersona"class="input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">luogo di nascita</label>
+                            <div class="control">
+                                <input id="luogo_nascitaPersona" class="input" type="text"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">città residenza</label>
+                            <div class="control">
+                                <input id="città_residenzaPersona" class="input" type="text"> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">via residenza</label>
+                            <div class="control">
+                                <input id="via_residenzaPersona" class="input" type="text"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">cap residenza</label>
+                            <div class="control">
+                                <input id="cap_residenzaPersona" class="input" type="text"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">telefono</label>
+                            <div class="control">
+                                <input id="telefonoPersona" class="input" type="text"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">tutore1</label>
+                            <div class="control">
+                                <input id="id_tutore1Persona" class="input" type="number"> 
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">tutore2</label>
+                            <div class="control">
+                                <input id="id_tutore2Persona" class="input" type="number"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--bottone aggiorna-->
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Azione</label>
+                            <div class="buttons">
+                                <button id="saveButton" class="button is-primary is-fullwidth">Crea / Aggiorna</button>
+                                <button id="cancelEditButton" class="button is-light is-fullwidth" style="display:none;">Annulla</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="editingId" value="">
+            </div>
+
+            <div class="level mb-4">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input id="searchInput" class="input" type="text" placeholder="Filtra per nome o ID...">
+                            </div>
+                            <div class="control">
+                                <button id="refreshButton" class="button is-info">Aggiorna tabella</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable is-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome persona</th>
+                            <th>cognome Persona</th>
+                            <th>data di nascita</th>
+                            <th>luogo di nascita</th>
+                            <th>città residenza</th>
+                            <th>via residenza</th>
+                            <th>cap residenza</th>
+                            <th>Telefono</th>
+                            <th>id tutore1</th>
+                            <th>id tutore2</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brancaTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const apiUrl = '/api/persona';
+        const nomePersonaInput= document.getElementById('nomePersona');
+        const cognomePersonaInput = document.getElementById('cognomePersona');
+        const data_nascitaPersonaInput = document.getElementById('data_nascitaPersona');
+        const luogo_nascitaPersonaInput = document.getElementById('luogo_nascitaPersona');
+        const città_residenzaPersonaInput = document.getElementById('città_residenzaPersona');
+        const via_residenzaPersonaInput = document.getElementById('via_residenzaPersona');
+        const cap_residenzaPersonaInput= document.getElementById('cap_residenzaPersona');
+        const telefonoPersonaInput= document.getElementById('telefonoPersona');
+        const id_tutore1PersonaInput= document.getElementById('id_tutore1Persona');
+        const id_tutore2PersonaInput= document.getElementById('id_tutore2Persona');
+        const saveButton = document.getElementById('saveButton');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const editingIdInput = document.getElementById('editingId');
+        const searchInput = document.getElementById('searchInput');
+        const refreshButton = document.getElementById('refreshButton');
+        const tableBody = document.getElementById('brancaTableBody');
+        const notificationArea = document.getElementById('notificationArea');
+        let Persons = [];
+
+        async function fetchPersons() {
+            try {
+                const response = await fetch(apiUrl, { method: 'GET' });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore caricamento persone.', 'is-danger');
+                    return;
+                }
+                Persons = Array.isArray(json) ? json : [];
+                console.log(Persons);
+                
+                renderTable(Persons);
+            } catch (error) {
+                showNotification('Errore di rete: impossibile caricare le persone.', 'is-danger');
+            }
+        }
+
+        function renderTable(items) {
+            const filter = searchInput.value.trim().toLowerCase();
+            const filtered = items.filter(item => {
+                const values = [item.id_persona, item.nome, item.cognome, item.data_nascita,item.luogo_nascita,item.citta_residenza,item.via_residenza,item.cap_residenza,item.telefono,item.id_tutore1,item.id_tutore2].join(' ').toLowerCase();
+                return values.includes(filter);
+            });
+            tableBody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${item.id_persona}</td>
+                    <td>${escapeHtml(item.nome)}</td>
+                    <td>${escapeHtml(item.cognome)}</td>
+                    <td>${item.data_nascita}</td>
+                    <td>${escapeHtml(item.luogo_nascita)}</td>
+                    <td>${escapeHtml(item.citta_residenza)}</td>
+                    <td>${escapeHtml(item.via_residenza)}</td>
+                    <td>${escapeHtml(item.cap_residenza)}</td>
+                    <td>${escapeHtml(item.telefono)}</td>
+                    <td>${escapeHtml(item.id_tutore1)}</td>
+                    <td>${escapeHtml(item.id_tutore2)}</td>
+                    <td>
+                        <button class="button is-small is-info mr-2" onclick="startEdit(${item.id_persona})">Modifica</button>
+                        <button class="button is-small is-danger" onclick="deletePersona(${item.id_persona})">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            return text.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showNotification(message, type = 'is-info') {
+            notificationArea.innerHTML = `
+                <div class="notification ${type}">
+                    <button class="delete" onclick="this.parentElement.remove()"></button>
+                    ${escapeHtml(message)}
+                </div>
+            `;
+        }
+
+        function clearNotification() {
+            notificationArea.innerHTML = '';
+        }
+
+        function resetForm() {
+            editingIdInput.value = '';
+            nomePersonaInput.value = '';
+            cognomePersonaInput.value = '';
+            data_nascitaPersonaInput.value = '';
+            luogo_nascitaPersonaInput.value = '';
+            città_residenzaPersonaInput.value = '';
+            via_residenzaPersonaInput.value = '';
+            cap_residenzaPersonaInput.value = '';
+            telefonoPersonaInput.value = '';
+            id_tutore1PersonaInput.value = '';
+            id_tutore2PersonaInput.value = '';
+            cancelEditButton.style.display = 'none';
+            saveButton.textContent = 'Crea / Aggiorna';
+        }
+
+        function populateForm(item) {
+            editingIdInput.value = item.id_persona;
+            nomePersonaInput.value = item.nome;
+            cognomePersonaInput.value = item.cognome;
+            data_nascitaPersonaInput.value = item.data_nascita;
+            luogo_nascitaPersonaInput.value=item.luogo_nascita;
+            città_residenzaPersonaInput.value=item.citta_residenza;
+            via_residenzaPersonaInput.value=item.via_residenza;
+            cap_residenzaPersonaInput.value=item.cap_residenza;
+            telefonoPersonaInput.value=item.telefono;
+            id_tutore1PersonaInput.value=item.id_tutore1;
+            id_tutore2PersonaInput.value=item.id_tutore2;
+            cancelEditButton.style.display = 'inline-flex';
+            saveButton.textContent = 'Aggiorna';
+            nomePersonaInput.focus();
+        }
+
+        window.startEdit = function(id) {
+            const item = Persons.find(entry => entry.id_persona === id);
+            if (!item) {
+                showNotification('Elemento non trovato per la modifica.', 'is-warning');
+                return;
+            }
+            populateForm(item);
+        };
+
+        async function deletePersona(id) {
+            if (!confirm('Eliminare questa branca?')) {
+                return;
+            }
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({id_persona: id })
+                });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore durante l\'eliminazione.', 'is-danger');
+                    return;
+                }
+                showNotification(json.message || 'Persona eliminata.', 'is-success');
+                await fetchPersons();
+                resetForm();
+            } catch (error) {
+                showNotification('Errore di rete durante l\'eliminazione.', 'is-danger');
+            }
+        }
+
+        async function submitForm() {
+            const var_nome = nomePersonaInput.value.trim();
+            const var_cognome = cognomePersonaInput.value.trim();
+            const dataNascita = data_nascitaPersonaInput.value.trim();
+            const luogoNascita = luogo_nascitaPersonaInput.value.trim();
+            const cittàResidenza = città_residenzaPersonaInput.value.trim();
+            const viaResidenza = via_residenzaPersonaInput.value.trim();
+            const capResidenza = cap_residenzaPersonaInput.value.trim();
+            const Telefono = telefonoPersonaInput.value.trim();
+            const idTutore1 = id_tutore1PersonaInput.value.trim();
+            const idTutore2 = id_tutore2PersonaInput.value.trim();
+
+            const editingId = editingIdInput.value;
+
+            if (!var_nome || !var_cognome || !dataNascita ||!luogoNascita ||!cittàResidenza ||!viaResidenza ||!capResidenza ||!Telefono ||!idTutore1 ||!idTutore2 ) {
+                showNotification('Compila tutti i campi prima di inviare.', 'is-warning');
+                return;
+            }
+           
+
+            const payload = {
+                nome: var_nome,
+                cognome: var_cognome,
+                data_nascita:dataNascita,
+                luogo_nascita: luogoNascita,
+                citta_residenza:cittàResidenza,
+                via_residenza: viaResidenza,
+                cap_residenza:capResidenza,
+                telefono:Telefono,
+                id_tutore1:idTutore1,
+                id_tutore2: idTutore2
+            };
+
+            let method = 'POST';
+            if (editingId) {
+                method = 'PUT';
+                payload.id_persona = Number(editingId);
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await response.json();
+                if (!response.ok) {
+                    showNotification(json.error || 'Errore durante il salvataggio.', 'is-danger');
+                    return;
+                }
+                showNotification(json.message || 'Salvataggio avvenuto con successo.', 'is-success');
+                await fetchPersons();
+                resetForm();
+            } catch (error) {
+                showNotification('Errore di rete durante il salvataggio.', 'is-danger');
+            }
+        }
+
+        saveButton.addEventListener('click', async () => {
+            clearNotification();
+            await submitForm();
+        });
+
+        cancelEditButton.addEventListener('click', () => {
+            resetForm();
+            clearNotification();
+        });
+
+        refreshButton.addEventListener('click', async () => {
+            clearNotification();
+            await fetchPersons();
+        });
+
+        searchInput.addEventListener('input', () => {
+            renderTable(Persons);
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchPersons();
+        });
+    </script>
+</body>
+</html>
