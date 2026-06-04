@@ -5,15 +5,6 @@ foreach (glob(__DIR__ . '/handlers/*.php') as $handler_file) {
     require_once $handler_file;
 }
 
-// ---------------------------------------------------------------------------
-// Tabella delle rotte
-// Aggiungere rispettando l'ordine alfabetico per comodità di lettura.
-//
-// TODO #1: rimuovere rotte parametriche e usare sempre json (anche per GET)
-// TODO #2: uniformare le implementazioni degli handler (assicurandosi di usare la classe db helper)
-// TODO #3: verificare il funzionamento delle rotte
-// TODO #4: rimuovere json_decode dalle implementazioni degli handler perchè viene passato in automatico dal router.
-// ---------------------------------------------------------------------------
 $routes = [
     'GET' => [
         '/api/account' => 'read_account',
@@ -27,12 +18,9 @@ $routes = [
         '/api/prova' => 'mostra_messaggio_di_prova',
         '/api/servizio' => 'read_servizio',
         '/api/unita' => 'read_unita',
-        '/api/tutori' => 'read_tutori',
-        
+        '/api/tutore' => 'read_tutore',
         '/api/permesso' => 'prova_permesso',
     ],
-
-
     'POST' => [
         '/api/account' => 'create_account',
         '/api/auth' => 'authenticate_user',
@@ -56,7 +44,7 @@ $routes = [
         '/api/partecipa' => 'update_partecipa',
         '/api/persona' => 'update_persona',
         '/api/servizio' => 'update_servizio',
-        '/api/unita' => 'update_unita'
+        '/api/unita' => 'update_unita',
     ],
     'DELETE' => [
         '/api/account' => 'delete_account',
@@ -68,6 +56,6 @@ $routes = [
         '/api/pagamento' => 'delete_pagamento',
         '/api/persona' => 'delete_persona',
         '/api/servizio' => 'delete_servizio',
-        '/api/unita' => 'delete_unita'
+        '/api/unita' => 'delete_unita',
     ]
 ];

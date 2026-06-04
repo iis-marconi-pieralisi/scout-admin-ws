@@ -1,5 +1,5 @@
 <?php
-    function read_tutori($db, $data)
+    function read_tutore($db, $data)
     {
         try
         {

@@ -60,7 +60,7 @@
 
         <label for="id_tutore1">Tutore 1 *</label><br>
         <select id="id_tutore1" name="id_tutore1" required>
-            <option value="">— Caricamento... —</option>
+            <option value="">— Caricamento... —</option>registrazione
         </select><br><br>
 
         <label for="id_tutore2">Tutore 2 (opzionale)</label><br>
@@ -98,7 +98,7 @@
     {
         try
         {
-            const res = await fetch('/api/tutori');
+            const res = await fetch('/api/tutore');
             const tutori = await res.json();
 
             const sel1 = document.getElementById('id_tutore1');
