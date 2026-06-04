@@ -39,20 +39,19 @@
                         <div class="field">
                             <label class="label">Nome</label>
                             <div class="control">
-                                <input id="nomeTipologia" class="input" type="text">
+                                <input id="nomeTipologia" class="input" type="text" placeholder="es. Admin">
                             </div>
                         </div>
                     </div>
 
-                    <div class="column is-one-quarter">
+                    <div class="column is-half">
                         <div class="field">
                             <label class="label">Descrizione</label>
                             <div class="control">
-                                <input id="descrizioneTipologia" class="input" type="text">
+                                <input id="descrizioneTipologia" class="input" type="text" placeholder="es. Responsabile...">
                             </div>
                         </div>
                     </div>
-
 
                     <div class="column is-one-quarter">
                         <div class="field">
@@ -72,7 +71,7 @@
                     <div class="level-item">
                         <div class="field has-addons">
                             <div class="control">
-                                <input id="searchInput" class="input" type="text" placeholder="Filtra per nome o ID...">
+                                <input id="searchInput" class="input" type="text" placeholder="Filtra per nome, descrizione o ID...">
                             </div>
                             <div class="control">
                                 <button id="refreshButton" class="button is-info">Aggiorna tabella</button>
@@ -92,7 +91,7 @@
                             <th>Azioni</th>
                         </tr>
                     </thead>
-                    <tbody id="brancaTableBody"></tbody>
+                    <tbody id="tipologiaTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -108,47 +107,225 @@
         const editingIdInput = document.getElementById('editingId');
         const searchInput = document.getElementById('searchInput');
         const refreshButton = document.getElementById('refreshButton');
-        const tableBody = document.getElementById('brancaTableBody');
+        const tableBody = document.getElementById('tipologiaTableBody');
         const notificationArea = document.getElementById('notificationArea');
-        let tipologia = [];
+        let tipologie = [];
 
+        // CARICAMENTO DATI (GET)
         async function fetchTipologia() 
         {
-            
+            try 
+            {
+                const response = await fetch(apiUrl, { method: 'GET' });
+                const json = await response.json();
+                if (!response.ok) 
+                {
+                    showNotification(json.error || 'Errore caricamento tipologie.', 'is-danger');
+                    return;
+                }
+                // Gestisce sia il caso in cui il backend restituisca un array diretto, sia se sia avvolto in un oggetto
+                tipologie = Array.isArray(json) ? json : (json.data && Array.isArray(json.data) ? json.data : []);
+                renderTable(tipologie);
+            } catch (error) 
+            {
+                showNotification('Errore di rete: impossibile caricare le tipologie.', 'is-danger');
+            }
         }
 
         function renderTable(items) 
         {
-            
+            const filter = searchInput.value.trim().toLowerCase();
+            const filtered = items.filter(item => {
+                // Mappatura precisa: item.id_tipologia, item.nome, item.descrizione
+                const values = [item.id_tipologia, item.nome, item.descrizione].join(' ').toLowerCase();
+                return values.includes(filter);
+            });
+
+            tableBody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${item.id_tipologia}</td>
+                    <td><strong>${escapeHtml(item.nome)}</strong></td>
+                    <td>${escapeHtml(item.descrizione)}</td>
+                    <td>
+                        <button class="button is-small is-info mr-2" onclick="startEdit(${item.id_tipologia})">Modifica</button>
+                        <button class="button is-small is-danger" onclick="deleteTipologia(${item.id_tipologia})">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function escapeHtml(text) 
         {
-          
+            if (text === null || text === undefined) return '';
+            return text.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         function showNotification(message, type = 'is-info') 
         {
-            
+            notificationArea.innerHTML = `
+                <div class="notification ${type}">
+                    <button class="delete" onclick="this.parentElement.remove()"></button>
+                    ${escapeHtml(message)}
+                </div>
+            `;
         }
+
         function clearNotification() 
         {
             notificationArea.innerHTML = '';
         }
 
+        // RESET E POPOLAMENTO FORM
         function resetForm() 
         {
-            
+            nomeTipologiaInput.value = '';
+            descrizioneTipologiaInput.value = '';
+            editingIdInput.value = '';
+            saveButton.textContent = 'Crea / Aggiorna';
+            cancelEditButton.style.display = 'none';
         }
 
         function populateForm(item) 
         {
-           
+            nomeTipologiaInput.value = item.nome || '';
+            descrizioneTipologiaInput.value = item.descrizione || '';
+            editingIdInput.value = item.id_tipologia;
+            saveButton.textContent = 'Aggiorna';
+            cancelEditButton.style.display = 'inline-flex';  
+            nomeTipologiaInput.focus();
         }
 
-       
+        window.startEdit = function(id) 
+        {
+            const item = tipologie.find(entry => entry.id_tipologia === id);
+            if (!item) {
+                showNotification('Elemento non trovato per la modifica.', 'is-warning');
+                return;
+            }
+            populateForm(item);
+        };
 
-        
+
+        window.deleteTipologia = async function(id) 
+        {
+            if (!confirm('Eliminare questa tipologia?')) 
+            {
+                return;
+            }
+
+            try 
+            {
+                clearNotification();
+
+                const response = await fetch(apiUrl, 
+                {
+                    method: 'DELETE',
+                    headers: 
+                    { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ id_tipologia: Number(id) }) // Forza l'ID come numero
+                });
+
+                const json = await response.json();
+
+                if (!response.ok) 
+                {
+                    // Mostra l'errore se il server risponde con un codice di errore 
+                    showNotification(json.error || 'Errore durante l\'eliminazione.', 'is-danger');
+                    return;
+                }
+
+                // Se il server risponde con successo
+                showNotification(json.message || 'Tipologia eliminata.', 'is-success');
+                
+                // Ricarica la tabella e svuota il form
+                await fetchTipologia();
+                resetForm();
+                
+                } catch (error) 
+                {
+                    console.error("Errore", error);
+                    showNotification('Errore di rete durante l\'eliminazione.', 'is-danger');
+                }
+        };
+
+       
+        async function submitForm() 
+        {
+            const nomeStr = nomeTipologiaInput.value.trim();
+            const descrizioneStr = descrizioneTipologiaInput.value.trim();
+            const editingId = editingIdInput.value;
+
+            if (!nomeStr || !descrizioneStr) 
+            {
+                showNotification('Compila tutti i campi prima di inviare.', 'is-warning');
+                return;
+            }
+
+            // Inviamo i parametri con i nomi esatti che si aspetta il backend/DB
+            const payload = {
+                nome: nomeStr,
+                descrizione: descrizioneStr
+            };
+
+            let method = 'POST';
+            if (editingId) 
+            {
+                method = 'PUT';
+                payload.id_tipologia = Number(editingId);
+            }
+
+            try 
+            {
+                const response = await fetch(apiUrl, 
+                {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await response.json();
+                if (!response.ok) 
+                {
+                    showNotification(json.error || 'Errore durante il salvataggio.', 'is-danger');
+                    return;
+                }
+                showNotification(json.message || 'Salvataggio avvenuto con successo.', 'is-success');
+                await fetchTipologia();
+                resetForm();
+            } catch (error) 
+            {
+                showNotification('Errore di rete durante il salvataggio.', 'is-danger');
+            }
+        }
+
+        saveButton.addEventListener('click', async () => {
+            clearNotification();
+            await submitForm();
+        });
+
+        cancelEditButton.addEventListener('click', () => {
+            resetForm();
+            clearNotification();
+        });
+
+        refreshButton.addEventListener('click', async () => {
+            clearNotification();
+            await fetchTipologia();
+        });
+
+        searchInput.addEventListener('input', () => {
+            renderTable(tipologie);
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchTipologia();
+        });
     </script>
 </body>
 </html>
