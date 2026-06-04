@@ -1,38 +1,14 @@
 <?php
-
-/**
- * Test svolti
- *
- * read_account:
- * - Restituisce tutti gli account presenti
- * - Restituisce [] se la tabella è vuota
- *
- * create_account:
- * - Crea un account con username, password, email validi
- * - Rifiuta la richiesta se manca uno dei campi obbligatori
- * - Restituisce 500 se username già esistente (UNIQUE constraint)
- * - Salva la password come hash bcrypt (non in chiaro)
- *
- * update_account:
- * - Aggiorna password ed email di un account esistente
- * - Restituisce affected_rows=0 se username non esiste (nessun errore)
- * - Rifiuta la richiesta se manca uno dei campi obbligatori
- * - Salva la nuova password come hash bcrypt (non in chiaro)
- *
- * delete_account:
- * - Elimina l'account con lo username indicato
- * - Restituisce affected_rows=0 se username non esiste (nessun errore)
- * - Rifiuta la richiesta se manca il campo "username"
- *
- */
-
 function read_account($db, $data)
 {
+    if(!check_permission('account', 'R', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     try {
-        $sql = <<<EOD
-            SELECT * 
-            FROM Account
-            EOD;
+        $sql = "SELECT * FROM Account";
         $results = $db->query($sql);
         json_response($results);
     } catch (Exception $e) {
@@ -42,6 +18,12 @@ function read_account($db, $data)
 
 function create_account($db, $data)
 {
+    if(!check_permission('account', 'C', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
@@ -49,9 +31,9 @@ function create_account($db, $data)
 
     try {
         $sql = <<<EOD
-            INSERT INTO Account (username, password, email, id_persona) 
-            VALUES (?, ?, ?, ?)
-            EOD;
+          INSERT INTO Account (username, password, email, id_persona) 
+          VALUES (?, ?, ?, ?)
+          EOD;
         $params = [
             $data['username'],
             password_hash($data['password'], PASSWORD_BCRYPT),
@@ -73,35 +55,28 @@ function create_account($db, $data)
 
 function update_account($db, $data)
 {
-    $required_fields = ['username', 'email', 'id_persona'];
+    if(!check_permission('account', 'U', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
+    $required_fields = ['username', 'password', 'email', 'id_persona'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
-    $originalUsername = isset($data['original_username']) && $data['original_username'] !== '' ? $data['original_username'] : $data['username'];
-
     try {
-        $fields = ['email = ?', 'id_persona = ?'];
+        $sql = <<<EOD
+          UPDATE Account SET password = ?, email = ?, id_persona = ? 
+          WHERE username = ?
+          EOD;
         $params = [
+            password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
             (int)$data['id_persona'],
+            $data['username'],
         ];
-
-        if (!empty($data['password'])) {
-            array_unshift($params, password_hash($data['password'], PASSWORD_BCRYPT));
-            array_unshift($fields, 'password = ?');
-        }
-
-        if ($originalUsername !== $data['username']) {
-            $fields[] = 'username = ?';
-            $params[] = $data['username'];
-        }
-
-        $sql = sprintf(
-            "UPDATE Account SET %s WHERE username = ?",
-            implode(', ', $fields)
-        );
-        $params[] = $originalUsername;
 
         $affected_rows = $db->query($sql, $params);
 
@@ -117,16 +92,20 @@ function update_account($db, $data)
 
 function delete_account($db, $data)
 {
+
+    if(!check_permission('account', 'D', $_SESSION['tipologia']))
+    {
+        json_response(['error' => 'Accesso non consentito.'], 403);
+        return;
+    }
+
     $required_fields = ['username'];
     if (!validate_required_fields($data, $required_fields)) {
         return;
     }
 
     try {
-        $sql = <<<EOD
-            DELETE FROM Account 
-            WHERE username = ?
-            EOD;
+        $sql = "DELETE FROM Account WHERE username = ?";
         $affected_rows = $db->query($sql, [$data['username']]);
 
         json_response([
