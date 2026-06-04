@@ -1,26 +1,21 @@
 <?php
 
-function read_branca($db, $data) 
+function read_branca($db, $data)
 {
     try {
-        // EOD necessario per stringa literal multiriga
         $sql = <<<EOD
             SELECT  *
-            FROM Branca
+            FROM    Branca
         EOD;
-        
-        // Se in futuro vorrai usare il body del JSON per filtrare (es. $data['filtro']),
-        // potrai estrarlo comodamente da $data.
-        
+
         $results = $db->query($sql);
         json_response($results);
-    } catch (Exception $e) 
-    {
-        // In produzione, è buona norma non esporre i dettagli specifici dell'errore.
-        // Si potrebbe loggare $e->getMessage() in un file di log per il debug.
+
+    } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
 
 function create_branca($db, $data)
 {
@@ -47,12 +42,13 @@ function create_branca($db, $data)
             'success'       => true,
             'message'       => 'Branca creata con successo.',
             'affected_rows' => $affected_rows,
-        ]);
+        ], 201);
 
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }
 }
+
 
 function update_branca($db, $data)
 {
@@ -90,6 +86,7 @@ function update_branca($db, $data)
     }
 }
 
+
 function delete_branca($db, $data)
 {
     $required_fields = ['id_branca'];
@@ -110,6 +107,7 @@ function delete_branca($db, $data)
             'message'       => 'Branca eliminata.',
             'affected_rows' => $affected_rows,
         ]);
+
     } catch (Exception $e) {
         json_response(['error' => 'Errore interno del server.'], 500);
     }

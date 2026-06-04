@@ -31,9 +31,9 @@ function create_account($db, $data)
 
     try {
         $sql = <<<EOD
-INSERT INTO Account (username, password, email, id_persona) 
-VALUES (?, ?, ?, ?)
-EOD;
+          INSERT INTO Account (username, password, email, id_persona) 
+          VALUES (?, ?, ?, ?)
+          EOD;
         $params = [
             $data['username'],
             password_hash($data['password'], PASSWORD_BCRYPT),
@@ -68,9 +68,9 @@ function update_account($db, $data)
 
     try {
         $sql = <<<EOD
-UPDATE Account SET password = ?, email = ?, id_persona = ? 
-WHERE username = ?
-EOD;
+          UPDATE Account SET password = ?, email = ?, id_persona = ? 
+          WHERE username = ?
+          EOD;
         $params = [
             password_hash($data['password'], PASSWORD_BCRYPT),
             $data['email'],
