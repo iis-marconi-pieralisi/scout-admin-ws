@@ -28,6 +28,8 @@ $routes = [
         '/api/servizio' => 'read_servizio',
         '/api/unita' => 'read_unita',
     ],
+
+
     'POST' => [
         '/api/account' => 'create_account',
         '/api/auth' => 'authenticate_user',
