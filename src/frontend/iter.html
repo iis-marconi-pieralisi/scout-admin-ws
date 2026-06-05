@@ -6,34 +6,10 @@
     <title>Test CRUD Iter</title>
 
     <!-- Bulma -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 
-    <style>
-        body {
-            background: #f5f7fa;
-            min-height: 100vh;
-        }
-
-        .response-box,
-        .result-box {
-            background: #f8fafc;
-            border-radius: 10px;
-            padding: 16px;
-            font-family: Menlo, Monaco, Consolas, monospace;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            border: 1px solid #dfe6ee;
-        }
-
-        .page-title {
-            margin-bottom: 2rem;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-    </style>
+    <!-- file css -->
+    <link rel="stylesheet" href="css/iterstyle.css">
 </head>
 <body>
 
@@ -57,7 +33,6 @@
             <!-- Form -->
             <div class="column is-5-desktop is-12-tablet">
                 <div class="box">
-
                     <div class="field">
                         <label class="label">id_iter</label>
                         <div class="control">
@@ -68,7 +43,6 @@
                                 placeholder="Inserisci id_iter">
                         </div>
                     </div>
-
                     <div class="field">
                         <label class="label">Nome</label>
                         <div class="control">
@@ -79,7 +53,6 @@
                                 placeholder="Nome dell'iter">
                         </div>
                     </div>
-
                     <div class="field">
                         <label class="label">Descrizione</label>
                         <div class="control">
@@ -90,7 +63,6 @@
                                 placeholder="Descrizione facoltativa"></textarea>
                         </div>
                     </div>
-
                     <div class="field">
                         <label class="label">id_branca</label>
                         <div class="control">
@@ -101,10 +73,8 @@
                                 placeholder="ID della branca">
                         </div>
                     </div>
-
                     <!-- Pulsanti -->
                     <div class="buttons mt-5">
-
                         <button
                             class="button is-link"
                             onclick="getIter()">

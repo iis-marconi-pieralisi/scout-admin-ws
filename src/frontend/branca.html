@@ -7,58 +7,58 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
-<section class="section">
-    <div class="container">
-        <h1 class="title">Test CRUD per <strong>Branca</strong></h1>
-        <p class="subtitle">Pagina di test per le chiamate API a <code>/api/branca</code>.</p>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Test CRUD per <strong>Branca</strong></h1>
+            <p class="subtitle">Pagina di test per le chiamate API a <code>/api/branca</code>.</p>
 
-        <div class="box">
-            <div class="field">
-                <label class="label" for="id_branca">id_branca</label>
-                <div class="control">
-                    <input id="id_branca" class="input" type="number" placeholder="ID per update / delete">
+            <div class="box">
+                <div class="field">
+                    <label class="label" for="id_branca">id_branca</label>
+                    <div class="control">
+                        <input id="id_branca" class="input" type="number" placeholder="ID per update / delete">
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label" for="nome_branca">Nome Branca</label>
-                <div class="control">
-                    <input id="nome_branca" class="input" type="text" placeholder="Nome della branca">
+                <div class="field">
+                    <label class="label" for="nome_branca">Nome Branca</label>
+                    <div class="control">
+                        <input id="nome_branca" class="input" type="text" placeholder="Nome della branca">
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label" for="min_eta">Età minima</label>
-                <div class="control">
-                    <input id="min_eta" class="input" type="number" placeholder="Età minima">
+                <div class="field">
+                    <label class="label" for="min_eta">Età minima</label>
+                    <div class="control">
+                        <input id="min_eta" class="input" type="number" placeholder="Età minima">
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label" for="max_eta">Età massima</label>
-                <div class="control">
-                    <input id="max_eta" class="input" type="number" placeholder="Età massima">
+                <div class="field">
+                    <label class="label" for="max_eta">Età massima</label>
+                    <div class="control">
+                        <input id="max_eta" class="input" type="number" placeholder="Età massima">
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="button is-info" onclick="getBranca()">GET</button>
+                    <button class="button is-success" onclick="createBranca()">POST</button>
+                    <button class="button is-warning" onclick="updateBranca()">PUT</button>
+                    <button class="button is-danger" onclick="deleteBranca()">DELETE</button>
+                    <button class="button" onclick="clearBrancaFields()">RESET</button>
                 </div>
             </div>
 
-            <div class="buttons">
-                <button class="button is-info" onclick="getBranca()">GET</button>
-                <button class="button is-success" onclick="createBranca()">POST</button>
-                <button class="button is-warning" onclick="updateBranca()">PUT</button>
-                <button class="button is-danger" onclick="deleteBranca()">DELETE</button>
-                <button class="button" onclick="clearBrancaFields()">RESET</button>
+            <div class="box">
+                <h2 class="subtitle">Ultima risposta</h2>
+                <pre id="response">Nessuna chiamata ancora effettuata.</pre>
+            </div>
+
+            <div class="box">
+                <h2 class="subtitle">Risultati GET</h2>
+                <div id="result-list">Esegui GET per visualizzare i dati.</div>
             </div>
         </div>
+    </section>
 
-        <div class="box">
-            <h2 class="subtitle">Ultima risposta</h2>
-            <pre id="response">Nessuna chiamata ancora effettuata.</pre>
-        </div>
-
-        <div class="box">
-            <h2 class="subtitle">Risultati GET</h2>
-            <div id="result-list">Esegui GET per visualizzare i dati.</div>
-        </div>
-    </div>
-</section>
-
-<script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

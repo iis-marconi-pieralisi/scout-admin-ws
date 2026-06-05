@@ -1,0 +1,23 @@
+ body 
+ {
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+.response-box, .result-box 
+{
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: Menlo, Monaco, Consolas, monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    border: 1px solid #dfe6ee;
+}
+.page-title 
+{
+    margin-bottom: 2rem;
+}
+textarea 
+{
+    resize: vertical;
+}
