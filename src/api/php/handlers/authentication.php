@@ -8,9 +8,9 @@
         {
             $sql = "SELECT A.username, A.password, T.nome as tipologia
                     FROM Account A JOIN Persona P ON A.id_persona = P.id_persona
-                    JOIN Servizio S ON P.id_persona = S.id_persona
-                    JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
-                    WHERE A.email = ? AND S.anno_associativo = YEAR(CURDATE())";
+                    LEFT JOIN Servizio S ON P.id_persona = S.id_persona AND S.anno_associativo = YEAR(CURDATE())
+                    LEFT JOIN Tipologia T ON S.id_tipologia = T.id_tipologia
+                    WHERE A.email = ?";
 
             $params = [$data['email']];
             $result = $db->query($sql, $params);
@@ -26,7 +26,15 @@
             {
                 session_start();
                 $username = $result[0]['username'];
-                $tipologia = $result[0]['tipologia'];
+                
+                if ($result[0]['tipologia'] === null)
+                {
+                    $tipologia = 'Censito';
+                }
+                else
+                {
+                    $tipologia = $result[0]['tipologia'];
+                }
 
                 if($tipologia == 'Membro')
                 {
